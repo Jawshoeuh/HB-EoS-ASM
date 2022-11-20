@@ -39,17 +39,17 @@
         mov r3,#0x100
         bl DealDamage
         
-        ;Check for succesful hit.
+        ; Check for succesful hit.
         cmp r0,#0
         beq MoveJumpAddress
         
-        ; Grab target position.
+        ; User X/Y Pos
         ldrb r12,[r4,#+0x4c] ; User Direction
         ldrh r0,[r9,#+0x4] ; User X Pos
         ldrh r1,[r9,#+0x6] ; User Y Pos
         
         ; This is a better way to visualize what happens to
-        ; the values when loading the array. 
+        ; the values than loading the direction array. 
         ; 5   4   3   (y+1)
         ;   \ | /
         ; 6 - E - 2   (y+0)
@@ -59,22 +59,22 @@
         ; x   x   x
         ; +   +   -
         ; 1   0   1
-        ;cmp   r12,#1
-        ;subeq r0,r0,#1 ; r12 = 1
-        ;suble r1,r1,#1 ; r12 = 0,1
-        ;ble check_tile
-        ;cmp   r12,#3
-        ;addeq r1,r1,#1 ; r12 = 3
-        ;suble r0,r0,#1 ; r12 = 2,3
-        ;ble check_tile
-        ;cmp   r12,#5
-        ;addeq r0,r0,#1 ; r12 = 5
-        ;addle r1,r1,#1 ; r12 = 4,5
-        ;ble check_tile
-        ;cmp   r12,#6
-        ;add   r0,r0,#1 ; r12 = 6,7
-        ;beq check_tile
-        ;sub   r1,r1,#1 ; r12 = 7
+        cmp   r12,#1
+        subeq r0,r0,#1 ; r12 = 1
+        suble r1,r1,#1 ; r12 = 0,1
+        ble check_tile
+        cmp   r12,#3
+        addeq r1,r1,#1 ; r12 = 3
+        suble r0,r0,#1 ; r12 = 2,3
+        ble check_tile
+        cmp   r12,#5
+        addeq r0,r0,#1 ; r12 = 5
+        addle r1,r1,#1 ; r12 = 4,5
+        ble check_tile
+        cmp   r12,#6
+        add   r0,r0,#1 ; r12 = 6,7
+        beq check_tile
+        sub   r1,r1,#1 ; r12 = 7
         
     end:
 		; Always branch at the end
