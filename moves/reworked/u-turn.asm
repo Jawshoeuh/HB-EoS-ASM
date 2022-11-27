@@ -28,7 +28,7 @@
 
 
 ; File creation
-.create "./code_out.bin", MoveStartAddress ; Change to the actual offset as this directive doesn't accept labels
+.create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
 	.org MoveStartAddress
 	.area MaxSize ; Define the size of the area
 		
@@ -76,7 +76,6 @@
         beq check_tile
         sub   r1,r1,#1 ; r12 = 7
         
-    end:
 		; Always branch at the end
 		b MoveJumpAddress
 		.pool

@@ -1,8 +1,10 @@
-; 
 ; ------------------------------------------------------------------------------
-; A template to code your own move effects
+; Jawshoeuh 11/27/2022
+; UNTESTED
+; Chilly Reception causes the user to summon a hailstorm, and swap with
+; an ally behind them.
+; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
-
 
 .relativeinclude on
 .nds
@@ -18,33 +20,42 @@
 .include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
-.definelabel GetTilePointer, 0x23360FC
-.definelabel ExecuteMoveEffect, 0x232E864
+.definelabel DoMoveHail, 0x0232612C
+.definelabel TrySwitchPlace, 0x22EB178
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel GetTilePointer, 0x????????
-;.definelabel ExecuteMonsterAction, 0x????????
-;.definelabel SetMonsterActionFields, 0x????????
-;.definelabel ClearMonsterActionFields, 0x????????
-;.definelabel SetActionRegularAttack, 0x????????
-;.definelabel SetActionUseMoveAI, 0x????????
+;.definelabel DoMoveHail, 0x????????
+;.definelabel TrySwitchPlace, 0x22EBB28
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; For EU: 0x02330B74
+.create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
 	.org MoveStartAddress
 	.area MaxSize ; Define the size of the area
-
+		
+        ; Branch to original hail code.
+        mov r0,r9
+        mov r1,r4
+        mov r2,r8
+        mov r3,r7
+        bl DoMoveHail
         
-        ; Grab target position.
-        ldrb r12,[r4,#+0x4c] ; Target Direction
-        ldrh r0,[r4,#+0x4] ; Target X Pos
-        ldrh r1,[r4,#+0x6] ; Target Y Pos
+        ; Check for succesful weather change.
+        mov r10,r0
+        cmp r0,#0
+        beq MoveJumpAddress
         
-        ;Get tile offset to check.
+        ; User X/Y Pos
+        ldrb r12,[r4,#+0x4c] ; User Direction
+        ldrh r0,[r9,#+0x4]   ; User X Pos
+        ldrh r1,[r9,#+0x6]   ; User Y Pos
+        
+        ; This is a better way to visualize what happens to
+        ; the values than loading the direction array. Because
+        ; we are looking behind, the values are opposite.
         ; 5   4   3   (y+1)
         ;   \ | /
         ; 6 - E - 2   (y+0)
@@ -70,43 +81,33 @@
         add   r0,r0,#1 ; r12 = 6,7
         beq check_tile
         sub   r1,r1,#1 ; r12 = 7
-       
-       
-check_tile:
+        
+    check_tile:
+    
         ; Check tile for Monster.
         bl    GetTilePointer
         ldr   r1,[r0,#+0xc]
-        cmp   r1,#0 
-        moveq r10,#0 ;failed, no monster
-        beq   end
+        cmp   r1,#0
+        beq   MoveJumpAddress ; failed, no monster
         
         ; Check if friend or enemy.
-        ldr   r12,[r0,#+0xb4]
+        ldr   r12,[r1,#0xb4]
         ldrb  r0,[r12,#0x6]
         ldrb  r2,[r12,#0x8]
         eor   r3,r0,r2 ; 1 = enemy, 0 = friend
-        ldrb  r0,[r4,#0x6] ;
-        ldrb  r2,[r4,#0x8] ;
-        eor   r2,r0,r2 ; 1 = enemy, 0 = friend
-        cmp   r3,r2
-        moveq r10,#0 ; failed, friendly fire
-        beq   end
+        ldrb  r0,[r9,#0x6] ;
+        ldrb  r2,[r9,#0x8] ;
+        eor   r12,r0,r2 ; 1 = enemy, 0 = friend
+        cmp   r12,r3
+        bne   MoveJumpAddress ; failed, not on same team
         
-        ;Attempt something?
-        add r2,r4,#0x124
-        mov r1,r4
-        bl ExecuteMoveEffect
-        
-        ;Debug message
+        ; Try to swap places
+        ; Monster behind still in r1.
         mov r0,r9
-		ldr r1,=debug_ins
-		bl SendMessageWithStringLog
-end:         
-        ; Always branch at the end
-        b MoveJumpAddress
+        bl TrySwitchPlace
         
+		; Always branch at the end
+		b MoveJumpAddress
 		.pool
-	debug_ins:
-		.asciiz "Debug instruct end!" 
 	.endarea
 .close
