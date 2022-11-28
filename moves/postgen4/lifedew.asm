@@ -29,9 +29,9 @@
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
-	.org MoveStartAddress
-	.area MaxSize ; Define the size of the area
-		
+    .org MoveStartAddress
+    .area MaxSize ; Define the size of the area
+        
         ; Calculate Health
         ldr   r0,[r4,#0xb4]
         ldrsh r1,[r0,#0x12]
@@ -45,8 +45,8 @@
         mov r3,#0 ; Don't increasce temp max HP
         bl RaiseHP
         
-		; Always branch at the end
-		b MoveJumpAddress
-		.pool
-	.endarea
+        ; Always branch at the end
+        b MoveJumpAddress
+        .pool
+    .endarea
 .close

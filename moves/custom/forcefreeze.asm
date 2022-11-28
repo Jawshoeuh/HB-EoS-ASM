@@ -30,17 +30,17 @@
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
-	.org MoveStartAddress
-	.area MaxSize ; Define the size of the area
+    .org MoveStartAddress
+    .area MaxSize ; Define the size of the area
     
         ; Just freeze...
         mov r0,r9
-		mov r1,r4
-		mov r2,#1
-		bl Freeze
-		
-		; Always branch at the end
-		b MoveJumpAddress
-		.pool
-	.endarea
+        mov r1,r4
+        mov r2,#1
+        bl Freeze
+        
+        ; Always branch at the end
+        b MoveJumpAddress
+        .pool
+    .endarea
 .close

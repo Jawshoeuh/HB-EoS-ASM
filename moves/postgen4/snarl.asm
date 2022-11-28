@@ -28,9 +28,9 @@
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
-	.org MoveStartAddress
-	.area MaxSize ; Define the size of the area
-		
+    .org MoveStartAddress
+    .area MaxSize ; Define the size of the area
+        
         ; Deal damage.
         mov r0,r0
         mov r1,r4
@@ -44,13 +44,13 @@
         
         ;If so, lower special attack.
         mov r0,r9
-		mov r1,r4
-		mov r2,#1
-		mov r3,#1
-		bl AttackStatDown
+        mov r1,r4
+        mov r2,#1
+        mov r3,#1
+        bl AttackStatDown
 
-		; Always branch at the end
-		b MoveJumpAddress
-		.pool
-	.endarea
+        ; Always branch at the end
+        b MoveJumpAddress
+        .pool
+    .endarea
 .close

@@ -33,8 +33,8 @@
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
-	.org MoveStartAddress
-	.area MaxSize ; Define the size of the area
+    .org MoveStartAddress
+    .area MaxSize ; Define the size of the area
     
         ; Attempt to find a target in front of user.
         ; Get User Direction,X,Y
@@ -89,8 +89,8 @@
         ; Move return value appropriately.
         mov r10,r0
         
-		; Always branch at the end
-		b MoveJumpAddress
-		.pool
-	.endarea
+        ; Always branch at the end
+        b MoveJumpAddress
+        .pool
+    .endarea
 .close

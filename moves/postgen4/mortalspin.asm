@@ -32,10 +32,10 @@
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
-	.org MoveStartAddress
-	.area MaxSize ; Define the size of the area
-		
-        ; Branch to original rapid spin code 
+    .org MoveStartAddress
+    .area MaxSize ; Define the size of the area
+        
+        ; Branch to code for the move rapid spin.
         ; Adex-8x's implementation of rapid spin
         ; that gives a speed boost after uses this
         ; method and many moves effects have documented
@@ -58,8 +58,8 @@
         mov r3,#0
         bl Poison
         
-		; Always branch at the end
-		b MoveJumpAddress
-		.pool
-	.endarea
+        ; Always branch at the end
+        b MoveJumpAddress
+        .pool
+    .endarea
 .close

@@ -28,9 +28,9 @@
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
-	.org MoveStartAddress
-	.area MaxSize ; Define the size of the area
-		
+    .org MoveStartAddress
+    .area MaxSize ; Define the size of the area
+        
         ; Get poisoned status.
         ldr  r0,[r4,#0xb4]
         ldrb r1,[r0,#0xbf]
@@ -47,8 +47,8 @@
         mov r2,r8
         bl  DealDamage
         
-		; Always branch at the end
-		b MoveJumpAddress
-		.pool
-	.endarea
+        ; Always branch at the end
+        b MoveJumpAddress
+        .pool
+    .endarea
 .close
