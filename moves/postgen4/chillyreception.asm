@@ -36,7 +36,11 @@
 	.org MoveStartAddress
 	.area MaxSize ; Define the size of the area
 		
-        ; Branch to original hail code.
+        ; Branch to code for the move hail.
+        ; Adex-8x's implementation of rapid spin
+        ; that gives a speed boost after uses this
+        ; method and many moves effects have documented
+        ; addresses in the community overlay29.
         mov r0,r9
         mov r1,r4
         mov r2,r8
@@ -86,7 +90,7 @@
     
         ; Check tile for Monster.
         bl    GetTile
-        ldr   r1,[r0,#+0xc]
+        ldr   r1,[r0,#0xc]
         cmp   r1,#0
         beq   MoveJumpAddress ; failed, no monster
         
@@ -103,8 +107,8 @@
         bne   MoveJumpAddress ; failed, not on same team
         
         ; Try to swap places
-        ; Monster behind still in r1.
         mov r0,r9
+        ; Monster behind still in r1.
         bl TrySwitchPlace
         
         ; TODO: Make the swapping animation prettier.

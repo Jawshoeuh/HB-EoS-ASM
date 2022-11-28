@@ -47,6 +47,7 @@
         
         ; Check for succesful trap busting? I've choosen to have
         ; it raise speed and attack even if trap busting fails.
+        ; Although, I'm not sure how it would fail?
         ; mov r10,r0
         ; cmp r0,#0
         ; beq MoveJumpAddress
