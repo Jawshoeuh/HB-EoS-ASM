@@ -31,19 +31,14 @@
 	.org MoveStartAddress
 	.area MaxSize ; Define the size of the area
 		
-        ; Raise attack.
-        mov r0,r9
-        mov r1,r9
-        mov r2,#0
-        mov r3,#1
-        bl AttackStatUp
+        ; Get current health
+        ldr   r0,[r4,#0xb4]
+        ldrsh r1,[r0,#0x10]
         
-        ; Raise defense.
+        ; Deal damage to opponent.
         mov r0,r9
-		mov r1,r9
-		mov r2,#0
-		mov r3,#1
-		bl DefenseStatUp
+        
+
         
 		; Always branch at the end
 		b MoveJumpAddress

@@ -1,6 +1,5 @@
 ; ------------------------------------------------------------------------------
 ; Jawshoeuh 11/27/2022
-; UNTESTED
 ; Chilly Reception causes the user to summon a hailstorm, and swap with
 ; an ally behind them.
 ; Based on the template provided by https://github.com/SkyTemple
@@ -22,6 +21,7 @@
 .definelabel MoveJumpAddress, 0x023326CC
 .definelabel DoMoveHail, 0x0232612C
 .definelabel TrySwitchPlace, 0x22EB178
+.definelabel GetTile, 0x023360FC
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
@@ -44,27 +44,27 @@
         bl DoMoveHail
         
         ; Check for succesful weather change.
-        mov r10,r0
-        cmp r0,#0
+        cmp r10,#0
         beq MoveJumpAddress
         
-        ; User X/Y Pos
-        ldrb r12,[r4,#+0x4c] ; User Direction
-        ldrh r0,[r9,#+0x4]   ; User X Pos
-        ldrh r1,[r9,#+0x6]   ; User Y Pos
+        ; Get User Direction,X,Y
+        ldr  r0, [r9,#0xb4]
+        ldrb r12,[r0,#0x4c] ; User Direction
+        ldrh r0, [r9,#0x4]  ; User X Pos
+        ldrh r1, [r9,#0x6]  ; User Y Pos
         
         ; This is a better way to visualize what happens to
         ; the values than loading the direction array. Because
         ; we are looking behind, the values are opposite.
-        ; 5   4   3   (y+1)
+        ; 5   4   3   (y-1)
         ;   \ | /
-        ; 6 - E - 2   (y+0)
+        ; 6 - E - 2   (y)
         ;   / | \
-        ; 7   0   1   (y-1)
+        ; 7   0   1   (y+1)
         ;
         ; x   x   x
-        ; +   +   -
-        ; 1   0   1
+        ; -       +
+        ; 1       1
         cmp   r12,#1
         subeq r0,r0,#1 ; r12 = 1
         suble r1,r1,#1 ; r12 = 0,1
@@ -85,7 +85,7 @@
     check_tile:
     
         ; Check tile for Monster.
-        bl    GetTilePointer
+        bl    GetTile
         ldr   r1,[r0,#+0xc]
         cmp   r1,#0
         beq   MoveJumpAddress ; failed, no monster
@@ -95,8 +95,9 @@
         ldrb  r0,[r12,#0x6]
         ldrb  r2,[r12,#0x8]
         eor   r3,r0,r2 ; 1 = enemy, 0 = friend
-        ldrb  r0,[r9,#0x6] ;
-        ldrb  r2,[r9,#0x8] ;
+        ldr   r12,[r9,#0xb4]
+        ldrb  r0,[r12,#0x6]
+        ldrb  r2,[r12,#0x8]
         eor   r12,r0,r2 ; 1 = enemy, 0 = friend
         cmp   r12,r3
         bne   MoveJumpAddress ; failed, not on same team
@@ -105,6 +106,9 @@
         ; Monster behind still in r1.
         mov r0,r9
         bl TrySwitchPlace
+        
+        ; TODO: Make the swapping animation prettier.
+        ; Currently, it's very jarring...
         
 		; Always branch at the end
 		b MoveJumpAddress

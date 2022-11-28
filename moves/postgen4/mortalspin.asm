@@ -46,7 +46,6 @@
         mov r3,r7
         bl DoMoveRapidSpin
         
-        
         ; Check for succesful hit.
         mov r10,r0
         cmp r0,#0

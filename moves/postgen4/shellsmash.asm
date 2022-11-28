@@ -47,7 +47,7 @@
         bl AttackStatUp
         
         ; Raise speed (only 1, because I suspect raising it 2 stages
-        ; is probably too strong. 6 turns like in PSMD
+        ; is probably too strong!)
         mov r0,r9
         mov r1,r4
         mov r2,#6

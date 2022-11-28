@@ -1,6 +1,7 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/12/2022
-; Work Up raises the Attack and Defense of the User.
+; Jawshoeuh 11/27/2022
+; Tidy up removes traps and boosts the users attack and speed!
+; and poisons the enemy pokemon.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -18,12 +19,14 @@
 .include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
+.definelabel DoMoveTrapBuster, 0x0232CB18
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
+;.definelabel DoMoveTrapBuster, 0x????????
 
 
 ; File creation
@@ -31,6 +34,23 @@
 	.org MoveStartAddress
 	.area MaxSize ; Define the size of the area
 		
+        ; Branch to code for the move Trap Buster.
+        ; Adex-8x's implementation of rapid spin
+        ; that gives a speed boost after uses this
+        ; method and many moves effects have documented
+        ; addresses in the community overlay29.
+        mov r0,r9
+        mov r1,r4
+        mov r2,r8
+        mov r3,r7
+        bl DoMoveTrapBuster 
+        
+        ; Check for succesful trap busting? I've choosen to have
+        ; it raise speed and attack even if trap busting fails.
+        ; mov r10,r0
+        ; cmp r0,#0
+        ; beq MoveJumpAddress
+        
         ; Raise attack.
         mov r0,r9
         mov r1,r4
@@ -38,12 +58,12 @@
         mov r3,#1
         bl AttackStatUp
         
-        ; Raise defense.
+        ; Raise speed
         mov r0,r9
-		mov r1,r4
-		mov r2,#0
-		mov r3,#1
-		bl DefenseStatUp
+        mov r1,r4
+        mov r2,#6
+        mov r3,#0
+        bl SpeedStatUpOneStage
         
 		; Always branch at the end
 		b MoveJumpAddress
