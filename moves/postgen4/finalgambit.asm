@@ -36,7 +36,7 @@
     .area MaxSize ; Define the size of the area
         
         ; Get current health
-        ldr   r0,[r4,#0xb4]
+        ldr   r0,[r9,#0xb4]
         ldrsh r1,[r0,#0x10]
         
         ; Deal damage to opponent.
@@ -48,7 +48,7 @@
         
         ; Deal damage to self.
         mov r0,r9
-        mov r1,#9999 ; survive this, loser
+        ldr r1,#9999 ; survive this, loser
         mov r2,#0
         mov r3,#0
         bl ConstDamage

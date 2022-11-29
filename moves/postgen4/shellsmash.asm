@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/12/2022
+; Jawshoeuh 11/12/2022 - Confirmed Working 11/28/2022
 ; Shell Smashes raises the User's Attack, Special Attack and Speed by 2 but
 ; also lowers the User's Defense and Special Defense by 1.
 ; Based on the template provided by https://github.com/SkyTemple
