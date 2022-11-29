@@ -1,7 +1,6 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/27/2022
+; Jawshoeuh 11/27/2022 - Confirmed Working 11/28/2022
 ; Tidy up removes traps and boosts the users attack and speed!
-; and poisons the enemy pokemon.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -33,6 +32,20 @@
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
+    
+        ; Raise attack.
+        mov r0,r9
+        mov r1,r9
+        mov r2,#0
+        mov r3,#1
+        bl AttackStatUp
+        
+        ; Raise speed
+        mov r0,r9
+        mov r1,r9
+        mov r2,#6 ; 6 turns like PSMD
+        mov r3,#0
+        bl SpeedStatUpOneStage
         
         ; Branch to code for the move Trap Buster.
         ; Adex-8x's implementation of rapid spin
@@ -43,28 +56,14 @@
         mov r1,r4
         mov r2,r8
         mov r3,r7
-        bl DoMoveTrapBuster 
+        bl DoMoveTrapBuster
         
         ; Check for succesful trap busting? I've choosen to have
         ; it raise speed and attack even if trap busting fails.
-        ; Although, I'm not sure how it would fail?
+        ; Although, I'm not sure how it would fail? No traps?
         ; mov r10,r0
         ; cmp r0,#0
         ; beq MoveJumpAddress
-        
-        ; Raise attack.
-        mov r0,r9
-        mov r1,r4
-        mov r2,#0
-        mov r3,#1
-        bl AttackStatUp
-        
-        ; Raise speed
-        mov r0,r9
-        mov r1,r4
-        mov r2,#6
-        mov r3,#0
-        bl SpeedStatUpOneStage
         
         ; Always branch at the end
         b MoveJumpAddress

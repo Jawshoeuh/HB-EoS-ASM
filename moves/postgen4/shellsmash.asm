@@ -50,7 +50,7 @@
         ; is probably too strong!)
         mov r0,r9
         mov r1,r4
-        mov r2,#6
+        mov r2,#6 ; 6 turns like PSMD
         mov r3,#0
         bl SpeedStatUpOneStage
         

@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/28/2022
+; Jawshoeuh 11/28/2022 - Confirmed Working 11/28/2022
 ; Spicy Extract lowers defense by 2 and raises attack by 2.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
@@ -35,14 +35,14 @@
         mov r0,r9
         mov r1,r4
         mov r2,#0
-        mov r3,#2
+        mov r3,#2 ; 2 stages
         bl DefenseStatDown
         
         ; Raise attack.
         mov r0,r9
         mov r1,r4
         mov r2,#0
-        mov r3,#2
+        mov r3,#2 ; 2 stages
         bl AttackStatUp
         
         ; Always branch at the end

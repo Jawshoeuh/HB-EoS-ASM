@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/17/2022
+; Jawshoeuh 11/17/2022 - Untested
 ; Venoshock deals extra damage if the pokemon is poisoned.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------

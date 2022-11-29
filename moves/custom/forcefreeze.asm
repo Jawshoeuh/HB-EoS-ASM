@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/28/2022
+; Jawshoeuh 11/28/2022 - Probably Working
 ; Force freeze simply freezes the target. This is here because it is
 ; difficult to test debug interactions with freeze when all moves
 ; don't have a guaranteed chance to freeze.

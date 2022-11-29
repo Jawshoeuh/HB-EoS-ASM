@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/27/2022
+; Jawshoeuh 11/27/2022 - Confirmed Working 11/28/2022
 ; Chilly Reception causes the user to summon a hailstorm, and swap with
 ; an ally behind them.
 ; Based on the template provided by https://github.com/SkyTemple
@@ -30,6 +30,7 @@
 ;.definelabel MoveJumpAddress, 0x0233310C
 ;.definelabel DoMoveHail, 0x????????
 ;.definelabel TrySwitchPlace, 0x22EBB28
+;.definelabel GetTile, 0x????????
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels

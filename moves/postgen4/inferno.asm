@@ -47,7 +47,6 @@
         mov r1,r4
         mov r2,#0
         mov r3,#1
-        str r2,[r13]
         bl Burn
         
         ; Always branch at the end

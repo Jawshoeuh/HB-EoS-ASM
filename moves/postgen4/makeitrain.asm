@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/28/2022
+; Jawshoeuh 11/28/2022 - Confirmed Working 11/28/2022
 ; Make It Rain deals damage, drops coins and lowers its special attack.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
@@ -53,7 +53,7 @@
         mov r0,r9
         mov r1,r9
         mov r2,#1
-        mov r3,#2
+        mov r3,#1 ; 1 stage
         bl AttackStatDown
         
         ; Always branch at the end

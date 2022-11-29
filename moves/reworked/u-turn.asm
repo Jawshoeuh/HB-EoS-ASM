@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/12/2022
+; Jawshoeuh 11/12/2022 - Probably Working
 ; U-turn deals damage and then the user swaps with an ally behind them.
 ; Currently functions identically to Adex-8x's implementation, but uses
 ; a bit of cleverness for determining the tile behind and whether or not
@@ -21,6 +21,7 @@
 .include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
+.definelabel GetTile, 0x023360FC
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
