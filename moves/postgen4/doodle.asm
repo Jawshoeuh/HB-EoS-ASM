@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/27/2022 - Confirmed Working 11/28/2022
+; Jawshoeuh 11/29/2022 - Confirmed Working 11/30/2022
 ; Doodle changes the abilities of all allies to the ability of the target.
 ; Unfortunately, we need to check for an enemy for every target which is
 ; a bit wasteful, but I don't see a way around it...
@@ -21,7 +21,6 @@
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
 .definelabel GetTile, 0x023360FC
-.definelabel DoMoveRolePlay, 0x0232A188
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
@@ -83,23 +82,42 @@
     check_tile:
         ; Check tile for monster.
         bl    GetTile
-        ldr   r1,[r0,#0xc]
-        cmp   r1,#0
+        ldr   r12,[r0,#0xc]
+        cmp   r12,#0
         moveq r10,#0
+        movne r10,#1
         beq   MoveJumpAddress ; failed, no monster
         
-        ; Replace target ability
-        mov r0,r4
-        ; Found monster is still in r1.
-        mov r2,r8
-        mov r3,r7
-        bl DoMoveRolePlay
+        ; Load that monsters abiilities
+        ldr  r0,[r12,#0xb4]
+        ldrb r1,[r0,#0x60]
+        ldrb r0,[r0,#0x61]
         
-        ; Move return value appropriately.
-        mov r10,r0
+        ; Store that monsters abilities
+        ldr  r2,[r4,#0xb4]
+        strb r1,[r2,#0x60]
+        strb r0,[r2,#0x61]
+        
+        ; When giving self ability, display feedback message.
+        ; The order is specific!
+        cmp r9,r4
+        bne MoveJumpAddress
+        mov r0,#1
+        mov r1,r12
+        mov r2,#0
+        bl ChangeString ; Target
+        mov r0,#0
+        mov r1,r9
+        mov r2,#0
+        bl ChangeString ; User
+        mov r0,r9
+        ldr r1,=doodle_str
+        bl SendMessageWithStringLog
         
         ; Always branch at the end
         b MoveJumpAddress
         .pool
+    doodle_str:
+        .asciiz "[string:0] gave all nearby allies[R]the abilities of [string:1]!" 
     .endarea
 .close

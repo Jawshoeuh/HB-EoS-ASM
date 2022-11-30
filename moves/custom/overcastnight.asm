@@ -1,6 +1,6 @@
 ; ------------------------------------------------------------------------------
 ; Jawshoeuh 11/29/2022 - Confirmed Working 11/30/2022
-; Overcast NIght causes the weather to be cloudy.
+; Overcast Night causes the weather to be cloudy.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
