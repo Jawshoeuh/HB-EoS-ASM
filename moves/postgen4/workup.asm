@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/12/2022
+; Jawshoeuh 11/12/2022 - Confirmed Working 11/29/2022
 ; Work Up raises the Attack and Defense of the User.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------

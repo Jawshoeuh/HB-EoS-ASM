@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/12/2022
+; Jawshoeuh 11/12/2022 - Confirmed Working 11/29/2022
 ; Final gambit does damage equal to the user's health and then they faint.
 ; I choose to make the self damage 9999 so that there aren't any weird
 ; niche cases where a Pokemon lives and so I don't have to save health.
@@ -48,7 +48,7 @@
         
         ; Deal damage to self.
         mov r0,r9
-        ldr r1,#9999 ; survive this, loser
+        ldr r1,=#9999 ; survive this, loser
         mov r2,#0
         mov r3,#0
         bl ConstDamage

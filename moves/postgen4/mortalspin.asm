@@ -1,6 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/27/2022
-; UNTESTED
+; Jawshoeuh 11/27/2022 - Confirmed Working 11/29/2022
 ; Mortal Spin removes entry hazards, bind wrap... (exactly like rapid spin)
 ; and poisons the enemy pokemon.
 ; Based on the template provided by https://github.com/SkyTemple

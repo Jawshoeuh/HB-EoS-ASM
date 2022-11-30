@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/12/2022
+; Jawshoeuh 11/12/2022 - Probably Working
 ; Inferno deals damage and guarantees burn (if it hits).
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------

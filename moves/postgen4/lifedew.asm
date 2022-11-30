@@ -1,7 +1,8 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/12/2022
-; Life Dew heals 1/4 of all allies health. The heal fails on allies with
-; Water Absorb, Storm Drain, and Dry Skin
+; Jawshoeuh 11/12/2022 - Confirmed Working 11/29/2022
+; Life Dew heals 1/4 of all allies health.
+; The heal should fail on allies with Water Absorb, Storm Drain,
+; and Dry Skin but the interaction is not tested.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
