@@ -1,6 +1,6 @@
 ; ------------------------------------------------------------------------------
 ; Jawshoeuh 11/29/2022 - Confirmed Working 11/29/2022
-; Snowstorm causes the weather to be snow.
+; Snowscape causes the weather to be snow.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
