@@ -4,7 +4,7 @@ Contains ASM for Explorers of Sky that I make. <br/>
 # Moves
 Contains the raw asm files that can be imported under the move effects tabs of SkyTemple. <br/>
 
-#Abilities
+# Abilities
 Contains the raw asm files that can be turned into skypatches and applied in SkyTemple. <br/>
 
 # Credits
