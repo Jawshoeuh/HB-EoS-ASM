@@ -1,8 +1,7 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/27/2022 - Confirmed Working 11/30/2022
-; Chilly Reception causes the user to summon a snowstorm, and swap with
-; an ally behind them. There is a version that causes hail inside
-; the legacy folder.
+; Jawshoeuh 11/27/2022 - Confirmed Working 11/28/2022
+; Chilly Reception causes the user to summon a hailstorm, and swap with
+; an ally behind them.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -20,9 +19,8 @@
 .include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
-.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x0234B350
-.definelabel TrySwitchPlace, 0x022EB178
-.definelabel WeatherChanged, 0x023354C4
+.definelabel DoMoveHail, 0x0232612C
+.definelabel TrySwitchPlace, 0x22EB178
 .definelabel GetTile, 0x023360FC
 
 ; For EU
@@ -30,6 +28,7 @@
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
+;.definelabel DoMoveHail, 0x????????
 ;.definelabel TrySwitchPlace, 0x22EBB28
 ;.definelabel GetTile, 0x????????
 
@@ -38,21 +37,20 @@
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
         
-        ; Attempt to set weather to snow.
-        ldr   r3,=0x022C4654
-        ldr   r2,=DungeonBaseStructurePtr
-        ldrsh r3,[r3,#0x0]
-        ldr   r2,[r2,#0x0] ; DungeonBaseStrPtr
-        add   r2,r2,#0xCD00
-        mov   r0,#0x1
-        mov   r1,#0x0
-        strh  r3,[r2,#0x48]
-        bl    WeatherChanged
+        ; Branch to code for the move hail.
+        ; Adex-8x's implementation of rapid spin
+        ; that gives a speed boost after uses this
+        ; method and many moves effects have documented
+        ; addresses in the community overlay29.
+        mov r0,r9
+        mov r1,r4
+        mov r2,r8
+        mov r3,r7
+        bl DoMoveHail
         
-        ; Return if weather changed succesfully.
-        cmp   r0,#0
-        mov   r10,#1 ; 0x023260D0 (DoMoveRainDance) returns 1
-        beq   failed_change
+        ; Check for succesful weather change.
+        cmp r10,#0
+        beq MoveJumpAddress
         
         ; Get User Direction,X,Y
         ldr  r0, [r9,#0xb4]
@@ -90,6 +88,7 @@
         sub   r1,r1,#1 ; r12 = 7
         
     check_tile:
+    
         ; Check tile for Monster.
         bl    GetTile
         ldr   r1,[r0,#0xc]
@@ -115,15 +114,6 @@
         
         ; TODO: Make the swapping animation prettier.
         ; Currently, it's very jarring...
-        
-        b MoveJumpAddress
-        
-    failed_change:
-        ; Log that the weather stayed the same.
-        ldr r2,=0xEC5 ; Weather did not change string
-        mov r0,r9
-        mov r1,r4
-        bl  LogMessageByIdWithPopupCheckUserTarget
         
         ; Always branch at the end
         b MoveJumpAddress
