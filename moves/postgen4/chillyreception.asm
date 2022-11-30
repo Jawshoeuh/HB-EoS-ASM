@@ -30,7 +30,9 @@
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel TrySwitchPlace, 0x22EBB28
+;.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x????????
+;.definelabel TrySwitchPlace, 0x022EBB28
+;.definelabel WeatherChanged, 0x????????
 ;.definelabel GetTile, 0x????????
 
 ; File creation
