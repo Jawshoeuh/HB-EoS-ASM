@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 12/1/2022
+; Jawshoeuh 12/1/2022 - Work In Progress
 ; Fillet Away empties the users belly (like belly drum) and boosts
 ; attack, special attack, and speed by 2 stages. It does some 
 ; Based on the template provided by https://github.com/SkyTemple
@@ -68,6 +68,8 @@
         mov r2,#2
         mov r3,#6 ; 6 turns like PSMD
         bl SpeedStatUp
+        
+        ; TODO: Reduce belly. While I could put whatever the 
         
         b MoveJumpAddress
         

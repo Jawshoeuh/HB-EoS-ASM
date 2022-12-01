@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 12/1/2022
+; Jawshoeuh 12/1/2022 - Work In Progress
 ; Fillet Away deals 1/2 max health damage to the user and boosts
 ; attack, special attack, and speed by 2 stages.
 ; Based on the template provided by https://github.com/SkyTemple
