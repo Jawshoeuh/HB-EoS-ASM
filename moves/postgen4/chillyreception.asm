@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/27/2022 - Confirmed Working 11/31/2022
+; Jawshoeuh 11/27/2022 - Confirmed Working 12/1/2022
 ; Chilly Reception causes the user to summon a snowstorm, and swap with
 ; an ally behind them. There is a working, less optimized version
 ; that causes hail in the legacy folder. If you wanted to cause hail,
@@ -21,7 +21,6 @@
 .include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
-.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x0234B350
 .definelabel TrySwitchPlace, 0x022EB178
 .definelabel WeatherChanged, 0x023354C4
 .definelabel DIRECTIONS_XY, 0x0235171C
@@ -32,7 +31,6 @@
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x234BF50
 ;.definelabel TrySwitchPlace, 0x022EBB28
 ;.definelabel WeatherChanged, 0x????????
 ;.definelabel DIRECTIONS_XY, 0x2352328
@@ -121,7 +119,7 @@
         ldr r2,=0xEC5 ; Weather did not change string
         mov r0,r9
         mov r1,r4
-        bl  LogMessageByIdWithPopupCheckUserTarget
+        bl  SendMessageWithIDCheckUTLog
         
         ; Always branch at the end
         b MoveJumpAddress

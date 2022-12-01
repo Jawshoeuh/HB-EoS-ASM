@@ -18,7 +18,6 @@
 .include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
-.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x0234B350
 .definelabel WeatherChanged, 0x023354C4
 
 ; For EU
@@ -26,7 +25,6 @@
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x234BF50
 ;.definelabel WeatherChanged, 0x????????
 
 ; File creation
@@ -54,7 +52,7 @@
         ldr r2,=0xEC5 ; Weather did not change string
         mov r0,r9
         mov r1,r4
-        bl  LogMessageByIdWithPopupCheckUserTarget
+        bl  SendMessageWithIDCheckUTLog
 
         ; Always branch at the end
         b MoveJumpAddress

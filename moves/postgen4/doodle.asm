@@ -88,14 +88,14 @@
         mov r0,#1
         mov r1,r12
         mov r2,#0
-        bl ChangeString ; Target
+        bl  ChangeString ; Target
         mov r0,#0
         mov r1,r9
         mov r2,#0
-        bl ChangeString ; User
+        bl  ChangeString ; User
         mov r0,r9
         ldr r1,=doodle_str
-        bl SendMessageWithStringLog
+        bl  SendMessageWithStringLog
         
         ; Always branch at the end
         b MoveJumpAddress
