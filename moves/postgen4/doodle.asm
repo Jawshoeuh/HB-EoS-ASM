@@ -20,6 +20,7 @@
 .include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
+.definelabel DIRECTIONS_XY, 0x0235171C
 .definelabel GetTile, 0x023360FC
 
 ; For EU
@@ -27,7 +28,8 @@
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel DoMoveRolePlay, 0x0232ABF4
+;.definelabel DIRECTIONS_XY, 0x2352328
+;.definelabel GetTile, 0x2336CCC
 
 
 ; File creation
@@ -39,11 +41,7 @@
         ; Get User Direction,X,Y
         ldr  r0, [r9,#0xb4]
         ldrb r12,[r0,#0x4c] ; User Direction
-        ldrh r0, [r9,#0x4]  ; User X Pos
-        ldrh r1, [r9,#0x6]  ; User Y Pos
-        
-        ; This is a better way to visualize what happens to
-        ; the values than loading the direction array.
+        ; Visualization of values loaded from direction array.
         ; 5   4   3   (y-1)
         ;   \ | /
         ; 6 - E - 2   (y)
@@ -53,24 +51,18 @@
         ; x   x   x
         ; -       +
         ; 1       1
-        cmp   r12,#1
-        addeq r0,r0,#1 ; r12 = 1
-        addle r1,r1,#1 ; r12 = 0,1
-        ble   check_tile
-        cmp   r12,#3
-        subeq r1,r1,#1 ; r12 = 3
-        addle r0,r0,#1 ; r12 = 2,3
-        ble   check_tile
-        cmp   r12,#5
-        subeq r0,r0,#1 ; r12 = 5
-        suble r1,r1,#1 ; r12 = 4,5
-        ble   check_tile
-        cmp   r12,#6
-        sub   r0,r0,#1 ; r12 = 6,7
-        beq   check_tile
-        add   r1,r1,#1 ; r12 = 7
+        ldr   r10,=DIRECTIONS_XY
+        mov   r2,r12, lsl #0x2     ; Array Offset For Dir Value
+        add   r3,r10,r12, lsl #0x2 ; Array Offset For Dir Value
+        ldrsh r0,[r10,r2]          ; X Offset
+        ldrsh r1,[r3,#0x2]         ; Y Offset
+        ldrh  r2,[r9,#0x4]         ; User X Pos
+        ldrh  r3,[r9,#0x6]         ; User Y Pos
         
-    check_tile:
+        ; Add values together
+        add r0,r0,r2
+        add r1,r1,r3
+        
         ; Check tile for monster.
         bl    GetTile
         ldr   r12,[r0,#0xc]

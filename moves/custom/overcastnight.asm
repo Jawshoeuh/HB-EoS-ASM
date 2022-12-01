@@ -26,6 +26,8 @@
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
+;.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x234BF50
+;.definelabel WeatherChanged, 0x????????
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
@@ -45,7 +47,7 @@
         
         ; Return if weather changed succesfully.
         cmp r0,#0
-        mov r10,#1 ; 0x023260D0 (DoMoveRainDance) returns 1
+        mov r10,#1 ; 0x023260D0 (DoMoveRainDance) returns 1 regardless
         bne MoveJumpAddress
         
         ; Log that the weather stayed the same.

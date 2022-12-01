@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/12/2022 - Probably Working
+; Jawshoeuh 11/12/2022 - Confirmed Working 11/30/2022
 ; U-turn deals damage and then the user swaps with an ally behind them.
 ; Currently functions identically to Adex-8x's implementation, but uses
 ; a bit of cleverness for determining the tile behind and whether or not
@@ -21,6 +21,8 @@
 .include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
+.definelabel TrySwitchPlace, 0x022EB178
+.definelabel DIRECTIONS_XY, 0x0235171C
 .definelabel GetTile, 0x023360FC
 
 ; For EU
@@ -28,6 +30,9 @@
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
+;.definelabel TrySwitchPlace, 0x022EBB28
+;.definelabel DIRECTIONS_XY, 0x2352328
+;.definelabel GetTile, 0x2336CCC
 
 
 ; File creation
@@ -36,7 +41,7 @@
     .area MaxSize ; Define the size of the area
         
         ; Deal damage.
-        mov r0,r0
+        mov r0,r9
         mov r1,r4
         mov r2,r8
         mov r3,#0x100
@@ -47,15 +52,14 @@
         mov   r10,r0
         beq MoveJumpAddress
         
-        ; Get User Direction,X,Y
-        ldr  r0, [r9,#0xb4]
-        ldrb r12,[r0,#0x4c] ; User Direction
-        ldrh r0, [r9,#0x4]  ; User X Pos
-        ldrh r1, [r9,#0x6]  ; User Y Pos
+        ; Get User Direction and Flip
+        ldr   r0, [r9,#0xb4]
+        ldrb  r12,[r0,#0x4c] ; User Direction
+        cmp   r12,#0x4
+        subge r12,r12,#0x4 ; 7->3,6->2,5->1,4->0
+        addlt r12,r12,#0x4 ; 0->4,1->5,2->6,3->7
         
-        ; This is a better way to visualize what happens to
-        ; the values than loading the direction array. Because
-        ; we are looking behind, the values are opposite.
+        ; Visualization of values loaded from direction array.
         ; 5   4   3   (y-1)
         ;   \ | /
         ; 6 - E - 2   (y)
@@ -65,24 +69,18 @@
         ; x   x   x
         ; -       +
         ; 1       1
-        cmp   r12,#1
-        subeq r0,r0,#1 ; r12 = 1
-        suble r1,r1,#1 ; r12 = 0,1
-        ble check_tile
-        cmp   r12,#3
-        addeq r1,r1,#1 ; r12 = 3
-        suble r0,r0,#1 ; r12 = 2,3
-        ble check_tile
-        cmp   r12,#5
-        addeq r0,r0,#1 ; r12 = 5
-        addle r1,r1,#1 ; r12 = 4,5
-        ble check_tile
-        cmp   r12,#6
-        add   r0,r0,#1 ; r12 = 6,7
-        beq check_tile
-        sub   r1,r1,#1 ; r12 = 7
+        ldr   r10,=DIRECTIONS_XY
+        mov   r2,r12, lsl #0x2     ; Array Offset For Dir Value
+        add   r3,r10,r12, lsl #0x2 ; Array Offset For Dir Value
+        ldrsh r0,[r10,r2]          ; X Offset
+        ldrsh r1,[r3,#0x2]         ; Y Offset
+        ldrh  r2,[r9,#0x4]         ; User X Pos
+        ldrh  r3,[r9,#0x6]         ; User Y Pos
         
-    check_tile:
+        ; Add values together
+        add r0,r0,r2
+        add r1,r1,r3
+        
         ; Check tile for Monster.
         bl    GetTile
         ldr   r1,[r0,#0xc]
