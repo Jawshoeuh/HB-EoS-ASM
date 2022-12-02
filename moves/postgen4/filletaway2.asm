@@ -20,7 +20,7 @@
 .include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
-.definelabel DecToFixedPoint, 0x02050ff8
+.definelabel IntToFixedPoint, 0x02050ff8
 .definelabel CeilFixedPoint, 0x02051064
 .definelabel BellyTooLowStr, 0xEEB
 
@@ -76,11 +76,11 @@
         bl SpeedStatUp
         
         ; Lower belly to 1. Identical implementation to original
-        ; belly drum, but I suspect this can be done without calling
-        ; this function because the output will be the same because
-        ; the input is the same.
+        ; belly drum, but I suspect this can be done by manually putting
+        ; the result into the registers since the result of the 
+        ; function will always be the same.
         mov  r0,#1
-        bl   DecToFixedPoint
+        bl   IntToFixedPoint
         strh r0,[sp,#0x0]
         mov  r0,r0, lsr #0x10 ; Right shift by 16
         strh r0,[sp,#0x2]
@@ -96,7 +96,7 @@
         
     failed_belly_empty:
         mov r0,#0
-        mov r1,r9
+        mov r1,r4
         mov r2,r0 ; Belly Drum does this, will be 0 or 1.
         bl ChangeString
         ldr r2,=BellyTooLowStr

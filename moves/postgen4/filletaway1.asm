@@ -78,10 +78,10 @@
         
     failed_recoil:
         mov r0,#0
-        mov r1,r9
+        mov r1,r4
         mov r2,#0
         bl  ChangeString ; User
-        mov r0,r9
+        mov r0,r4
         ldr r1,=filletaway_str
         bl  SendMessageWithStringLog
         
