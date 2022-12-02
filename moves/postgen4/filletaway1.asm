@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 12/1/2022 - Work In Progress
+; Jawshoeuh 12/1/2022 - Confirmed Working 12/1/2022
 ; Fillet Away deals 1/2 max health damage to the user and boosts
 ; attack, special attack, and speed by 2 stages.
 ; Based on the template provided by https://github.com/SkyTemple
@@ -35,13 +35,13 @@
         ; Calculate Health
         ldr   r0,[r9,#0xb4]
         ldrsh r1,[r0,#0x12]
-        ldrsh r0,[r0,#0x16]
-        add r0,r0,r1
+        ldrsh r2,[r0,#0x16]
+        ldrsh r0,[r0,#0x10] ; Current HP
+        add r1,r1,r2        ; Max HP
         
         ; Check if recoil higher than current health.
-        lsr r1,r0,#1 ; Divide health by 2
-        ldrsh r3,[r0,#0x10]
-        cmp r1,r3
+        lsr r1,r1,#1 ; Max HP / 2
+        cmp r1,r0
         bge failed_recoil
         
         ;Damage self
@@ -76,7 +76,7 @@
         mov r10,#1
         b MoveJumpAddress
         
-    failed_recoil
+    failed_recoil:
         mov r0,#0
         mov r1,r9
         mov r2,#0
