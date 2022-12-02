@@ -23,6 +23,7 @@
 .definelabel MoveJumpAddress, 0x023326CC
 .definelabel TrySwitchPlace, 0x022EB178
 .definelabel WeatherChanged, 0x023354C4
+.definelabel WeatherUnchangedStr, 0xEC5
 .definelabel DIRECTIONS_XY, 0x0235171C
 .definelabel GetTile, 0x023360FC
 
@@ -33,6 +34,7 @@
 ;.definelabel MoveJumpAddress, 0x0233310C
 ;.definelabel TrySwitchPlace, 0x022EBB28
 ;.definelabel WeatherChanged, 0x????????
+;.definelabel WeatherUnchangedStr, 0x???
 ;.definelabel DIRECTIONS_XY, 0x2352328
 ;.definelabel GetTile, 0x2336CCC
 
@@ -116,7 +118,7 @@
         
     failed_change:
         ; Log that the weather stayed the same.
-        ldr r2,=0xEC5 ; Weather did not change string
+        ldr r2,=WeatherUnchangedStr
         mov r0,r9
         mov r1,r4
         bl  SendMessageWithIDCheckUTLog

@@ -19,6 +19,7 @@
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
 .definelabel WeatherChanged, 0x023354C4
+.definelabel WeatherUnchangedStr, 0xEC5
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
@@ -26,6 +27,7 @@
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
 ;.definelabel WeatherChanged, 0x????????
+;.definelabel WeatherUnchangedStr, 0x???
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
@@ -49,7 +51,7 @@
         bne MoveJumpAddress
         
         ; Log that the weather stayed the same.
-        ldr r2,=0xEC5 ; Weather did not change string
+        ldr r2,=WeatherUnchangedStr
         mov r0,r9
         mov r1,r4
         bl  SendMessageWithIDCheckUTLog

@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 12/1/2022 - 
+; Jawshoeuh 12/1/2022 - Confirmed Working 12/2/2022
 ; Acid Spray deals damage and lowers the opponent's special defense by 2.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
