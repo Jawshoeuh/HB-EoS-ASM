@@ -2,16 +2,15 @@
 ; Jawshoeuh 12/1/2022 - Confirmed Working 12/2/2022
 ; Actually changes the target's ability to Insomnia instead of
 ; applying the sleepless status. Even properly doesn't apply it
-; to Pokemon with the ability Truant! In Gen5+ the ability fails
-; on Pokemon with the ability Insomnia, but I don't see any reason
-; someone to cast this repeatedly anyway...
+; to Pokemon with the ability Truant! In Gen5+ the move fails
+; on Pokemon with the ability Insomnia, but I don't see a reason
+; to add a fail message for it.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
 .relativeinclude on
 .nds
 .arm
-
 
 .definelabel MaxSize, 0x2598
 

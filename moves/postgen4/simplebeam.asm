@@ -1,9 +1,9 @@
 ; ------------------------------------------------------------------------------
 ; Jawshoeuh 12/1/2022 - Confirmed Working 12/2/2022
-; Chanegs the target's ability to Simple. Adex-8x's implementaion is
-; functionally identical, but this one check for Truant! The move
-; should fail on a target that already has the simple ability,
-; but I don't see a reason to add the message.
+; Chanegs the target's ability to Simple. Adex-8x's implementaion
+; will function identically most of the time, but this one check for
+; fails on Truant. It should also fail when the ability is already
+; Simple, but this is not neccessary.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -21,8 +21,6 @@
 .include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
-.definelabel ChangeStringAbility, 0x0234B084
-.definelabel InsomniaFailedStr, 0xF13
 .definelabel SimpleAbilityID, 0x61 ; 97
 .definelabel TruantAbilityID, 0x2A ; 40
 
@@ -31,9 +29,7 @@
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel ChangeStringAbility, 0x????????
-;.definelabel InsomniaFailedStr, 0x???
-;.definelabel SimpleAbilityID, 0x61` ; 97
+;.definelabel SimpleAbilityID, 0x61 ; 97
 ;.definelabel TruantAbilityID, 0x2A ; 40
 
 
