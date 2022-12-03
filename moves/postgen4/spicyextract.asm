@@ -45,6 +45,7 @@
         mov r3,#2 ; 2 stages
         bl AttackStatUp
         
+        mov r10,#1
         ; Always branch at the end
         b MoveJumpAddress
         .pool

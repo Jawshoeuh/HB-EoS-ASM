@@ -36,18 +36,20 @@
         mov r1,r4
         mov r2,r8
         mov r3,#0x100
-        bl DealDamage
+        bl  DealDamage
         
-        ;Check for succesful hit.
-        cmp r0,#0
-        beq MoveJumpAddress
+        ; Check for succesful hit.
+        cmp   r0,#0
+        movne r10,#1
+        moveq r10,#0
+        beq   MoveJumpAddress
         
-        ;If so, lower special defense
+        ; If so, lower special defense
         mov r0,r9
         mov r1,r4
         mov r2,#1
         mov r3,#2 ; 2 stages
-        bl DefenseStatDown
+        bl  DefenseStatDown
 
         ; Always branch at the end
         b MoveJumpAddress

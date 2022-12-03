@@ -53,6 +53,7 @@
         mov r3,#0
         bl ConstDamage
         
+        mov r10,#1
         ; Always branch at the end
         b MoveJumpAddress
         .pool

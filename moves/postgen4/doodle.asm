@@ -67,8 +67,8 @@
         bl    GetTile
         ldr   r12,[r0,#0xc]
         cmp   r12,#0
-        moveq r10,#0
         movne r10,#1
+        moveq r10,#0
         beq   MoveJumpAddress ; failed, no monster
         
         ; Load that monsters abiilities
@@ -82,7 +82,7 @@
         strb r0,[r2,#0x61]
         
         ; When giving self ability, display feedback message.
-        ; The order is specific!
+        ; The order is specific! Because r12 is a scratch register!
         cmp r9,r4
         bne MoveJumpAddress
         mov r0,#1

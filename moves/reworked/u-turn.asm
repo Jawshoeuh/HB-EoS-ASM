@@ -49,7 +49,8 @@
         
         ; Check for succesful hit.
         cmp   r0, #0
-        mov   r10,r0
+        movne r10,#1
+        moveq r10,#0
         beq MoveJumpAddress
         
         ; Get User Direction and Flip

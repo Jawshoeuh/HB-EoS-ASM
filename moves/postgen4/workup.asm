@@ -45,6 +45,7 @@
         mov r3,#1
         bl DefenseStatUp
         
+        mov r10,#1
         ; Always branch at the end
         b MoveJumpAddress
         .pool

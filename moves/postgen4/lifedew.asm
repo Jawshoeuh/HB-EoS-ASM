@@ -1,7 +1,7 @@
 ; ------------------------------------------------------------------------------
 ; Jawshoeuh 11/12/2022 - Confirmed Working 11/29/2022
 ; Life Dew heals 1/4 of all allies health.
-; The heal should fail on allies with Water Absorb, Storm Drain,
+; The heal should fail on allies with Water Absorb, Storm Drain,`
 ; and Dry Skin but the interaction is not tested.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
@@ -45,6 +45,8 @@
         mov r1,r4
         mov r3,#0 ; Don't increasce temp max HP
         bl RaiseHP
+        
+        mov r10,#1
         
         ; Always branch at the end
         b MoveJumpAddress

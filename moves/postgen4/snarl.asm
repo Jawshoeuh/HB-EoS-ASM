@@ -40,6 +40,8 @@
         
         ;Check for succesful hit.
         cmp r0,#0
+        movne r10,#1
+        moveq r10,#0
         beq MoveJumpAddress
         
         ;If so, lower special attack.

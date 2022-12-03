@@ -65,6 +65,7 @@
         ; cmp r0,#0
         ; beq MoveJumpAddress
         
+        mov r10,#1
         ; Always branch at the end
         b MoveJumpAddress
         .pool

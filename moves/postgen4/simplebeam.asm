@@ -60,6 +60,7 @@
         mov r0,r9
         ldr r1,=simplebeam_str
         bl SendMessageWithStringLog
+        mov r10,#1
 
         b MoveJumpAddress
 

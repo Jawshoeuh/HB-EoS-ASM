@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 12/1/2022 - Confirmed Working 12/3/2022
+; Jawshoeuh 12/2/2022 - Confirmed Working 12/3/2022
 ; Entrainment changes the target's ability to match the user's.
 ; While Adex-8x's version will function identically most of the time,
 ; this one checks for Truant, Trace, Forecast, and Flower Gift

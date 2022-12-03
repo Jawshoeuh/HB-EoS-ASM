@@ -85,6 +85,7 @@
         str r2,[sp,#0x0]
         bl  TryWakeUp
 
+        mov r10,#1
         b MoveJumpAddress
 
     failed_ability: ; Based off of original Worry Seed

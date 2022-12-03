@@ -39,8 +39,10 @@
         bl DealDamage
         
         ;Check for succesful hit.
-        cmp r0,#0
-        beq MoveJumpAddress
+        cmp   r0,#0
+        movne r10,#1
+        moveq r10,#0
+        beq   MoveJumpAddress
         
         ;Check if still alive.
         ldr  r0,[r4,#0xb4]
