@@ -39,10 +39,9 @@
         bl DealDamage
         
         ;Check for succesful hit.
-        cmp   r0,#0
-        movne r10,#1
-        moveq r10,#0
-        beq   MoveJumpAddress
+        cmp r0,#0
+        mov r10,#0
+        beq MoveJumpAddress
         
         ;Check if still alive.
         ldr  r0,[r4,#0xb4]
@@ -56,7 +55,8 @@
         mov r2,#0
         mov r3,#3
         bl AttackStatUp
-        
+
+        mov r10,#1
         ; Always branch at the end
         b MoveJumpAddress
         .pool

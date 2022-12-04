@@ -49,10 +49,9 @@
         bl  DealDamage
         
         ; Check for succesful hit.
-        cmp   r0,#0
-        movne r10,#1
-        moveq r10,#0
-        beq   MoveJumpAddress
+        cmp r0,#0
+        mov r10,#0
+        beq MoveJumpAddress
         
         ; Can we place a trap here?
         bl  CanPlaceTrapHere
@@ -70,6 +69,7 @@
         mov   r3,#1                 ; r3 = trap visible (bool)?
         bl TryCreateTrap
         
+        mov r10,#1
         ; Always branch at the end
         b MoveJumpAddress
         .pool

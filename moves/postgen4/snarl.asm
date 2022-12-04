@@ -40,8 +40,7 @@
         
         ;Check for succesful hit.
         cmp r0,#0
-        movne r10,#1
-        moveq r10,#0
+        mov r10,#0
         beq MoveJumpAddress
         
         ;If so, lower special attack.
@@ -50,7 +49,8 @@
         mov r2,#1
         mov r3,#1
         bl AttackStatDown
-
+        
+        mov r10,#1
         ; Always branch at the end
         b MoveJumpAddress
         .pool

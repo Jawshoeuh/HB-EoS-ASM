@@ -97,7 +97,7 @@
     failed_belly_empty:
         mov r0,#0
         mov r1,r4
-        mov r2,r0 ; Belly Drum does this, will be 0 or 1.
+        mov r2,#0
         bl ChangeString
         ldr r2,=BellyTooLowStr
         mov r0,r9

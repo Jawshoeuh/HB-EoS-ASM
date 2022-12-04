@@ -28,7 +28,7 @@
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel DIRECTIONS_XY, 0x2352328
+;.definelabel DIRECTIONS_XY, 0x02352328
 ;.definelabel GetTile, 0x2336CCC
 
 

@@ -39,10 +39,9 @@
         bl DealDamage
         
         ;Check for succesful hit.
-        cmp   r0,#0
-        movne r10,#1
-        moveq r10,#0
-        beq   MoveJumpAddress
+        cmp r0,#0
+        mov r10,#0
+        beq MoveJumpAddress
         
         ;If so, lower burn.
         mov r0,r9
@@ -51,6 +50,7 @@
         mov r3,#1
         bl Burn
         
+        mov r10,#1
         ; Always branch at the end
         b MoveJumpAddress
         .pool

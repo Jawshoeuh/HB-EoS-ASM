@@ -48,9 +48,8 @@
         bl DealDamage
         
         ; Check for succesful hit.
-        cmp   r0, #0
-        movne r10,#1
-        moveq r10,#0
+        cmp r0, #0
+        mov r10,#0
         beq MoveJumpAddress
         
         ; Get User Direction and Flip
@@ -108,6 +107,7 @@
         ; TODO: Make the swapping animation prettier.
         ; Currently, it's very jarring...
         
+        mov r10,#1
         ; Always branch at the end
         b MoveJumpAddress
         .pool
