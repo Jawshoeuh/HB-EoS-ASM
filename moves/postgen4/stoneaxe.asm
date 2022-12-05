@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 12/3/2022 - Confirmed Working 12/3/2022
+; Jawshoeuh 12/3/2022 - Confirmed Working 12/4/2022
 ; Stone Axe deals damage and places a Stealth Rock trap below
 ; the target. While I could branch to the DoMoveStealthRock, the trap
 ; would just spawn below us. Also, I don't want a message
@@ -23,6 +23,7 @@
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
 .definelabel CanPlaceTrapHere, 0x022ED868 ; loads fixed room properties?
+.definelabel TryActivateTrap, 0x022EDFA0
 .definelabel TryCreateTrap, 0x022EDCBC
 .definelabel StealthRockTrapID, 0x14
 
@@ -68,6 +69,13 @@
         moveq r2,#1
         mov   r3,#1                 ; r3 = trap visible (bool)?
         bl TryCreateTrap
+        
+        ; Activate trap if possible
+        cmp  r0,r4
+        add  r1,r4,#0x4
+        mov  r2,#0
+        mov  r3,#0
+        blne TryActivateTrap
         
         mov r10,#1
         ; Always branch at the end
