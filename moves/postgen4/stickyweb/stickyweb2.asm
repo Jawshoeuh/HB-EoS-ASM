@@ -1,8 +1,7 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 12/5/2022
-; This reworked toxic spikes activates the trap below the target. So
-; that it is similar to PLA entry hazards. It's much simpler
-; than some of the other traps and just causes poison.
+; Jawshoeuh 12/5/2022 - Confirmed Working 12/6/2022
+; Implements sticky web based upon slow and spikes in PLA.
+; This sticky web slows the target and lays a trap below them.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -24,7 +23,7 @@
 .definelabel TryActivateTrap, 0x022EDFA0
 .definelabel ChangeStringTrap, 0x22EDF5C
 .definelabel TryCreateTrap, 0x022EDCBC
-.definelabel ToxicSpikesTrapID, 0xC
+.definelabel SlowTrapID, 0xA
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
@@ -33,10 +32,9 @@
 ;.definelabel MoveJumpAddress, 0x0233310C
 ;.definelabel CanPlaceTrapHere, 0x???????? ; loads fixed room properties?
 ;.definelabel TryActivateTrap, 0x0???????
-;.definelabel DoTrapToxicSpikes, 0x0???????
 ;.definelabel ChangeStringTrap, 0x????????
 ;.definelabel TryCreateTrap, 0x????????
-;.definelabel ToxicSpikesTrapID, 0xC
+;.definelabel SlowTrapID, 0xA
 
 
 ; File creation
@@ -49,9 +47,9 @@
         cmp r0,#0
         beq failed_trap_place
         
-        ; Try to place a toxic spikes trap
+        ; Try to place a slow trap
         add   r0,r4,#0x4            ; r0 = pointer to x/y
-        mov   r1,ToxicSpikesTrapID  ; r1 = trap id
+        mov   r1,SlowTrapID  ; r1 = trap id
         ldr   r2,[r9,#0xb4]         ; r2 = trap alignment
         ldrb  r2,[r2,#0x6]          ; notably it just checks for the non
         cmp   r2,#0                 ; team member flag, so I guess traps
@@ -60,7 +58,7 @@
         mov   r3,#1                 ; r3 = trap visible (bool)?
         bl TryCreateTrap            ; probably not visible because I
                                     ; need to update the minimap...
-        ; Activate trap if possible so it's definitely visible.
+        
         cmp  r0,#0
         beq  failed_trap_place
         mov  r0,r4
@@ -73,18 +71,21 @@
         b MoveJumpAddress
         
     failed_trap_place: ; When in hallways, pretend a trap activated.
-        ; Manually say a toxic spikes trap was activated!
+        ; Manually say a slow trap was activated!
+        mov r0,#0
+        mov r1,SlowTrapID
+        bl  ChangeStringTrap
         mov r0,r4
-        mov r1,ToxicSpikesTrapID 
-        add r1,r1,#0x51  ; Unlike other traps, no need to substitute
-        add r1,r1,#0xb00 ; trap name.
+        mov r1,SlowTrapID
+        add r1,r1,#0x51
+        add r1,r1,#0xb00
         bl  SendMessageWithIDCheckULog
         
         mov r0,r9
         mov r1,r4
         mov r2,#1
-        mov r3,#0
-        bl  Poison
+        mov r3,#1
+        bl  SpeedStatDown
         
         mov r10,#1
         ; Always branch at the end

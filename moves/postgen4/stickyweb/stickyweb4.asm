@@ -1,8 +1,7 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 12/5/2022
-; This reworked toxic spikes activates the trap below the target. So
-; that it is similar to PLA entry hazards. It's much simpler
-; than some of the other traps and just causes poison.
+; Jawshoeuh 12/5/2022 - Confirmed Working 12/6/2022
+; Implements sticky web that uses a sticky trap. For the truly evil who
+; want players to have an awful unclean experience with sticky items!
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -22,9 +21,10 @@
 .definelabel MoveJumpAddress, 0x023326CC
 .definelabel CanPlaceTrapHere, 0x022ED868 ; loads fixed room properties?
 .definelabel TryActivateTrap, 0x022EDFA0
+.definelabel DoTrapSticky, 0x022EE434
 .definelabel ChangeStringTrap, 0x22EDF5C
 .definelabel TryCreateTrap, 0x022EDCBC
-.definelabel ToxicSpikesTrapID, 0xC
+.definelabel StickyTrapID, 0x2
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
@@ -33,10 +33,9 @@
 ;.definelabel MoveJumpAddress, 0x0233310C
 ;.definelabel CanPlaceTrapHere, 0x???????? ; loads fixed room properties?
 ;.definelabel TryActivateTrap, 0x0???????
-;.definelabel DoTrapToxicSpikes, 0x0???????
 ;.definelabel ChangeStringTrap, 0x????????
 ;.definelabel TryCreateTrap, 0x????????
-;.definelabel ToxicSpikesTrapID, 0xC
+;.definelabel StickyTrapID, 0xA
 
 
 ; File creation
@@ -49,9 +48,9 @@
         cmp r0,#0
         beq failed_trap_place
         
-        ; Try to place a toxic spikes trap
+        ; Try to place a sticky trap
         add   r0,r4,#0x4            ; r0 = pointer to x/y
-        mov   r1,ToxicSpikesTrapID  ; r1 = trap id
+        mov   r1,StickyTrapID  ; r1 = trap id
         ldr   r2,[r9,#0xb4]         ; r2 = trap alignment
         ldrb  r2,[r2,#0x6]          ; notably it just checks for the non
         cmp   r2,#0                 ; team member flag, so I guess traps
@@ -73,18 +72,16 @@
         b MoveJumpAddress
         
     failed_trap_place: ; When in hallways, pretend a trap activated.
-        ; Manually say a toxic spikes trap was activated!
+        ; Manually say a sticky trap was activated!
         mov r0,r4
-        mov r1,ToxicSpikesTrapID 
-        add r1,r1,#0x51  ; Unlike other traps, no need to substitute
-        add r1,r1,#0xb00 ; trap name.
+        mov r1,StickyTrapID
+        add r1,r1,#0x51
+        add r1,r1,#0xb00
         bl  SendMessageWithIDCheckULog
         
         mov r0,r9
         mov r1,r4
-        mov r2,#1
-        mov r3,#0
-        bl  Poison
+        bl DoTrapSticky
         
         mov r10,#1
         ; Always branch at the end
