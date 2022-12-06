@@ -1,8 +1,9 @@
 ; ------------------------------------------------------------------------------
 ; Jawshoeuh 12/5/2022 - Confirmed Working 12/6/2022
-; Implements sticky web based upon stealth rock, spikes, toxic spikes
-; originally in PMD:EoS. For an implementation like the reworks in my
-; repository, look at stickyweb2.
+; Implements sticky web based upon the sticky trap. For an
+; implementation that applies this effect when the trap is placed
+; look at stickyweb4. If you want versions with a slow, look at
+; stickyweb1 and stickyweb2
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
