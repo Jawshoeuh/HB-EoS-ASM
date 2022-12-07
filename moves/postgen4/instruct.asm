@@ -1,6 +1,6 @@
 ; ------------------------------------------------------------------------------
 ; Jawshoeuh 12/7/2022 - Confirmed Working 12/7/2022
-; Instruct causes the user to use a regular attack on a nearby target.
+; Instruct causes the target to use a regular attack on a nearby enemy.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -41,7 +41,7 @@
     .area MaxSize ; Define the size of the area
         ; Choose five scratch registers
         push {r5,r6,r7,r8,r9}
-        ldr  r5,=DIRECTIONS_XY ; Offsets
+        ldr  r5,=DIRECTIONS_XY ; Direction Array
         ldr  r0,[r4,#0xb4]
         ldrb r6,[r0,#0x4c]     ; Target Direction
         ldrh r7,[r4,#0x4]      ; Target X Pos
