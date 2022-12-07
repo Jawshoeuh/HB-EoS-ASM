@@ -1,7 +1,7 @@
 ; ------------------------------------------------------------------------------
 ; Jawshoeuh 12/7/2022 - Confirmed Working 12/7/2022
-; Fillet Away deals 1/2 max health damage to the user and boosts
-; attack, special attack, and speed by 2 stages.
+; Belly Drum deals 1/2 max health damage to the user and boosts
+; attack to the max!
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
