@@ -53,11 +53,10 @@
         beq MoveJumpAddress
         
         ; Get User Direction and Flip
-        ldr   r0, [r9,#0xb4]
-        ldrb  r12,[r0,#0x4c] ; User Direction
-        cmp   r12,#0x4
-        subge r12,r12,#0x4 ; 7->3,6->2,5->1,4->0
-        addlt r12,r12,#0x4 ; 0->4,1->5,2->6,3->7
+        ldr  r0, [r9,#0xb4]
+        ldrb r12,[r0,#0x4c] ; User Direction
+        add  r12,r12,#0x4
+        and  r12,r12,#0x7   ; Flip Direction
         
         ; Visualization of values loaded from direction array.
         ; 5   4   3   (y-1)

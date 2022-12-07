@@ -38,7 +38,7 @@
     .area MaxSize ; Define the size of the area
     
         ; Attempt to find a target in front of user.
-        ; Get User Direction,X,Y
+        ; Get User Direction
         ldr  r0, [r9,#0xb4]
         ldrb r12,[r0,#0x4c] ; User Direction
         ; Visualization of values loaded from direction array.
