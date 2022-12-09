@@ -1,6 +1,10 @@
 ; ------------------------------------------------------------------------------
 ; Jawshoeuh 12/7/2022 - Confirmed Working 12/7/2022
-; Instruct causes the target to use a regular attack on a nearby enemy.
+; Instruct(v1) causes the target to regular attack an enemy nearby.
+; Check out instruct2 for a version that causes the target to use
+; the first move that it knows.
+; Check out instruct3 for a version that causes the rarget to use
+; the last move that it used.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
