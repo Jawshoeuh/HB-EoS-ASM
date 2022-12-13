@@ -45,7 +45,7 @@
         
         ;Check if still alive.
         ldr  r0,[r4,#0xb4]
-        ldrb r0,[r0,#0x10]
+        ldrb r0,[r0,#0x10] ; maybe unsafe?
         cmp r0,#0
         bgt MoveJumpAddress
         
