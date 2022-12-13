@@ -71,9 +71,9 @@
         movne r2,#2                 ; placed by allied NPCs can hurt us?
         moveq r2,#1
         mov   r3,#1                 ; r3 = trap visible (bool)?
-        bl TryCreateTrap
-        
-        ; Activate trap if possible so it's definitely visible.
+        bl    TryCreateTrap
+        ; Note to self, if fainted pokemon cause bugs, add a health check.
+        ; Activate trap if possible.
         cmp  r0,#0
         beq  failed_trap_place
         mov  r0,r4
