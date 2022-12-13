@@ -1,11 +1,11 @@
 # HB-EoS-ASM
-Contains ASM for Explorers of Sky that I make. <br/>
+Contains ASM for Explorers of Sky that I've made. If you find any bugs or issues with an effect, please start an issue or message me on Discord (HeckaBad#0747). <br/>
 
 # Moves
 Contains the raw asm files that can be imported under the move effects tabs of SkyTemple. <br/>
 
 # Abilities
-Contains the raw asm files that can be turned into skypatches and applied in SkyTemple. <br/>
+Contains the raw asm files and skypatches that can be applied in Skytemple. <br/>
 
 # Credits
 Adex-8x: The layout and inspiration for this repsitory goes to Adex-8x's which can be found here (if I am missing a move, it may exist here already). <br/>

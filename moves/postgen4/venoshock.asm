@@ -38,7 +38,7 @@
         ; Set damage accordingly.
         cmp   r1,#0x2   ; TryInflictPoisonedStatus sets this to 2.
         cmpne r1,#0x3   ; TryInflictBadlyPoisonedStatus sets to 3
-        moveq r3,#0x180 ; Damage amp if badly poisoned/poisoned
+        moveq r3,#0x200 ; Damage amp if badly poisoned/poisoned
         movne r3,#0x100 ; Regular damage otherwise.
         
         ; Damage enemy.

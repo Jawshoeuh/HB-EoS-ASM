@@ -1,9 +1,10 @@
 ; ------------------------------------------------------------------------------
 ; Jawshoeuh 12/8/2022 - Confirmed Working 12/10/2022
-; Instruct causes the target to use the first move it knows. Fails if
-; the target's first move is out of PP or conditions that stop the
-; first move from being used. This Instruct is by far the easiest,
-; but also the most technically boring and my least favorite.
+; Instruct causes the target to use the first move it knows. This move
+; wont work with moves like Mimic/Copycat, wont decreasce the move PP,
+; and may be able to be used when normally it can't. I find this instruct
+; to be very boring, but useful for those who want more control
+; over the move their target uses.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
