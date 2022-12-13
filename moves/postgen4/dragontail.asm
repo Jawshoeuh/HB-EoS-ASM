@@ -2,8 +2,7 @@
 ; Jawshoeuh 12/12/2022 - Confirmed Working 12/13/2022
 ; Dragon Tail deals damage and then does the blowback effect like Roar.
 ; This implementation should function identically to Adex-8x's but
-; this doesn't use the stack. Also, correctly loads a half word
-; instead of a byte for the current hp.
+; this doesn't use the stack.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
