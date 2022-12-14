@@ -8,7 +8,7 @@
 
     .org 0x22f93bc
     .area 0x4
-    strhne r5,[r0,0x58]
+    strneh r5,[r0,0x58]
     .endarea
     
 .close
