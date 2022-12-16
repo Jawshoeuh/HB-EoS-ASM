@@ -56,10 +56,10 @@
         mov r0,#0
         mov r1,r4
         mov r2,#0
-        bl ChangeString
+        bl  ChangeString
         mov r0,r9
         ldr r1,=simplebeam_str
-        bl SendMessageWithStringLog
+        bl  SendMessageWithStringLog
         mov r10,#1
 
         b MoveJumpAddress
@@ -68,10 +68,10 @@
         mov r0,#0
         mov r1,r4
         mov r2,#0
-        bl ChangeString
+        bl  ChangeString
         ldr r1,=failed_simplebeam_str
         mov r0,r4
-        bl SendMessageWithStringLog
+        bl  SendMessageWithStringLog
 
         mov r10,#0
         ; Always branch at the end

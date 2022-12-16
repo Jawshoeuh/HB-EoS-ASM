@@ -26,11 +26,8 @@
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel CanPlaceTrapHere, 0x???????? ; loads fixed room properties?
-;.definelabel TryActivateTrap, 0x0???????
-;.definelabel ChangeStringTrap, 0x????????
-;.definelabel TryCreateTrap, 0x????????
-;.definelabel StickyTrapID, 0xA
+;.definelabel DoTrapSticky, 0x????????
+
 
 
 ; File creation
