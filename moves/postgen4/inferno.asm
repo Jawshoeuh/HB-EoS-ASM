@@ -30,13 +30,20 @@
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
+    
+        ; Try to thaw target.
+        mov r0,r9
+        mov r1,r4
+        mov r2,r8
+        mov r3,r7
+        bl TryThawTarget
         
         ; Deal damage.
         mov r0,r9
         mov r1,r4
         mov r2,r8
         mov r3,#0x100
-        bl DealDamage
+        bl  DealDamage
         
         ;Check for succesful hit.
         cmp r0,#0
@@ -50,6 +57,7 @@
         mov r1,r4
         mov r2,#0
         mov r3,#1
+        bl  Burn
         
         mov r10,#1
         ; Always branch at the end
