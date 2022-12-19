@@ -19,7 +19,6 @@
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
 .definelabel TryThawTarget, 0x02307C78
-.definelabel LighterItemID, 1360
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
@@ -27,7 +26,6 @@
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
 ;.definelabel TryThawTarget, 0x????????
-;.definelabel LighterItemID, 1360
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
