@@ -1,11 +1,11 @@
 # Custom
 Contains custom moves that don't originate from any Pokemon game.
 
-# Legacy
-Contains old version of moves that either functioned differently or were vastly improved.
-
 # Examples
 Generic moves that can serve as the base for other moves and for help creating your own.
+
+# Legacy
+Contains old version of moves that either functioned differently or were vastly improved.
 
 # Postgen4
 Contains moves added after Gen 4 (Diamond/Pearl/Platinum/HG/SS)
