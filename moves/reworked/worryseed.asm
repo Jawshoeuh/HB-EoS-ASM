@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 12/1/2022 - Confirmed Working 12/2/2022
+; Jawshoeuh 12/1/2022 - Confirmed Working 12/23/2022
 ; Actually changes the target's ability to Insomnia instead of
 ; applying the sleepless status. Even properly doesn't apply it
 ; to Pokemon with the ability Truant! In Gen5+ the move fails
@@ -52,7 +52,7 @@
         bne failed_ability
 
         ; Change Ability To Insomnia
-        ldr  r0,[r4,#0xb4]
+        ldr  r0,[r4,#0xB4]
         mov  r1,InsomniaAbiilityID
         mov  r2,#0x0       ; Ability 0 = None
         strb r1,[r0,#0x60] ; First Ability -> Insomnia
@@ -67,17 +67,27 @@
         ldr r1,=worryseed_str
         bl SendMessageWithStringLog
         
-        ; Check If Asleep (This section is similar to
-        ; DoMoveWakeUpSlap @ 0x0232E400)
-        ldr   r0,[r4,#0xb4]
-        ldrb  r1,[r0,#0xbd] ; IsAsleep?
+        ; Skill Swap/Role Play do this when a target's ability is changed.
+        ; It may not be neccessary here, but I do it anyway.
+        ldr    r3,[r4,#0xB4]
+        ldrb   r0,[r3,#0x108]
+        cmp    r0,#0x0
+        moveq  r0,#0x1
+        streqb r0,[r3,#0x108]
+        
+        ; Check If Asleep (see 0x022fa8f0 for reference)
+        ldr   r0,[r4,#0xB4]
+        ldrb  r1,[r0,#0xBD] ; IsAsleep?
         cmp   r1,#1
         cmpne r1,#3
+        cmpne r1,#4
         cmpne r1,#5
         mov   r10,#1
         bne MoveJumpAddress
         
-        ; THOU SHALL NOT SLEEP (Wake Up Target... I think?)
+        ; Attempt to wakeup target. Normally for ability changes,
+        ; you should call 022FA7DC, but since we definitely know the
+        ; ability, just directly call the wake up funciton it uses.
         mov r0,r9
         mov r1,r4
         mov r2,#0

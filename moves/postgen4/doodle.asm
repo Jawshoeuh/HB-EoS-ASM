@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/29/2022 - Confirmed Working 11/30/2022
+; Jawshoeuh 11/29/2022 - Confirmed Working 12/23/2022
 ; Doodle changes the abilities of all allies to the ability of the target.
 ; Unfortunately, we need to check for an enemy for every target which is
 ; a bit wasteful, but I don't see a way around it...
@@ -20,6 +20,7 @@
 .include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
+.definelabel AbilityEndStatuses, 0x022FA7DC
 .definelabel DIRECTIONS_XY, 0x0235171C
 .definelabel GetTile, 0x023360FC
 
@@ -28,6 +29,7 @@
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
+;.definelabel AbilityEndStatuses, 0x????????
 ;.definelabel DIRECTIONS_XY, 0x02352328
 ;.definelabel GetTile, 0x2336CCC
 
@@ -84,7 +86,7 @@
         ; When giving self ability, display feedback message.
         ; The order is specific! Because r12 is a scratch register!
         cmp r9,r4
-        bne MoveJumpAddress
+        bne not_user
         mov r0,#1
         mov r1,r12
         mov r2,#0
@@ -96,7 +98,21 @@
         mov r0,r9
         ldr r1,=doodle_str
         bl  SendMessageWithStringLog
+     
+    not_user:
+        ; Skill Swap/Role Play do this when a target's ability is changed.
+        ldr    r3,[r4,#0xB4]
+        ldrb   r0,[r3,#0x108]
+        cmp    r0,#0x0
+        moveq  r0,#0x1
+        streqb r0,[r3,#0x108]
         
+        ; Double check if this new ability would end statuses.
+        mov  r0,r4
+        mov  r1,r4
+        bl   AbilityEndStatuses
+        
+        mov r10,#1
         ; Always branch at the end
         b MoveJumpAddress
         .pool

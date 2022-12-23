@@ -42,10 +42,12 @@ The following moves (credit to Espik for testing them) have placeholder names an
 555: Skull Bash second half <br/>
 556: Ghost-type Curse animation <br/>
 
-Additional regular moves that I have found you should not replace.
+Additional regular moves that I have found you should not replace. <br/>
 031: Weather Ball (has a special type check in GetMoveTypeForMonster <br/>
 064: Thunder (has a special accuracy check in MoveHitCheck) <br/>
+229: Assist (has a special check to use another move after) <br/>
 270: Blizzard (has a special accuracy check in MoveHitCheck) <br/>
 324: Hidden Power (has a special check in GetMoveTypeForMonster) <br/>
 471: Natural Gift (has a special check in GetMoveTypeForMonster) <br/>
+465: Me First (has a special check to use another move after, has move effect #325 by default) <br/>
 

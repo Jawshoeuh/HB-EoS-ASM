@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 12/1/2022 - Confirmed Working 12/2/2022
+; Jawshoeuh 12/1/2022 - Confirmed Working 12/23/2022
 ; Chanegs the target's ability to Simple. Adex-8x's implementaion
 ; will function identically most of the time, but this one check for
 ; fails on Truant. It should also fail when the ability is already
@@ -43,7 +43,27 @@
         mov r1,TruantAbilityID
         bl  HasAbility
         cmp r0,#0
-        bne failed_ability
+        beq success
+        
+        mov r0,#0
+        mov r1,r4
+        mov r2,#0
+        bl  ChangeString
+        ldr r1,=failed_simplebeam_str
+        mov r0,r4
+        bl  SendMessageWithStringLog
+
+        mov r10,#1
+        b MoveJumpAddress
+        
+    success:
+        mov r0,#0
+        mov r1,r4
+        mov r2,#0
+        bl  ChangeString
+        ldr r1,=failed_simplebeam_str
+        mov r0,r4
+        bl  SendMessageWithStringLog
 
         ; Change Ability To Simple
         ldr  r0,[r4,#0xb4]
@@ -60,21 +80,20 @@
         mov r0,r9
         ldr r1,=simplebeam_str
         bl  SendMessageWithStringLog
+        
+        ; Skill Swap/Role Play do this when a target's ability is changed.
+        ; It may not be neccessary here, but I do it anyway.
+        ldr    r3,[r4,#0xB4]
+        ldrb   r0,[r3,#0x108]
+        cmp    r0,#0x0
+        moveq  r0,#0x1
+        streqb r0,[r3,#0x108]
+        
+        ; Normally, you would call 022FA7DC after changing an ability, but
+        ; because we know Simple isn't going to remove any statuses
+        ; (for example, Own Tempo stopping confusion) I just don't bother.
+        
         mov r10,#1
-
-        b MoveJumpAddress
-
-    failed_ability:
-        mov r0,#0
-        mov r1,r4
-        mov r2,#0
-        bl  ChangeString
-        ldr r1,=failed_simplebeam_str
-        mov r0,r4
-        bl  SendMessageWithStringLog
-
-        mov r10,#0
-        ; Always branch at the end
         b MoveJumpAddress
         .pool
     simplebeam_str:
