@@ -22,7 +22,7 @@
 .definelabel MoveJumpAddress, 0x023326CC
 .definelabel CanPlaceTrapHere, 0x022ED868 ; loads fixed room properties?
 .definelabel TryCreateTrap, 0x022EDCBC
-.definelabel DisplayTrap, 0x02336F4C ; not certain what this does
+.definelabel UpdateDisplay, 0x02336F4C
 .definelabel TrapFailedStr, 0xEEF
 .definelabel SlowTrapID, 0xA
 
@@ -60,7 +60,7 @@
         ;Show trap if made.
         cmp r0,#0
         beq failed_trap
-        bl DisplayTrap
+        bl UpdateDisplay
         
         mov r10,#1
         b MoveJumpAddress
