@@ -18,12 +18,14 @@
 .include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
+.definelabel EntityIsValid, 0x22E0354
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
+;.definelabel EntityIsValid, 0x0022E0C94
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
@@ -43,11 +45,11 @@
         mov r10,#0
         beq MoveJumpAddress
         
-        ;Check if still alive.
-        ldr  r0,[r4,#0xb4]
-        ldrb r0,[r0,#0x10]
-        cmp  r0,#0
-        bgt  MoveJumpAddress
+        ; Check if still alive.
+        mov r0,r4
+        bl  EntityIsValid
+        cmp r0,#0x0
+        beq MoveJumpAddress
         
         ; Raise attack.
         mov r0,r9
