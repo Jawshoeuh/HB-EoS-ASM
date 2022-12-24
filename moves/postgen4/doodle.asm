@@ -98,6 +98,12 @@
         mov r0,r9
         ldr r1,=doodle_str
         bl  SendMessageWithStringLog
+        
+        ; Set flag for dungeon to activate artificial weather abilities.
+        mov   r0,#0x1
+        ldr   r1,=DungeonBaseStructurePtr
+        ldrsh r2,[r1,#0x0]
+        strb  r0,[r2,#0xe]
      
     not_user:
         ; Skill Swap/Role Play do this when a target's ability is changed.

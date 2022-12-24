@@ -79,11 +79,7 @@
         ldr  r3,[r4,#0xb4]
         strb r1,[r3,#0x60]
         strb r2,[r3,#0x61]
-        ; Ability changes set this part of the DungeonStruct
-        ; Speculation1: Maybe to activate a secondary check for floorwide
-        ; abilities like Damp?
-        ; Speculation2: Maybe to activate an ability that would normally
-        ; happen at the start of a floor like Pickup & Slow Start? 
+        ; Set flag for dungeon to activate artificial weather abilities.
         mov   r0,#0x1
         ldr   r1,=DungeonBaseStructurePtr
         ldrsh r2,[r1,#0x0]
