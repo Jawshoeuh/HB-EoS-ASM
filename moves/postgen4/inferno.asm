@@ -39,10 +39,11 @@
         bl TryThawTarget
         
         ; Deal damage.
+        str r7,[sp]
         mov r0,r9
         mov r1,r4
         mov r2,r8
-        mov r3,#0x100
+        mov r3,#0x100 ; normal damage
         bl  DealDamage
         
         ;Check for succesful hit.

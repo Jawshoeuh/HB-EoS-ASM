@@ -21,6 +21,7 @@
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
 .definelabel TryBlowAway, 0x0231FDE0
+.definelabel EntityIsValid, 0x022ECDC0
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
@@ -28,6 +29,7 @@
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
 ;.definelabel TryBlowAway, 0x02320848
+;.definelabel EntityIsValid, 0x022ECDC0
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
@@ -35,10 +37,11 @@
     .area MaxSize ; Define the size of the area
         
         ; Damage enemy.
+        str r7,[sp]
         mov r0,r9
         mov r1,r4
         mov r2,r8
-        mov r3,#0x100
+        mov r3,#0x100 ; normal damage
         bl  DealDamage
         
         ; Check for succesful hit.
@@ -47,10 +50,10 @@
         beq MoveJumpAddress
         
         ; Check if still alive.
-        ldr  r0,[r4,#0xb4]
-        ldrh r0,[r0,#0x10]
-        cmp  r0,#0
-        ble  MoveJumpAddress
+        mov r0,r4
+        bl  EntityIsValid
+        cmp r0,#0x0
+        beq MoveJumpAddress
         
         ; Uh? Yeet (throw) the target?
         mov  r0,r9

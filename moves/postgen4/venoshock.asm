@@ -42,9 +42,11 @@
         movne r3,#0x100 ; Regular damage otherwise.
         
         ; Damage enemy.
+        str r7,[sp]
         mov r0,r9
         mov r1,r4
         mov r2,r8
+        ; damage is already in r3
         bl  DealDamage
         
         ; Always branch at the end
