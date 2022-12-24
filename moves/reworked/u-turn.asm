@@ -11,7 +11,6 @@
 .nds
 .arm
 
-
 .definelabel MaxSize, 0x2598
 
 ; Uncomment the correct version
@@ -33,7 +32,6 @@
 ;.definelabel TrySwitchPlace, 0x022EBB28
 ;.definelabel DIRECTIONS_XY, 0x2352328
 ;.definelabel GetTile, 0x2336CCC
-
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels

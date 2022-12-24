@@ -9,7 +9,6 @@
 .nds
 .arm
 
-
 .definelabel MaxSize, 0x2598
 
 ; Uncomment the correct version
@@ -38,7 +37,6 @@
 ;.definelabel ChangeStringTrap, 0x????????
 ;.definelabel TryCreateTrap, 0x????????
 ;.definelabel SpikeTrapID, 0x13
-
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels

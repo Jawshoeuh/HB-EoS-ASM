@@ -27,7 +27,6 @@
 ;.definelabel MoveJumpAddress, 0x0233310C
 ;.definelabel PlayUnfreezeAnimation, 0x????????
 
-
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
     .org MoveStartAddress
