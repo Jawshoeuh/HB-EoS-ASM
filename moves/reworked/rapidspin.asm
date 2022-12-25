@@ -1,7 +1,7 @@
 ; ------------------------------------------------------------------------------
 ; Jawshoeuh 12/24/2022 - Confirmed Working 12/24/2022
-; Rapid Spin removes entry hazards, bind wrap... (exactly like rapid spin)
-; and poisons the enemy pokemon.
+; Rapid Spin removes entry hazards, bind wrap, leech seed.
+; and boosts the user's speed.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -59,19 +59,18 @@
         cmp r0,#0
         beq MoveJumpAddress
         
+        ; Check if user still alive.
+        mov r0,r9
+        bl  EntityIsValid
+        cmp r0,#0
+        beq MoveJumpAddress
+        
         ; Raise speed
         mov r0,r9
         mov r1,r9
         mov r2,#0
         mov r3,#0
         bl SpeedStatUpOneStage
-        
-        
-        ; Check if user still alive.
-        mov r0,r9
-        bl  EntityIsValid
-        cmp r0,#0
-        beq MoveJumpAddress
         
         ; Set a flag to remove these effects.
         ldr   r0,[r5,#0xB4]

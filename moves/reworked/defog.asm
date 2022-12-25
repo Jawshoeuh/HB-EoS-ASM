@@ -209,7 +209,7 @@
 
 ; Notes for modifying DoMoveTrapBuster for defog.
 ; r8  -> r8
-; r11 -> r6
+; r11 -> r9
 ; r4  -> r7
 ; r5  -> r5
-; r6  -> r9
+; r6  -> r6

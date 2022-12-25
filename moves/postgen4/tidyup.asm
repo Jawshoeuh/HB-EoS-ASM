@@ -35,14 +35,14 @@
     
         ; Raise attack.
         mov r0,r9
-        mov r1,r9
+        mov r1,r4
         mov r2,#0
         mov r3,#1
         bl AttackStatUp
         
         ; Raise speed
         mov r0,r9
-        mov r1,r9
+        mov r1,r4
         mov r2,#0
         mov r3,#0
         bl SpeedStatUpOneStage

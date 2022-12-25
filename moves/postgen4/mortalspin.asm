@@ -59,18 +59,18 @@
         cmp r0,#0
         beq MoveJumpAddress
         
+        ; Check if user still alive.
+        mov r0,r9
+        bl  EntityIsValid
+        cmp r0,#0
+        beq MoveJumpAddress
+        
         ; Attempt to poison target.
         mov r0,r9
         mov r1,r4
         mov r2,#0
         mov r3,#0
         bl Poison
-        
-        ; Check if user still alive.
-        mov r0,r9
-        bl  EntityIsValid
-        cmp r0,#0
-        beq MoveJumpAddress
         
         ; Set a flag to remove these effects.
         ldr   r0,[r5,#0xB4]
@@ -181,7 +181,6 @@
         mov r10,#1
         add sp,sp,#0xC
         pop r5,r6,r7,r8,r9
-        
         ; Always branch at the end
         b MoveJumpAddress
         .pool
