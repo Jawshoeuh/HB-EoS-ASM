@@ -60,7 +60,7 @@
         ;Show trap if made.
         cmp r0,#0
         beq failed_trap
-        bl UpdateDisplay
+        bl  UpdateDisplay
         
         mov r10,#1
         b MoveJumpAddress

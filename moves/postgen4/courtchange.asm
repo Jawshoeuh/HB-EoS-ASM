@@ -1,18 +1,16 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 12/23/2022 - Confirmed Working 12/23/2022
-; Reworked Defog removes traps, lowers evasiveness, and disperses fog.
-; Notably, tries to remove traps from around the targets instead of the
-; user, so that may be a bit odd... Why not just branch to the original
-; effect for removing traps? Because it spams the message for not
-; traps found/traps found because it's only called on the user
-; in the base game. Looks way better without message spam.
+; Jawshoeuh 12/24/2022 - Confirmed Working 12/25/2022
+; Court Change swaps the ownership of nearby traps (Enemy -> Ally &
+; Ally -> Enemy) and swaps Light Screen, Reflect, Mist, Safeguard.
+; WARNING: This attack is only built to be used on ONE target at a time.
+; Using this on multiple opponents will swap the traps MULTIPLE TIMES.
+; Causing the traps to sometimes stay in their alignment.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
 .relativeinclude on
 .nds
 .arm
-
 
 .definelabel MaxSize, 0x2598
 
@@ -23,32 +21,26 @@
 .include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
-.definelabel MistIsActive, 0x023197CC ; also exclusive item effect check
-.definelabel EndProtectionClassStatus, 0x023064F4
 .definelabel IsFullFloorFixedRoom, 0x023361D4
 .definelabel GetTileAtEntity, 0x022E1628
 .definelabel HasDropeyeStatus, 0x02301F50
+.definelabel UpdateStatusIconFlags, 0x022E3AB4
 .definelabel UpdateMinimap, 0x02339CE8
 .definelabel UpdateDisplay, 0x02336F4C
-.definelabel DestroyTrap, 0x022EDE7C 
 .definelabel GetTileSafe, 0x02336164
-.definelabel WeatherChanged, 0x023354C4
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel MistIsActive, 0x????????
-;.definelabel EndProtectionClassStatus, 0x????????
 ;.definelabel IsFullFloorFixedRoom, 0x02336DA4
 ;.definelabel GetTileAtEntity, 0x022E1F68
 ;.definelabel HasDropeyeStatus, 0x0230297C
+;.definelabel UpdateStatusIconFlags, 0x022E4464
 ;.definelabel UpdateMinimap, 0x????????
 ;.definelabel UpdateDisplay, 0x????????
-;.definelabel DestroyTrap, 0x022EDE7C 
 ;.definelabel GetTileSafe, 0x02336D34
-;.definelabel WeatherChanged, 0x????????
 
 
 ; File creation
@@ -56,63 +48,51 @@
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
     
-        ; Check for mist.
-        mov r0,r4        ; This function also checks for some kind of
-        bl  MistIsActive ; exclusive effect that blocks stat changes.
-        cmp r0,#0x0
-        bne clear_buffs
+        ; Get User & Target Protections
+        ldr  r0,[r9,#0xB4]
+        ldrb r1,[r0,#0xD5]  ; Protections (Reflect, Aqua Ring, etc)
+        ldrb r10,[r0,#0xD6] ; Turns of Protection (User)
+        ldr  r2,[r4,#0xB4]
+        ldrb r3,[r2,#0xD5]  ; Protections (Reflect, Aqua Ring, etc)
+        ldrb r12,[r2,#0xD6] ; Turns of Protection (Target)
         
-        ; Check for light screen, reflect, safeguard
-        ldr  r7,[r4,#0xB4]
-        ldrb r0,[r7,#0xD5]
-        add  r0,r0,#0xFF
-        and  r0,r0,#0xFF
-        cmp  r0,#0x2
-        bhi  lower_evasion
-    
-    clear_buffs:
-        ldr r2,=#0xED2
+        ; Give our protections to target.
+        cmp    r1,#0x1
+        cmpne  r1,#0x2
+        cmpne  r1,#0x3
+        cmpne  r1,#0xE
+        streqb r1,[r2,#0xD5]
+        streqb r10,[r2,#0xD6]
+        moveq  r1,#0x0
+        streqb r1,[r0,#0xD5]
+        streqb r1,[r0,#0xD6]
+        
+        ; Get our target's protections.
+        cmp    r3,#0x1
+        cmpne  r3,#0x2
+        cmpne  r3,#0x3
+        cmpne  r3,#0xE
+        streqb r3,[r0,#0xD5]
+        streqb r12,[r0,#0xD6]
+        moveq  r1,#0x0
+        streqb r1,[r2,#0xD5]
+        streqb r1,[r2,#0xD6]
+        
+        ; Update after.
         mov r0,r9
-        mov r1,r4
-        bl  SendMessageWithIDCheckUTLog
-        mov r0,r9
-        mov r1,r4
-        bl  EndProtectionClassStatus
+        bl  UpdateStatusIconFlags
+        mov r0,r4
+        bl  UpdateStatusIconFlags
         
-    lower_evasion:
-        ; Lower evasion.
-        mov r0,r9
-        mov r1,r4
-        mov r2,#1
-        bl  FocusStatDown
-        
-        ; Check for fog.
-        mov r0,r9
-        bl  GetWeather
-        cmp r0,#0x6
-        bne remove_traps
-        
-        ; Blow away fog. (Set weather to clear)
-        ldr   r3,=0xBB8 ; Set to this by DoMoveRainDance
-        ldr   r2,=DungeonBaseStructurePtr
-        ldrsh r3,[r3,#0x0]
-        ldr   r2,[r2,#0x0] ; DungeonBaseStrPtr
-        add   r2,r2,#0xCD00
-        mov   r0,#0x1
-        mov   r1,#0x0
-        strh  r3,[r2,#0x3A]
-        bl    WeatherChanged
-        
-    remove_traps:
+        ; Check if this if a fixed room.
         bl    IsFullFloorFixedRoom
         cmp   r0,#0x0
-        mov   r10,#0
+        mov   r10,#1
         bne   MoveJumpAddress ; failed, don't work in fixed rooms
         
         ; Init loop to check for traps!
         push r5,r6,r7,r8,r9
-        sub  sp,sp,#0xC
-        mov  r0,r4
+        mov  r0,r9
         bl   GetTileAtEntity
         mov  r5,r0
         ldrb r0,[r0,#0x7]
@@ -151,14 +131,11 @@
         ldr  r0,=#0x02352B38 ; Will definelabel for this when I have a good
         ldrh r1,[r0,#0x0]    ; name to describe it.
         ldrh r0,[r0,#0x2]
-        strh r1,[sp,#4]
-        strh r0,[sp,#6]
         b    check_outer_loop
     init_inner_loop:
         mov r0,r8, lsl #0x10
         mov r0,r0, asr #0x10
         mov r6,r9
-        str r0,[sp]
         b   check_inner_loop
         
     body_loop:
@@ -171,19 +148,18 @@
         ldr  r1,[r0,#0x0]
         cmp  r1,#0x2
         bne  iter_inner_loop
-        ldr  r0,[r0,#0xB4] ; original trap buster calls a function for this
-        ldrb r1,[r0,#0x2]
-        tst  r1,#0x1       ; can break trap flag
+        ldr  r1,[r0,#0xB4] ; original trap buster calls a function for this
+        ldrb r2,[r1,#0x2]
+        tst  r2,#0x1       ; can break trap flag
         bne  iter_inner_loop
-        ldrb r0,[r0,#0x0]
-        cmp  r0,#0x11 ; Check if this 'trap' is actually a wonder tile.
+        ldrb r2,[r1,#0x0]
+        cmp  r2,#0x11 ; Check if this 'trap' is actually a wonder tile.
         beq  iter_inner_loop
-        ldr  r2,[sp]
-        add  r0,sp,#0x8
-        mov  r1,#0x0
-        strh r2,[sp,#0x8]
-        strh r6,[sp,#0xA]
-        bl   DestroyTrap 
+        ldrb r2,[r1,#0x1] ; get trap alignment
+        eor  r2,r2,#0x1   ; swap trap alignment
+        strb r2,[r1,#0x1] ; save new trap alignment
+        mov  r3,#0x1
+        strb r3,[r0,#0x20] ; make trap visible
         
     iter_inner_loop:
         add r6,r6,#0x1
@@ -200,7 +176,6 @@
         bl UpdateDisplay
         
         mov r10,#1
-        add sp,sp,#0xC
         pop r5,r6,r7,r8,r9
         b MoveJumpAddress
         .pool

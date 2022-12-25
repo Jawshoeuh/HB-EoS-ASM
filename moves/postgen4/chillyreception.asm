@@ -60,8 +60,8 @@
         beq   failed_change
         
         ; Get User Direction and Flip
-        ldr  r0, [r9,#0xb4]
-        ldrb r12,[r0,#0x4c] ; User Direction
+        ldr  r0, [r9,#0xB4]
+        ldrb r12,[r0,#0x4C] ; User Direction
         add  r12,r12,#0x4
         and  r12,r12,#0x7   ; Flip Direction
         
@@ -94,11 +94,11 @@
         beq   MoveJumpAddress ; failed, no monster
         
         ; Check if friend or enemy.
-        ldr   r12,[r1,#0xb4]
+        ldr   r12,[r1,#0xB4]
         ldrb  r0,[r12,#0x6]
         ldrb  r2,[r12,#0x8]
         eor   r3,r0,r2 ; 1 = enemy, 0 = friend
-        ldr   r12,[r9,#0xb4]
+        ldr   r12,[r9,#0xB4]
         ldrb  r0,[r12,#0x6]
         ldrb  r2,[r12,#0x8]
         eor   r12,r0,r2 ; 1 = enemy, 0 = friend
