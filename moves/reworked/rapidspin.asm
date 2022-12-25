@@ -1,18 +1,13 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 12/23/2022 - Confirmed Working 12/23/2022
-; Reworked Defog removes traps, lowers evasiveness, and disperses fog.
-; Notably, tries to remove traps from around the targets instead of the
-; user, so that may be a bit odd... Why not just branch to the original
-; effect for removing traps? Because it spams the message for not
-; traps found/traps found because it's only called on the user
-; in the base game. Looks way better without message spam.
+; Jawshoeuh 12/24/2022 - Confirmed Working 12/24/2022
+; Rapid Spin removes entry hazards, bind wrap... (exactly like rapid spin)
+; and poisons the enemy pokemon.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
 .relativeinclude on
 .nds
 .arm
-
 
 .definelabel MaxSize, 0x2598
 
@@ -23,8 +18,6 @@
 .include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
-.definelabel MistIsActive, 0x023197CC ; also exclusive item effect check
-.definelabel EndProtectionClassStatus, 0x023064F4
 .definelabel IsFullFloorFixedRoom, 0x023361D4
 .definelabel GetTileAtEntity, 0x022E1628
 .definelabel HasDropeyeStatus, 0x02301F50
@@ -32,78 +25,65 @@
 .definelabel UpdateDisplay, 0x02336F4C
 .definelabel DestroyTrap, 0x022EDE7C 
 .definelabel GetTileSafe, 0x02336164
-.definelabel WeatherChanged, 0x023354C4
+.definelabel EntityIsValid, 0x22E0354
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel MistIsActive, 0x????????
-;.definelabel EndProtectionClassStatus, 0x????????
-;.definelabel IsFullFloorFixedRoom, 0x02336DA4
+;.definelabel IsFullFloorFixedRoom, 0x023361D4
 ;.definelabel GetTileAtEntity, 0x022E1F68
-;.definelabel HasDropeyeStatus, 0x0230297C
+;.definelabel HasDropeyeStatus, 0x02301F50
 ;.definelabel UpdateMinimap, 0x????????
 ;.definelabel UpdateDisplay, 0x????????
 ;.definelabel DestroyTrap, 0x022EDE7C 
 ;.definelabel GetTileSafe, 0x02336D34
-;.definelabel WeatherChanged, 0x023354C4
-
+;.definelabel EntityIsValid, 0x0022E0C94
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
-    
-        ; Check for mist.
-        mov r0,r4        ; This function also checks for some kind of
-        bl  MistIsActive ; exclusive effect that blocks stat changes.
-        cmp r0,#0x0
-        bne clear_buffs
         
-        ; Check for light screen, reflect, safeguard
-        ldr  r7,[r4,#0xB4]
-        ldrb r0,[r7,#0xD5]
-        add  r0,r0,#0xFF
-        and  r0,r0,#0xFF
-        cmp  r0,#0x2
-        bhi  lower_evasion
-    
-    clear_buffs:
-        ldr r2,=#0xED2
+        ; Deal damage.
+        str r7,[sp]
         mov r0,r9
         mov r1,r4
-        bl  SendMessageWithIDCheckUTLog
+        mov r2,r8
+        mov r3,#0x100 ; normal damage
+        bl  DealDamage
+        
+        ; Check for succesful hit.
+        mov r10,#0
+        cmp r0,#0
+        beq MoveJumpAddress
+        
+        ; Raise speed
         mov r0,r9
-        mov r1,r4
-        bl  EndProtectionClassStatus
+        mov r1,r9
+        mov r2,#0
+        mov r3,#0
+        bl SpeedStatUpOneStage
         
-    lower_evasion:
-        ; Lower evasion.
+        
+        ; Check if user still alive.
         mov r0,r9
-        mov r1,r4
-        mov r2,#1
-        bl  FocusStatDown
+        bl  EntityIsValid
+        cmp r0,#0
+        beq MoveJumpAddress
         
-        ; Check for fog.
-        mov r0,r9
-        bl  GetWeather
-        cmp r0,#0x6
-        bne remove_traps
+        ; Set a flag to remove these effects.
+        ldr   r0,[r5,#0xB4]
+        add   r0,r0,#0x100
+        ldrh  r0,[r0,#0x92]
+        tst   r0,#0x2
+        ldr   r0,=0x0237CA6D ; this addr is loaded by Rapid Spin
+        movne r1,#0x0
+        moveq r1,#0x1
+        strb  r1,[r0]
         
-        ; Blow away fog. (Set weather to clear)
-        ldr   r3,=0xBB8 ; Set to this by DoMoveRainDance
-        ldr   r2,=DungeonBaseStructurePtr
-        ldrsh r3,[r3,#0x0]
-        ldr   r2,[r2,#0x0] ; DungeonBaseStrPtr
-        add   r2,r2,#0xCD00
-        mov   r0,#0x1
-        mov   r1,#0x0
-        strh  r3,[r2,#0x3A]
-        bl    WeatherChanged
-        
-    remove_traps:
+        ; Check to remove trap.
         bl    IsFullFloorFixedRoom
         cmp   r0,#0x0
         mov   r10,#0
@@ -112,7 +92,7 @@
         ; Init loop to check for traps!
         push r5,r6,r7,r8,r9
         sub  sp,sp,#0xC
-        mov  r0,r4
+        mov  r0,r9
         bl   GetTileAtEntity
         mov  r5,r0
         ldrb r0,[r0,#0x7]
@@ -202,14 +182,8 @@
         mov r10,#1
         add sp,sp,#0xC
         pop r5,r6,r7,r8,r9
+        ; Always branch at the end
         b MoveJumpAddress
         .pool
     .endarea
 .close
-
-; Notes for modifying DoMoveTrapBuster for defog.
-; r8  -> r8
-; r11 -> r6
-; r4  -> r7
-; r5  -> r5
-; r6  -> r9

@@ -1,6 +1,7 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/27/2022 - Confirmed Working 11/28/2022
-; Tidy up removes traps and boosts the users attack and speed!
+; Jawshoeuh 11/27/2022 - Confirmed Working 11/29/2022
+; Mortal Spin removes e bind wrap... (exactly like rapid spin)
+; and poisons the enemy pokemon.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -18,36 +19,22 @@
 .include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
-.definelabel DoMoveTrapBuster, 0x0232CB18
+.definelabel DoMoveRapidSpin, 0x02327940
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel DoMoveTrapBuster, 0x????????
+;.definelabel DoMoveRapidSpin, 0x23283A8
 
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
-    
-        ; Raise attack.
-        mov r0,r9
-        mov r1,r9
-        mov r2,#0
-        mov r3,#1
-        bl AttackStatUp
         
-        ; Raise speed
-        mov r0,r9
-        mov r1,r9
-        mov r2,#0
-        mov r3,#0
-        bl SpeedStatUpOneStage
-        
-        ; Branch to code for the move Trap Buster.
+        ; Branch to code for the move rapid spin.
         ; Adex-8x's implementation of rapid spin
         ; that gives a speed boost after uses this
         ; method and many moves effects have documented
@@ -56,16 +43,20 @@
         mov r1,r4
         mov r2,r8
         mov r3,r7
-        bl DoMoveTrapBuster
+        bl DoMoveRapidSpin
         
-        ; Check for succesful trap busting? I've choosen to have
-        ; it raise speed and attack even if trap busting fails.
-        ; Although, I'm not sure how it would fail? No traps?
-        ; mov r10,r0
-        ; cmp r0,#0
-        ; beq MoveJumpAddress
+        ; Check for succesful hit.
+        mov r10,r0
+        cmp r0,#0
+        beq MoveJumpAddress
         
-        mov r10,#1
+        ; Attempt to poison target.
+        mov r0,r9
+        mov r1,r4
+        mov r2,#1
+        mov r3,#0
+        bl Poison
+        
         ; Always branch at the end
         b MoveJumpAddress
         .pool
