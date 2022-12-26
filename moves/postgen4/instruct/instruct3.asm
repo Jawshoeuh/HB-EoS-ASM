@@ -1,10 +1,6 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 12/12/2022 - 
-; Instruct causes the target to use the first move it knows. This move
-; wont work with moves like Mimic/Copycat, wont decreasce the move PP,
-; and may be able to be used when normally it can't. I find this instruct
-; to be very boring, but useful for those who want more control
-; over the move their target uses.
+; Jawshoeuh 12/12/2022 - WIP, DO NOT USE
+; This version of instruct is incomplete! Please do not use it!
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 

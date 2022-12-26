@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/12/2022 - Probably Working
+; Jawshoeuh 11/12/2022 - Confirmed Working 12/26/2022
 ; Inferno deals damage and guarantees burn (if it hits).
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
@@ -17,12 +17,14 @@
 .include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
+.definelabel TryThawTarget, 0x02307C78
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
+;.definelabel TryThawTarget, 0x????????
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
@@ -34,7 +36,7 @@
         mov r1,r4
         mov r2,r8
         mov r3,r7
-        bl TryThawTarget
+        bl  TryThawTarget
         
         ; Deal damage.
         str r7,[sp]
