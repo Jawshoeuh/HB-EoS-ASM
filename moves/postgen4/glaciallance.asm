@@ -33,12 +33,20 @@
     .area MaxSize ; Define the size of the area
         
         ; Trivial damage!
+        sub sp,sp,#0x4
         str r7,[sp]
         mov r0,r9
         mov r1,r4
         mov r2,r8
         mov r3,#0x100 ; normal damage
         bl  DealDamage
+        add sp,sp,#0x4
+        
+        ; Check for succesful hit.
+        cmp   r0,#0
+        movne r10,#1
+        moveq r10,#0
+        beq   MoveJumpAddress
         
         ; Display Unfreeze Animation
         mov r0,r4 ; r0 = monster to display animation on

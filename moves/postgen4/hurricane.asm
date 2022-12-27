@@ -2,9 +2,8 @@
 ; Jawshoeuh 12/25/2022 - Confirmed Working 12/26/2022
 ; To avoid using complex ASM, the move should have guaranteed accuracy
 ; so that we can imitate/pretend to miss within hurricane itself.
-; While it can't hit targets in the middle of bounce/fly currently
-; (sorry!). It will never miss in the rain and will mostly have correct
-; accuracy values. Doesn't take into account evasiveness/accuracy drops.
+; It can't hit targets in the middle of bounce/fly currently
+; (sorry!).
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -23,6 +22,7 @@
 .definelabel MoveJumpAddress, 0x023326CC
 .definelabel GetApparentWeather, 0x02334D08
 .definelabel PlayAnimation, 0x022EA718
+.definelabel MoveHitCheckJump, 0x02323C68
 .definelabel ConfusionChance, 30
 .definelabel NormalAccuracy, 73 ; based off of Thunder
 .definelabel SunnyAccuracy, 50 ; based off of Thunder
@@ -33,6 +33,7 @@
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
 ;.definelabel GetApparentWeather, 0x02334D08
+;.definelabel MoveHitCheckJump, 0x02323C68
 ;.definelabel PlayAnimation, 0x022EA718
 ;.definelabel ConfusionChance, 30
 ;.definelabel HurrianceAccuracy, 73 ; based off of Thunder
@@ -46,24 +47,36 @@
         mov   r0,r9
         bl    GetApparentWeather
         cmp   r0,#0x4 ; Rain ID
-        beq   success
-        cmp   r0,#0x1 ; Sunny ID
-        moveq r2,SunnyAccuracy
-        movne r2,NormalAccuracy
+        beq   success ; skip check if raining
         
-        ; Artifical accuracy check.
-        mov r0,r9
-        mov r1,r4
-        ; Accuracy already put in above!
-        bl  RandomChanceUT ; yes, this ignores evasiveness/accuracy changes
-        cmp r0,#0
-        bne success
+        ; Branch into middle of move hit check in the middle.
+        ; Probably very not good practice. However, I don't feel like
+        ; implementing most of movehitcheck inside of my move...
+        push  lr ; preserve current lr
+        sub   sp,sp,#0x4
+        mov   r0,#0x1
+        str   r0,[sp]
+        ldr   r12,=after_check
+        stmdb sp!,{r4,r5,r6,r7,r8,r9,r10,r11,r12}
+        sub   sp,sp,#0xc
+        mov   r11,r8
+        mov   r7,r9
+        mov   r6,r4
+        cmp   r0,#0x1 ; Sunny ID
+        moveq r0,SunnyAccuracy
+        movne r0,NormalAccuracy
+        bl    MoveHitCheckJump
+    after_check:
+        pop   lr
+        add   sp,sp,#0x4
+        cmp   r0,#0x0
+        bne   success
         
         ; Generate artifical miss.
-        mov r2,#0x1
+        mov r2,#0x1    ; ???
         ldr r0,=0x270F ; animation id?
         mov r1,r4      ; must be entity to display it on.
-        sub r3,r2,#0x2
+        sub r3,r2,#0x2 ; ???
         bl  PlayAnimation ; Guessing...
         ldr r2,=0xEC3
         mov r0,r9
@@ -72,18 +85,20 @@
         mov r0,r9
         mov r1,r4
         bl  0x022E576C ; Maybe related to the miss sound or something? idk.
-        ; I will define the above function when I am certain how it works.
+        ; I will define the above function if someone knows what to call it.
         mov r10,#1
         b   MoveJumpAddress
         
     success:
         ; Deal damage.
+        sub sp,sp,#0x4
         str r7,[sp]
         mov r0,r9
         mov r1,r4
         mov r2,r8
         mov r3,#0x100 ; normal damage
         bl  DealDamage
+        add sp,sp,#0x4
         
         ;Check for succesful hit.
         cmp r0,#0

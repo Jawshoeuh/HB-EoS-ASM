@@ -32,11 +32,14 @@
     .area MaxSize ; Define the size of the area
         
         ; Deal damage.
+        sub sp,sp,#0x4
+        str r7,[sp]
         mov r0,r9
         mov r1,r4
         mov r2,r8
-        mov r3,#0x100
-        bl DealDamage
+        mov r3,#0x100 ; normal damage
+        bl  DealDamage
+        add sp,sp,#0x4
         
         ;Check for succesful hit.
         cmp r0,#0

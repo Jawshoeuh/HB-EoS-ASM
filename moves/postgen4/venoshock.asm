@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/17/2022 - Untested
+; Jawshoeuh 11/17/2022 - Confirmed Working 12/26/2022
 ; Venoshock deals extra damage if the pokemon is poisoned.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
@@ -39,13 +39,14 @@
         moveq r3,#0x200 ; Damage amp if badly poisoned/poisoned
         movne r3,#0x100 ; Regular damage otherwise.
         
-        ; Damage enemy.
+        sub sp,sp,#0x4
         str r7,[sp]
         mov r0,r9
         mov r1,r4
         mov r2,r8
-        ; damage is already in r3
+        ; damage multipler already in r3
         bl  DealDamage
+        add sp,sp,#0x4
         
         ; Always branch at the end
         b MoveJumpAddress

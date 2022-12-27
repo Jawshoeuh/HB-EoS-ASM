@@ -36,12 +36,14 @@
     .area MaxSize ; Define the size of the area
         
         ; Damage enemy.
+        sub sp,sp,#0x4
         str r7,[sp]
         mov r0,r9
         mov r1,r4
         mov r2,r8
         mov r3,#0x100 ; normal damage
         bl  DealDamage
+        add sp,sp,#0x4
         
         ; Check for succesful hit.
         cmp r0, #0
@@ -57,8 +59,8 @@
         ; Uh? Yeet (throw) the target?
         mov  r0,r9
         mov  r1,r4
-        ldr  r2,[r9,#0xb4]
-        ldrb r2,[r2,#0x4c]
+        ldr  r2,[r9,#0xB4]
+        ldrb r2,[r2,#0x4C]
         bl TryBlowAway
         
         mov r10,#1
