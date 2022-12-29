@@ -41,8 +41,8 @@
     
         ; Attempt to find a target in front of user.
         ; Get User Direction
-        ldr  r0, [r9,#0xb4]
-        ldrb r12,[r0,#0x4c] ; User Direction
+        ldr  r0, [r9,#0xB4]
+        ldrb r12,[r0,#0x4C] ; User Direction
         ; Visualization of values loaded from direction array.
         ; 5   4   3   (y-1)
         ;   \ | /

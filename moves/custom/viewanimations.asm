@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/12/2022 - Confirmed Working 12/28/2022
+; Jawshoeuh 12/27/2022 - Confirmed Working 12/28/2022
 ; View Animations displays all animations. May crash the game after
 ; because some animations are not intended to be loaded in dungeons and
 ; corrupt, clobber, or overwrite some of the other relevant data for the
@@ -57,9 +57,8 @@
         sub  sp,sp,#0x10
         
         ; Init Loop
-        ldr  r0,[r9,#0xB4]
-        ldr  r7,FirstAnimation
-        mov  r8,LastAnimation
+        ldr r7,FirstAnimation
+        mov r8,LastAnimation
         
     loop:
         mov r0,#0
@@ -68,8 +67,6 @@
         ldr r1,=#0xEAA ; By default, use the Magnitude String
         mov r0,r9
         bl  SendMessageWithIDLog
-        mov r0,r7
-        bl  0x022BDEB4
     
     ; Wait for the popup box to move down for our string.
         mov r4,#0
