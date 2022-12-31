@@ -1,6 +1,7 @@
 ; ------------------------------------------------------------------------------
 ; Jawshoeuh 12/28/2022 - Confirmed Working 12/28/2022
-; 
+; Just a test to see how the color palettes look on numbers above the head
+; and showing the number with and without signs.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -20,16 +21,21 @@
 .definelabel AdvanceFrame, 0x022E9FE0
 .definelabel DisplayTextAbove, 0x022EA718
 .definelabel ChangeStringNumber, 0x0234B09C
-.definelabel FramesBetweenAnimations, 40
-.definelabel FramesAfterText, 20
-.definelabel FirstPalette, 0
-.definelabel LastPalette, 15
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
+;.definelabel AdvanceFrame, 0x022EA990
+;.definelabel DisplayTextAbove, 0x????????
+;.definelabel ChangeStringNumber, 0x????????
+
+; Universal
+.definelabel FramesBetweenAnimations, 40
+.definelabel FramesAfterText, 20
+.definelabel FirstPalette, 0
+.definelabel LastPalette, 15
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels

@@ -3,7 +3,8 @@
 ; To avoid using complex ASM, the move should have guaranteed accuracy
 ; so that we can imitate/pretend to miss within hurricane itself.
 ; It can't hit targets in the middle of bounce/fly currently
-; (sorry!).
+; (sorry!). Credits to End for suggesting optimizations to
+; this effect.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -73,7 +74,7 @@
         bne   success
         
         ; Generate artifical miss.
-        mov r2,#0x1    ; maybe related to speed?
+        mov r2,#0x1    ; not certain?
         ldr r0,=0x270F ; number to show (0x270F is hardcoded to show MISS).
         mov r1,r4      ; entityt to display text above
         sub r3,r2,#0x2 ; color related, 0xfffffff normally, 0xb for stockpile

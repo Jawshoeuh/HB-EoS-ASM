@@ -68,7 +68,7 @@
         bl SendMessageWithStringLog
         
         ; Skill Swap/Role Play do this when a target's ability is changed.
-        ; It may not be neccessary here, but I do it anyway.
+        ; Mark that a move was used on the target.
         ldr    r3,[r4,#0xB4]
         ldrb   r0,[r3,#0x108]
         cmp    r0,#0x0
