@@ -19,6 +19,7 @@
 .include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
+.definelabel CalcSpeedStage, 0x022FFDF4
 .definelabel UpdateStatusIconFlags,0x022E3AB4
 
 ; For EU
@@ -65,6 +66,11 @@
         ldrb r1,[r12,#0x11D]
         strb r0,[r12,#0x11D]
         strb r1,[r12,#0x118]
+        
+        ; Recalculate new speed stage.
+        mov r0,r4
+        mov r1,#1
+        bl  CalcSpeedStage
         
         mov r0,r4
         bl UpdateStatusIconFlags

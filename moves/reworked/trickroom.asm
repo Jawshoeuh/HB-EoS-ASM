@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 12/31/2022 - Confirmed Working 12/31/2022
+; Jawshoeuh 12/31/2022 - WIP
 ; Trick Room swaps the speeds of all afffected monsters. Monsters
 ; with speed boosts become slow and slowed monsters become fast. This is
 ; intended to be used on everyone in a room or floor. If you plan on
@@ -50,18 +50,17 @@
         ldrb r3,[r12,#0x11D]
         
         ; Store Speed Down -> Speed Up
-        ldr  r2,[r12,#0x114]
-        ldrb r3,[r12,#0x118]
+        str  r2,[r12,#0x114]
+        strb r3,[r12,#0x118]
         
         ; Store Speed Up -> Speed Down
-        ldr  r0,[r12,#0x119]
-        ldrb r1,[r12,#0x11D]
+        str  r0,[r12,#0x119]
+        strb r1,[r12,#0x11D]
         
         ; Recalculate new speed stage.
         mov r0,r4
         mov r1,#1
         bl  CalcSpeedStage
-        ; don't need output
         
         mov r0,r4
         bl UpdateStatusIconFlags
