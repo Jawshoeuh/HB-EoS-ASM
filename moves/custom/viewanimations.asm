@@ -7,7 +7,10 @@
 ; themselves as not doing so messes with the visual number displayed
 ; additionally, they stay for an absurdly long time (probably because
 ; I don't use the function to stop the current animation that is playing
-; don't know what that is.
+; don't know what that function is.
+; 639, 640, 653, 659, 660, 661, 662, 668 are likely only intended to be
+; loaded in cutscenes. Playing the animation in dungeon mode will break
+; the game.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -80,7 +83,7 @@
         ; This is almost always called before PlayAnimation. However,
         ; is sparsely not loaded beforehand. Perhaps there is another
         ; function to load animations or this function is embedded in
-        ; another that gets called.
+        ; another that gets called?
         mov r0,r7
         bl  LoadAnimation
         

@@ -1,10 +1,10 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 12/31/2022 - WIP
+; Jawshoeuh 12/31/2022 - Confirmed Working 1/1/2023
 ; Trick Room swaps the speeds of all afffected monsters. Monsters
 ; with speed boosts become slow and slowed monsters become fast. This is
-; intended to be used on everyone in a room or floor. If you plan on
-; repurposing this for a single target, comment out line 62. There is
-; a less optimal version in the legacy folder.
+; intended to be used on everyone in a room or floor. I have tested it
+; and it works as intended, but can be confusing considering the game
+; doesn't normally allow speed swaps on the fly...
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -41,21 +41,17 @@
         
         ; I got the idea to load and store multiple at once by viewing
         ; Adex-8x's speed swap.
-        ; Load Speed Up Counters
-        ldr  r0,[r12,#0x114]
-        ldrb r1,[r12,#0x118]
+        ; Load & Store Speed Up/Down Counters 1-4
+        ldr r0,[r12,#0x114]
+        ldr r1,[r12,#0x119]
+        str r0,[r12,#0x119]
+        str r1,[r12,#0x114]
         
-        ; Load Speed Down Counters
-        ldr  r2,[r12,#0x119]
-        ldrb r3,[r12,#0x11D]
-        
-        ; Store Speed Down -> Speed Up
-        str  r2,[r12,#0x114]
-        strb r3,[r12,#0x118]
-        
-        ; Store Speed Up -> Speed Down
-        str  r0,[r12,#0x119]
-        strb r1,[r12,#0x11D]
+        ; Load & Store Speed Up/Down Counters 5
+        ldrb r0,[r12,#0x118]
+        ldrb r1,[r12,#0x11D]
+        strb r0,[r12,#0x11D]
+        strb r1,[r12,#0x118]
         
         ; Recalculate new speed stage.
         mov r0,r4

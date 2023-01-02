@@ -27,6 +27,7 @@
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
+;.definelabel CalcSpeedStage, 0x02300820
 ;.definelabel UpdateStatusIconFlags, 0x022E4464
 
 
@@ -73,7 +74,7 @@
         bl  CalcSpeedStage
         
         mov r0,r4
-        bl UpdateStatusIconFlags
+        bl  UpdateStatusIconFlags
         
         ; When swapping own speed, display message.
         ; This is done so the message is only seen once.
@@ -83,10 +84,10 @@
         mov r0,#0
         mov r1,r9
         mov r2,#0
-        bl ChangeString
+        bl  ChangeString
         mov r0,r9
         ldr r1,=trickroom_str
-        bl SendMessageWithStringLog
+        bl  SendMessageWithStringLog
         
         mov r10,#1
         ; Always branch at the end
