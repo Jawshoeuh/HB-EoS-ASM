@@ -60,7 +60,7 @@
         sub  sp,sp,#0x10
         
         ; Init Loop
-        ldr r7,FirstAnimation
+        mov r7,FirstAnimation
         mov r8,LastAnimation
         
     loop:
