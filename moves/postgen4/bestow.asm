@@ -122,8 +122,8 @@
         mov r0,r4
         bl  UpdateItemEffect
         
-        ; Mark that a move was used on the target for like XP.
-        ldr    r3,[r4,#0xB4]
+        ; Like Trick, the User will give more XP when killed. Why? Idk???
+        ldr    r3,[r9,#0xB4]
         ldrb   r0,[r3,#0x108]
         cmp    r0,#0x0
         movcc  r0,#0x1

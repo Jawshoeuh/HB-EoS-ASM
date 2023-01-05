@@ -23,7 +23,6 @@
 .definelabel MoveJumpAddress, 0x023326CC
 .definelabel TrySwitchPlace, 0x022EB178
 .definelabel WeatherChanged, 0x023354C4
-.definelabel WeatherUnchangedStr, 0xEC5
 .definelabel DIRECTIONS_XY, 0x0235171C
 .definelabel GetTile, 0x023360FC
 
@@ -34,9 +33,11 @@
 ;.definelabel MoveJumpAddress, 0x0233310C
 ;.definelabel TrySwitchPlace, 0x022EBB28
 ;.definelabel WeatherChanged, 0x????????
-;.definelabel WeatherUnchangedStr, 0x???
 ;.definelabel DIRECTIONS_XY, 0x2352328
 ;.definelabel GetTile, 0x2336CCC
+
+; Universal
+.definelabel WeatherUnchangedStr, 3781 ; 0xEC5
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
@@ -46,7 +47,7 @@
         ; Attempt to set weather to snow.
         ldr   r3,=0xBB8 ; Probably turn count.
         ldr   r2,=DungeonBaseStructurePtr
-        ldr   r2,[r2,#0x0] ; DungeonBaseStrPtr
+        ldr   r2,[r2] ; DungeonBaseStrPtr
         add   r2,r2,#0xCD00
         mov   r0,#0x1
         mov   r1,#0x0

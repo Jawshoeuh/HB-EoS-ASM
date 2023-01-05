@@ -99,13 +99,6 @@
         bl SendMessageWithStringLog
         mov r10,#1
         
-        ; Mark that a move was used on the target.
-        ldr    r3,[r4,#0xB4]
-        ldrb   r0,[r3,#0x108]
-        cmp    r0,#0x0
-        moveq  r0,#0x1
-        streqb r0,[r3,#0x108]
-        
         ; Double check if this new ability would end statuses.
         mov  r0,r9
         mov  r1,r4

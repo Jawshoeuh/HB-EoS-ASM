@@ -19,7 +19,6 @@
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
 .definelabel WeatherChanged, 0x023354C4
-.definelabel WeatherUnchangedStr, 0xEC5
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
@@ -27,7 +26,9 @@
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
 ;.definelabel WeatherChanged, 0x????????
-;.definelabel WeatherUnchangedStr, 0x???
+
+; Universal
+.definelabel WeatherUnchangedStr, 3781 ; 0xEC5
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
@@ -35,10 +36,9 @@
     .area MaxSize ; Define the size of the area
         
         ; Attempt to set weather to snow.
-        ldr   r3,=0xBB8 ; Set to this by DoMoveRainDance
+        ldr   r3,=0xBB8 ; Probably turn count.
         ldr   r2,=DungeonBaseStructurePtr
-        ldrsh r3,[r3,#0x0]
-        ldr   r2,[r2,#0x0] ; DungeonBaseStrPtr
+        ldr   r2,[r2] ; DungeonBaseStrPtr
         add   r2,r2,#0xCD00
         mov   r0,#0x1
         mov   r1,#0x0

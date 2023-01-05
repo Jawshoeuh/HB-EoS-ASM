@@ -104,15 +104,16 @@
         ldr   r1,=DungeonBaseStructurePtr
         ldrsh r2,[r1,#0x0]
         strb  r0,[r2,#0xe]
-     
-    not_user:
-        ; Skill Swap/Role Play do this when a target's ability is changed.
-        ldr    r3,[r4,#0xB4]
+        
+        ; Skill Swap/Role Play marks the user for extra XP. Like if a move
+        ; was used on them. Why? I don't know?
+        ldr    r3,[r9,#0xB4]
         ldrb   r0,[r3,#0x108]
         cmp    r0,#0x0
         moveq  r0,#0x1
         streqb r0,[r3,#0x108]
-        
+     
+    not_user:
         ; Double check if this new ability would end statuses.
         mov  r0,r4
         mov  r1,r4
