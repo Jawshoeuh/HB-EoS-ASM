@@ -1,6 +1,6 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/29/2022 - Confirmed Working 11/30/2022
-; Overcast Night causes the weather to be cloudy.
+; Jawshoeuh 1/4/2023 - Confirmed Working 1/4/2023
+; Misty Morning causes the weather to be fog.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -41,12 +41,11 @@
         add   r2,r2,#0xCD00
         mov   r0,#0x1
         mov   r1,#0x0
-        strh  r3,[r2,#0x40]
-        bl    WeatherChanged
+        strh  r3,[r2,#0x46]
         
         ; Return if weather changed succesfully.
         cmp r0,#0
-        mov r10,#1 ; 0x023260D0 (DoMoveRainDance) returns 1 regardless
+        mov r10,#1 ; 0x023260D0 (DoMoveRainDance) returns 1
         bne MoveJumpAddress
         
         ; Log that the weather stayed the same.
@@ -55,6 +54,7 @@
         mov r1,r4
         bl  SendMessageWithIDCheckUTLog
 
+        mov r10,#1
         ; Always branch at the end
         b MoveJumpAddress
         .pool

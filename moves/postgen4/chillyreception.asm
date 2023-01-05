@@ -44,9 +44,8 @@
     .area MaxSize ; Define the size of the area
         
         ; Attempt to set weather to snow.
-        ldr   r3,=0xBB8 ; Set to this by DoMoveRainDance
+        ldr   r3,=0xBB8 ; Probably turn count.
         ldr   r2,=DungeonBaseStructurePtr
-        ldrsh r3,[r3,#0x0]
         ldr   r2,[r2,#0x0] ; DungeonBaseStrPtr
         add   r2,r2,#0xCD00
         mov   r0,#0x1
