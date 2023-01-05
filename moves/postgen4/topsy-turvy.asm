@@ -55,7 +55,7 @@
     .area MaxSize ; Define the size of the area
     
         ; Store monster stuff in r12
-        ldr r12,[r4,#0xb4]
+        ldr r12,[r4,#0xB4]
         
         ; init stat boost swap loop
         mov r2,FirstStatStage
@@ -64,7 +64,7 @@
         mov  r1,#0x14    ; 20, the max it can go
         sub  r0,r1,r0    ; invert value
         strh r0,[r12,r2] ; store inverted value
-        add  r2,r2,#0x2     ; increment loop
+        add  r2,r2,#0x2  ; increment loop
         cmp  r2,LastStatStage
         ble  stat_boost_loop
         

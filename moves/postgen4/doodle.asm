@@ -74,7 +74,7 @@
         beq   MoveJumpAddress ; failed, no monster
         
         ; Load that monsters abiilities
-        ldr  r0,[r12,#0xb4]
+        ldr  r0,[r12,#0xB4]
         ldrb r1,[r0,#0x60]
         ldrb r0,[r0,#0x61]
         

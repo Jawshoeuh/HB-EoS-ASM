@@ -1,5 +1,6 @@
 ; ------------------------------------------------------------------------------
 ; Jawshoeuh 12/3/2022 - Confirmed Working 12/5/2022
+; TODO: Make this move better (works but not well made).
 ; Stone Axe does damage, tries to place down a trap, and
 ; activates the effect of a stealth rock  trap. Sometimes traps don't
 ; get shown?
@@ -66,7 +67,7 @@
         ; Try to place a stealth rock trap
         add   r0,r4,#0x4            ; r0 = pointer to x/y
         mov   r1,StealthRockTrapID  ; r1 = trap id
-        ldr   r2,[r9,#0xb4]         ; r2 = trap alignment
+        ldr   r2,[r9,#0xB4]         ; r2 = trap alignment
         ldrb  r2,[r2,#0x6]          ; notably it just checks for the non
         cmp   r2,#0                 ; team member flag, so I guess traps
         movne r2,#2                 ; placed by allied NPCs can hurt us?
@@ -94,14 +95,13 @@
         mov r0,r4
         mov r1,StealthRockTrapID
         add r1,r1,#0x51
-        add r1,r1,#0xb00
+        add r1,r1,#0xB00
         bl  SendMessageWithIDCheckULog
                               ; I think I could get away with just moving
         mov r0,r9             ; the target into r4 because the function
         mov r1,r4             ; only uses r1, but it's called with both r0
         bl  DoTrapStealthRock ; and r1 being set, so I do this to match.
-        
-        mov r10,#1
+
         ; Always branch at the end
         b MoveJumpAddress
         .pool

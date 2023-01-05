@@ -26,20 +26,22 @@
 .definelabel DestroyTrap, 0x022EDE7C 
 .definelabel GetTileSafe, 0x02336164
 .definelabel EntityIsValid, 0x22E0354
+.definelabel SomeDataAddr, 0x0237CA6D
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel IsFullFloorFixedRoom, 0x023361D4
+;.definelabel IsFullFloorFixedRoom, 0x02336DA4
 ;.definelabel GetTileAtEntity, 0x022E1F68
-;.definelabel HasDropeyeStatus, 0x02301F50
+;.definelabel HasDropeyeStatus, 0x0230297C
 ;.definelabel UpdateMinimap, 0x????????
 ;.definelabel UpdateDisplay, 0x????????
-;.definelabel DestroyTrap, 0x022EDE7C 
+;.definelabel DestroyTrap, 0x????????
 ;.definelabel GetTileSafe, 0x02336D34
 ;.definelabel EntityIsValid, 0x0022E0C94
+;.definelabel SomeDataAddr, 0x????????
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
@@ -77,7 +79,7 @@
         add   r0,r0,#0x100
         ldrh  r0,[r0,#0x92]
         tst   r0,#0x2
-        ldr   r0,=0x0237CA6D ; this addr is loaded by Rapid Spin
+        ldr   r0,=SomeDataAddr
         movne r1,#0x0
         moveq r1,#0x1
         strb  r1,[r0]
@@ -85,7 +87,7 @@
         ; Check to remove trap.
         bl    IsFullFloorFixedRoom
         cmp   r0,#0x0
-        mov   r10,#0
+        mov   r10,#1
         bne   MoveJumpAddress ; failed, don't work in fixed rooms
         
         ; Init loop to check for traps!
@@ -178,7 +180,6 @@
         bl UpdateMinimap
         bl UpdateDisplay
         
-        mov r10,#1
         add sp,sp,#0xC
         pop r5,r6,r7,r8,r9
         ; Always branch at the end

@@ -1,5 +1,6 @@
 ; ------------------------------------------------------------------------------
 ; Jawshoeuh 12/5/2022 - Confirmed Working 12/5/2022
+; TODO: Make this move better (works but not well made).
 ; Ceaseless edge does damage, tries to place down a trap, and
 ; activates the effect of a spikes trap. Sometimes traps don't get shown?
 ; Based on the template provided by https://github.com/SkyTemple

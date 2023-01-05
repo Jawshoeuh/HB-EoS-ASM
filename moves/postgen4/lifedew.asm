@@ -34,7 +34,7 @@
     .area MaxSize ; Define the size of the area
         
         ; Calculate Health
-        ldr   r0,[r4,#0xb4]
+        ldr   r0,[r4,#0xB4]
         ldrsh r1,[r0,#0x12]
         ldrsh r0,[r0,#0x16]
         add r0,r0,r1
@@ -47,7 +47,6 @@
         bl RaiseHP
         
         mov r10,#1
-        
         ; Always branch at the end
         b MoveJumpAddress
         .pool

@@ -66,7 +66,7 @@
         bl  SendMessageWithStringLog
 
         ; Change Ability To Simple
-        ldr  r0,[r4,#0xb4]
+        ldr  r0,[r4,#0xB4]
         mov  r1,SimpleAbilityID
         mov  r2,#0x0       ; Ability 0 = None
         strb r1,[r0,#0x60] ; First Ability -> Simple
