@@ -36,14 +36,14 @@
         mov r1,r4
         mov r2,#0
         mov r3,#1
-        bl AttackStatUp
+        bl  AttackStatUp
         
         ; Raise defense.
         mov r0,r9
         mov r1,r4
         mov r2,#0
         mov r3,#1
-        bl DefenseStatUp
+        bl  DefenseStatUp
         
         mov r10,#1
         ; Always branch at the end

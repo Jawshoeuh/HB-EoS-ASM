@@ -11,7 +11,6 @@
 .nds
 .arm
 
-
 .definelabel MaxSize, 0x2598
 
 ; Uncomment the correct version
@@ -32,11 +31,16 @@
 ;.definelabel SimpleAbilityID, 0x61 ; 97
 ;.definelabel TruantAbilityID, 0x2A ; 40
 
-
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
+    
+        ; preemptively substitute target into slot 1.
+        mov r0,#1
+        mov r1,r4
+        mov r2,#0
+        bl  ChangeString
 
         ; Check for Truant Ability
         mov r0,r4
@@ -45,23 +49,16 @@
         cmp r0,#0
         beq success
         
-        mov r0,#0
-        mov r1,r4
-        mov r2,#0
-        bl  ChangeString
+        ; Failed!
         ldr r1,=failed_simplebeam_str
         mov r0,r4
         bl  SendMessageWithStringLog
 
-        mov r10,#1
+        mov r10,#0
         b MoveJumpAddress
         
     success:
-        mov r0,#0
-        mov r1,r4
-        mov r2,#0
-        bl  ChangeString
-        ldr r1,=failed_simplebeam_str
+        ldr r1,=simplebeam_str
         mov r0,r4
         bl  SendMessageWithStringLog
 
@@ -73,17 +70,13 @@
         strb r2,[r0,#0x61] ; Secon Ability -> None
         
         ; Log ability change.
-        mov r0,#0
-        mov r1,r4
-        mov r2,#0
-        bl  ChangeString
-        mov r0,r9
+        mov r0,r4
         ldr r1,=simplebeam_str
         bl  SendMessageWithStringLog
         
-        ; Skill Swap/Role Play do this when a target's ability is changed.
-        ; Mark that a move was used on the target.
-        ldr    r3,[r4,#0xB4]
+        ; I don't know why, but Skill Swap/Role Play does this to the
+        ; user so they give more XP. Why? I don't know?
+        ldr    r3,[r9,#0xB4]
         ldrb   r0,[r3,#0x108]
         cmp    r0,#0x0
         moveq  r0,#0x1
@@ -97,8 +90,8 @@
         b MoveJumpAddress
         .pool
     simplebeam_str:
-        .asciiz "[string:0]'s ability became Simple!"
+        .asciiz "[string:1]'s ability became Simple!"
     failed_simplebeam_str:
-        .asciiz "[string:0]'s Truant ability[R]prevents Simple!"
+        .asciiz "[string:1]'s Truant ability[R]prevents Simple!"
     .endarea
 .close

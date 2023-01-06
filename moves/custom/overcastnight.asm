@@ -8,7 +8,6 @@
 .nds
 .arm
 
-
 .definelabel MaxSize, 0x2598
 
 ; Uncomment the correct version
@@ -28,7 +27,7 @@
 ;.definelabel WeatherChanged, 0x????????
 
 ; Universal
-.definelabel WeatherUnchangedStr, 3781 ; 0xEC5
+.definelabel WeatherUnchangedStr, 0xEC5 ; 3781
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels

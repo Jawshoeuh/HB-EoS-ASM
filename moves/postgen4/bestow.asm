@@ -125,8 +125,8 @@
         ; Like Trick, the User will give more XP when killed. Why? Idk???
         ldr    r3,[r9,#0xB4]
         ldrb   r0,[r3,#0x108]
-        cmp    r0,#0x0
-        movcc  r0,#0x1
+        cmp    r0,#0
+        movcc  r0,#1
         strccb r0,[r3,#0x108]
         
         ; Display target got item.

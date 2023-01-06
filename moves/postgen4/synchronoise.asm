@@ -1,15 +1,12 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/12/2022 - Confirmed Working 11/29/2022
-; Life Dew heals 1/4 of all allies health.
-; The heal should fail on allies with Water Absorb, Storm Drain,
-; and Dry Skin but the interaction is not tested.
+; Jawshoeuh 1/6/2023 - WIP
+; Synchronoise only deals damage if the user and target share a type.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
 .relativeinclude on
 .nds
 .arm
-
 
 .definelabel MaxSize, 0x2598
 
@@ -27,27 +24,47 @@
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
 
-
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
         
-        ; Calculate Health
-        ldr   r0,[r4,#0xB4]
-        ldrsh r1,[r0,#0x12]
-        ldrsh r0,[r0,#0x16]
-        add r0,r0,r1
+        ; Get User Types
+        ldr   r12,[r9,#0xB4]
+        ldrb  r0,[r12,#0x5E]
+        ldrb  r1,[r12,#0x5F]
         
-        ;Heal
-        lsr r2,r0,#2 ; Divide health by 4
+        ; Get Target Types
+        ldr   r10,[r4,#0xB4]
+        ldrb  r2,[r10,#0x5E]
+        ldrb  r3,[r10,#0x5F]
+        
+        ; Check first type.
+        cmp   r0,#0
+        beq   check_second_type
+        cmp   r0,r2
+        cmpne r0,r3
+        beq   target_shares_type
+        
+    check_second_type:
+        cmp   r1,#0
+        mov   r10,#0
+        beq   MoveJumpAddress ; failed, no secondary type
+        cmp   r1,r2
+        cmpne r1,r3
+        bne   MoveJumpAddress ; failed, no match found
+        
+    target_shares_type: ; Deal like damage or something man.
+        sub sp,sp,#0x4
+        str r7,[sp]
         mov r0,r9
         mov r1,r4
-        mov r3,#0 ; Don't increasce temp max HP
-        bl RaiseHP
+        mov r2,r8
+        mov r3,#0x100 ; normal damage
+        bl  DealDamage
+        add sp,sp,#0x4
         
         mov r10,#1
-        ; Always branch at the end
         b MoveJumpAddress
         .pool
     .endarea

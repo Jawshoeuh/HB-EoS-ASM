@@ -83,7 +83,7 @@
         ; don't care either. I mean obviously it's something on the stack.
         ; Maybe the number of this target.
         
-        ldr r0,[sp,#0x88] ; Some magical expletive value (0x78)
+        ldr r0,[sp,#0x88] ; Some magical expletive value (0x78 from call)
         cmp r0,#0x0
         bne unallocate_memory
     
