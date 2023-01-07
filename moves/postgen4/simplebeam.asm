@@ -36,7 +36,7 @@
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
     
-        ; preemptively substitute target into slot 1.
+        ; Preemptively substitute target into slot 1.
         mov r0,#1
         mov r1,r4
         mov r2,#0

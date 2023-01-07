@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/5/2023 - Confirmed Working 1/5/2023
+; Jawshoeuh 1/5/2023 - Confirmed Working 1/6/2023
 ; Cotton Guard raises the user's defense 3 (count 'em 3) stages!
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------

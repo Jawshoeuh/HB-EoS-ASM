@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/28/2022 - Confirmed Working 1/5/2023
+; Jawshoeuh 11/28/2022 - Confirmed Working 1/6/2023
 ; Make It Rain deals damage, drops coins and lowers user special attack.
 ; Unfortunately, the special attack is lowered after the first target.
 ; HOWEVER, I wont be fixing this because Draco Meteor does this too (and
@@ -88,6 +88,9 @@
         bne unallocate_memory
     
         ; Lower special attack if last target.
+        mov r12,#0
+        str r12,[sp,#0x0] ; don't check abilities/items
+        str r12,[sp,#0x4] ; don't display message on failure
         mov r0,r9
         mov r1,r9
         mov r2,#1 ; special attack

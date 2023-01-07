@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/5/2023 - WIP
+; Jawshoeuh 1/5/2023 - Confirmed Working 1/6/2023
 ; Reflect Type changes the user's type to be the same as the target's.
 ; Includes a special check for the ability Forecast! 
 ; Based on the template provided by https://github.com/SkyTemple
@@ -95,7 +95,7 @@
         b MoveJumpAddress
         .pool
     reflecttype_str:
-        .asciiz "[string:0] converted to [string:1]'s[R] type!"
+        .asciiz "[string:0] converted to [string:1]'s[R]type!"
     reflecttype_fail_str:
         .asciiz "But [string:1] was typeless?"
     .endarea

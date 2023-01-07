@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/12/2022 - Confirmed Working 11/28/2022
+; Jawshoeuh 11/12/2022 - Confirmed Working 1/6/2023
 ; Shell Smashes raises the User's Attack, Special Attack and Speed by 2 but
 ; also lowers the User's Defense and Special Defense by 1.
 ; Based on the template provided by https://github.com/SkyTemple
@@ -31,45 +31,52 @@
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
+        sub sp,sp,#0x8
         
         ; Raise attack.
         mov r0,r9
         mov r1,r4
         mov r2,#0
-        mov r3,#2
+        mov r3,#2 ; 2 stages
         bl AttackStatUp
         
         ; Raise special attack.
         mov r0,r9
         mov r1,r4
         mov r2,#1
-        mov r3,#2
+        mov r3,#2 ; 2 stages
         bl AttackStatUp
         
-        ; Raise speed (only 1, because I suspect raising it 2 stages
-        ; is probably too strong!)
+        ; Raise speed two stages.
+        mov r3,#1
         mov r0,r9
         mov r1,r4
-        mov r2,#0 ; default speeds
-        mov r3,#0
-        bl SpeedStatUpOneStage
+        mov r2,#2   ; 2 stages
+        str r3,[sp] ; yes, fail message
+        mov r3,#0   ; default number turns
+        bl  SpeedStatUp
         
         ; Lower defense.
         mov r0,r9
         mov r1,r4
         mov r2,#0
+        str r2,[sp,#0x4]
         mov r3,#1
+        str r3,[sp,#0x0]
         bl DefenseStatDown
         
         ; Lower special defense.
+        mov r12,#0
         mov r0,r9
         mov r1,r4
+        str r12,[sp,#0x4]
         mov r2,#1
         mov r3,#1
+        str r3,[sp,#0x0]
         bl DefenseStatDown
         
         mov r10,#1
-        ; Always branch at the end
+        add sp,sp,#0x8
         b MoveJumpAddress
         .pool
     .endarea

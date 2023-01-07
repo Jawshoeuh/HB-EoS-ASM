@@ -3,17 +3,17 @@ Moves With Existing Effects:<br/>
 Ally Switch (Switcher Orb), Bulldoze (DoMoveDamageLowerSpeed100), Drill Run (DoMoveDamage), Dual Chop (DoMoveDamage), Electroweb (Icy Wind), Frost Breath (DoMoveDamage), Gear Grind (DoMoveDamage), Glaciate (DoMoveDamageLowerSpeed100), Head Charge (Recoil), Heal Pulse (DoMoveRecoverHp), Heart Stamp (DoMoveDamageCringe30), Horn Leech (DoMoveDamageDrain), Leaf Tornado (DoMoveOctazooka), Low Sweep (DoMoveDamageLowerSpeed100), Night Daze (DoMoveDamageLowerAccuracy40), Rage Powder (DoMoveDecoy), Razor Shell (DoMoveCrushClaw), Steamroller (DoMoveDamageCringe30), Storm Throw (DoMoveDamage), Tail Slap (DoMoveDamage), Volt Switch (DoMoveDamage), Wild Charge (DoMoveDamageWithRecoil)
 
 Completed Move Effects:
-Acid Spray, Bestow, Circle Throw (See Dragon Tail), Dragon Tail, Entrainment, Final Gambit, Hone Claws, Hurricane, Inferno, Quash, Scald, Searing Shot (See Scald), Shell Smash, Shift Gear, Simple Beam, Snarl, Struggle Bug (See Snarl), Venoshock, Work Up
+Acid Spray, Bestow, Circle Throw (See Dragon Tail), Coil, Cotton Guard, Dragon Tail, Entrainment, Fiery Dance, Final Gambit, Hone Claws, Hurricane, Inferno, Quash, Reflect Type, Relic Song, Scald, Searing Shot (See Scald), Shell Smash, Shift Gear, Simple Beam, Snarl, Soak, Struggle Bug, Synchronoise, Venoshock, Work Up
 
 Moves Todo:
-After You, Autotomize, Bolt Strike, Blue Flare, Chip Away, Clear Smog, Coil, Cotton Guard, Echoed Voice, Electro Ball, Fiery Dance, Fire Pledge, Grass Pledge, Water Pledge, Flame Burst, Flame Charge, Foul Play, Freeze Shock, Fusion Bolt, Fusion Flare, Guard Split, Heat Crash , Heavy Slam, Hex, Ice Burn, Incinerate, Psyshock, Psystrike, Quick Guard, Quiver Dance, Reflect Type, Relic Song, Retaliate, Round, Sacred Sword, Secret Sword, Sky Drop, Smack Down, Soak, Stored Power, Synchronoise, Techno Blast, Telekinesis, V-create, Wide Guard, Wonder Room
+After You, Autotomize, Bolt Strike, Blue Flare, Chip Away, Clear Smog, Echoed Voice, Electro Ball, Fire Pledge, Grass Pledge, Water Pledge, Flame Burst, Flame Charge, Foul Play, Freeze Shock, Fusion Bolt, Fusion Flare, Guard Split, Heat Crash , Heavy Slam, Hex, Ice Burn, Incinerate, Psyshock, Psystrike, Quick Guard, Quiver Dance, Retaliate, Round, Sacred Sword, Secret Sword, Sky Drop, Smack Down, Stored Power, Techno Blast, Telekinesis, V-Create, Wide Guard, Wonder Room
 
 # Gen 6
 Moves With Existing Effects:<br/>
 Baby-Doll Eyes (DoMoveGrowl), Boomburst (DoMoveDamage), Celebrate (Effect 325), Dazzling Gleam (DoMoveDamage), Disarming Voice (DoMoveDamage), Dragon Ascent (DoMoveCloseCombat), Fairy Wind (DoMoveDamage), Land's Wrath (DoMoveDamageWithRecoil), Light of Ruin (DoMoveDamageWithRecoil), Origin Pulse (DoMoveDamage), Petal Blizzard (DoMoveDamage), Phantom Force (DoMoveShadowForce), Play Nice (DoMoveGrowl), Precipice Blades (DoMoveDamage), Water Shuriken (DoMoveDamage)
 
 Completed Move Effects:<br/>
-Fell Stinger, Steam Eruption (See Scald), Sticky Web, Topsy-Turvy
+Fell Stinger, Mystical Fire, Steam Eruption (See Scald), Sticky Web, Topsy-Turvy
 
 Moves Todo:<br/>
 Aromatic Mist, Belch, Confide, Crafty Shield, Diamond Storm, Draining Kiss, Eerie Impulse, Fairy Lock, Flower Shield, Flying Press, Forest's Curse, Freeze-Dry, Geomancy, Hyperspace Fury, Hyperspace Hole, Infestation, Magnetix Flux, Mat Block, Noble Roar, Nuzzle, Oblivion Wing (see Draining Kiss), Parting Shot, Play Rough, Power-Up Punch, Rototiller, Trick-or-Treat, Venom Drench
@@ -40,7 +40,7 @@ Moves With Existing Effects:<br/>
 Astral Barrage (DoMoveDamage), Branch Poke (DoMoveDamage), Chloroblast (DoMoveDamageWithRecoil), Dragon Darts (DoMoveDamage), Dragon Energy (DoMoveWaterSpout), Drum Beating (DoMoveDamageLowerSpeed100), Dual Wingbeat (DoMoveDamage), Eternabeam (Hyperbeam, Giga Impact), False Surrender (DoMoveDamage), Fiery Wrath (DoMoveDamageCringe20), Flip Turn (DoMoveDamage), Freezing Glare (DoMoveDamageFreeze15), Glacial Lance (DoMoveDamage), Overdrive (DoMoveDamage), Pyro Ball (DoMoveDamageBurn10), Surging Strikes (DoMoveDamage), Thunder Cage (DoMoveDamageConstrict10), Triple Axel (See DoMoveDamageMultihitUntilMiss), Wicked Blow (See DoMoveDamage)
 
 Completed Move Effects:<br/>
-Apple Acid (See Acid Spray), Corrosive Gas, Court Change, Life Dew, Sandsear Storm (See Scald), Scorching Sands (See Scald), Skitter Smack (See Snarl), Spirit Break (See Snarl), Stone Axe
+Apple Acid (See Acid Spray), Corrosive Gas, Court Change, Life Dew, Sandsear Storm (See Scald), Scorching Sands (See Scald), Skitter Smack (See Struggle Bug), Spirit Break (See Struggle Bug), Stone Axe
 
 Moves Todo:<br/>
 Aura Wheel, Barb Barrage, Bitter Malice, Bleakwind Storm, Body Press, Bolt Beak, Breaking Swipe, Burning Jealousy, Clangorous Soul, Coaching, Decorate, Dire Claw, Eerie Spell, Esper Wing, Fishious Rend, Grav Apple, Infernal Parade, Jaw Lock, Jungle Healing, Lash Out, Lunar Blessing, Magic Powder, Octolock, Poltergeist, Power Shift, Psyshield Bash, Raging Fury, Scale Shot, Shell Side Arm, Shelter, Snap Trap, Snipe Shot, Springtide Storm, Steel Beam, Strange Stream, Stuff Cheeks, Take Heart, Teatime, Thunderous Kick, Triple Arrows, Victory Dance, Wildbolt Storm

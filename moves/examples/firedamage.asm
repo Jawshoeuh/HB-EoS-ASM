@@ -31,6 +31,7 @@
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
+        sub sp,sp,#0x4
     
         ; Try to thaw target.
         mov r0,r9
@@ -40,17 +41,19 @@
         bl TryThawTarget
 
         ; Deal damage.
+        str r7,[sp]
         mov r0,r9
         mov r1,r4
         mov r2,r8
-        mov r3,#0x100
-        bl DealDamage
+        mov r3,#0x100 ; Normal 1.0x Damage
+        bl  DealDamage
         
         ; Return r10
         cmp r0,#0
-        moveq r10,#0
-        movne r10,#1
-        ; Always branch at the end
+        moveq r10,#0 ; Failure
+        movne r10,#1 ; Success
+        
+        add sp,sp,#0x4
         b MoveJumpAddress
         .pool
     .endarea

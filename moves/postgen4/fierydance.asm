@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/6/2023 - WIP
+; Jawshoeuh 1/6/2023 - Confirmed Working 1/6/2023
 ; Fiery Dance thaws the target, deals damage, and has a 50% chance to raise
 ; the user's special attack.
 ; Based on the template provided by https://github.com/SkyTemple
@@ -18,15 +18,17 @@
 .include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
+.definelabel TryThawTarget, 0x02307C78
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
+;.definelabel TryThawTarget, 0x????????
 
 ; Universal
-.definelabel BoostSpecialAttackChance
+.definelabel BoostSpecialAttackChance, 50
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
@@ -66,10 +68,17 @@
         
         ; Raise special attack
         mov r0,r9
-        mov r1,r4
+        mov r1,r9
         mov r2,#1 ; special attack
-        mov r3,#1
+        mov r3,#1 ; 1 stage
         bl  AttackStatUp
+        
+        ; Set 0x108 to 1 if 0 for user if stats get boosted.
+        ldr    r3,[r9,#0xB4]
+        ldrb   r0,[r3,#0x108]
+        cmp    r0,#0x0
+        moveq  r0,#0x1
+        streqb r0,[r3,#0x108]
         
         b MoveJumpAddress
         .pool

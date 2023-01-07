@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/6/2023 - WIP
+; Jawshoeuh 1/6/2023 - Confirmed Working 1/6/2023
 ; Synchronoise only deals damage if the user and target share a type.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
@@ -52,7 +52,21 @@
         beq   MoveJumpAddress ; failed, no secondary type
         cmp   r1,r2
         cmpne r1,r3
-        bne   MoveJumpAddress ; failed, no match found
+        beq   target_shares_type ; failed, no match found
+        
+        ; Say target/user don't share type.
+        mov r0,#0
+        mov r1,r9
+        mov r2,#0
+        bl ChangeString ; User
+        mov r0,#1
+        mov r1,r4
+        mov r2,#0
+        bl ChangeString ; Target
+        ldr r1,=synchronoise_fail_str
+        mov r0,r4
+        bl  SendMessageWithStringLog
+        b MoveJumpAddress
         
     target_shares_type: ; Deal like damage or something man.
         sub sp,sp,#0x4
@@ -67,5 +81,7 @@
         mov r10,#1
         b MoveJumpAddress
         .pool
+    synchronoise_fail_str:
+        .asciiz "[string:0] and [string:1] don't share[R]a type!"
     .endarea
 .close

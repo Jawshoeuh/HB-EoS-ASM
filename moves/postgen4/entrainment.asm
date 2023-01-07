@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 12/2/2022 - Confirmed Working 12/23/2022
+; Jawshoeuh 12/2/2022 - WIP
 ; Entrainment changes the target's ability to match the user's.
 ; While Adex-8x's version will function identically most of the time,
 ; this one checks for Truant, Trace, Forecast, and Flower Gift
@@ -49,43 +49,36 @@
         mov r2,#0
         bl ChangeString ; Target
 
-        ; Check for Truant Ability
-        mov r0,r4
-        mov r1,TruantAbilityID
-        bl  HasAbility
-        cmp r0,#0
-        bne failed_ability_truant
+        ; Check for Truant manually since we don't want to accidentally
+        ; share it even if it is suppressed by Gastro Acid!
+        ldr   r3,[r4,#0xB4]
+        ldrb  r1,[r3,#0x60]
+        ldrb  r2,[r3,#0x61]
+        cmp   r1,TruantAbilityID
+        cmpne r2,TruantAbilityID
+        beq   failed_ability_truant
 
-        ; Check for Flower Gift Ability
-        mov r0,r9
-        mov r1,FlowerGiftAbilityID
-        bl  HasAbility
-        cmp r0,#0
-        bne failed_ability
-        
-        ; Check for Forecast Ability
-        mov r0,r9
-        mov r1,ForecastAbilityID
-        bl  HasAbility
-        cmp r0,#0
-        bne failed_ability
-        
-        ; Check for Trace
-        mov r0,r9
-        mov r1,TraceAbilityID
-        bl  HasAbility
-        cmp r0,#0
-        bne failed_ability
-        
+        ; Check abilities manually since we don't want to accidentally
+        ; share illegal abilities if the ability is suppresed.
         ; Load our abilities.
         ldr  r0,[r9,#0xB4]
         ldrb r1,[r0,#0x60]
         ldrb r2,[r0,#0x61]
+        
+        ; Check for illegal abilities.
+        cmp   r1,FlowerGiftAbilityID
+        cmpne r1,ForecastAbilityID
+        cmpne r1,TraceAbilityID
+        cmpne r2,FlowerGiftAbilityID
+        cmpne r2,ForecastAbilityID
+        cmpne r2,TraceAbilityID
+        beq   failed_ability ; failed, banned entrainment ability!
+        
         ; Give our abilities.
-        ldr  r3,[r4,#0xb4]
         strb r1,[r3,#0x60]
         strb r2,[r3,#0x61]
-        ; Set flag for dungeon to activate artificial weather abilities.
+        
+        ; Set flag for dungeon to check artificial weather abilities.
         mov   r0,#0x1
         ldr   r1,=DungeonBaseStructurePtr
         ldrsh r2,[r1,#0x0]
@@ -94,7 +87,6 @@
         mov r0,r9
         ldr r1,=entrainment_str
         bl  SendMessageWithStringLog
-        mov r10,#1
         
         ; Double check if this new ability would end statuses.
         mov r0,r9
@@ -125,6 +117,6 @@
     failed_entrainment_truant_str:
         .asciiz "[string:1]'s Truant ability[R]can't be changed!"
     failed_entrainment_str:
-        .asciiz "[string:0]'s ability can't be shared!"
+        .asciiz "[string:0]'s abilities can't be shared!"
     .endarea
 .close

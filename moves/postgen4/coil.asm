@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/5/2023 - Confirmed Working 1/5/2023
+; Jawshoeuh 1/5/2023 - Confirmed Working 1/6/2023
 ; Coil raises attack, defense, and accuracy.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
