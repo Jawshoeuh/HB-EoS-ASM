@@ -49,10 +49,7 @@
         ; Could maybe push/pop r6/r7 instead of loading the user/target
         ; extra monster data. It probably doesn't make a huge difference.
     
-        ; Sub user/target strings.
-        ; Normally, the target is in 0 and the user is in 1; however
-        ; because we use strings originally intended for Thief/Covet
-        ; where the user gets the item, we reverse here.
+        ; Subs strings earlier for fail messages.
         mov r0,#0
         mov r1,r4
         mov r2,#0
@@ -130,6 +127,14 @@
         strccb r0,[r3,#0x108]
         
         ; Display target got item.
+        mov r0,#0
+        mov r1,r4
+        mov r2,#0
+        bl  ChangeString ; Target
+        mov r0,#1
+        mov r1,r9
+        mov r2,#0
+        bl  ChangeString ; User
         ldr r1,=bestow_get_str
         mov r0,r9
         bl SendMessageWithStringLog

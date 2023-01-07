@@ -44,7 +44,7 @@
         mov r0,r9
         mov r1,r4
         mov r2,#0
-        mov r3,#0
+        mov r3,#1
         bl SpeedStatUpOneStage
         
         ; Branch to code for the move Trap Buster.

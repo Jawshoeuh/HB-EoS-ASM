@@ -34,7 +34,7 @@
     .area MaxSize ; Define the size of the area
         
         ; Calculate Health
-        ldr   r0,[r4,#0xb4]
+        ldr   r0,[r4,#0xB4]
         ldrsh r1,[r0,#0x12]
         ldrsh r2,[r0,#0x16]
         ldrsh r3,[r0,#0x10]   ; Current HP
@@ -60,22 +60,22 @@
     success:
         ; Simply set our health lower and update.
         strh r3,[r0,#0x10]
-        mov r0,r4
-        bl UpdateStatusIconFlags
+        mov  r0,r4
+        bl   UpdateStatusIconFlags
         
         ; Raise attack.
         mov r0,r9
         mov r1,r4
         mov r2,#0
         mov r3,#2
-        bl AttackStatUp
+        bl  AttackStatUp
         
         ; Raise special attack.
         mov r0,r9
         mov r1,r4
         mov r2,#1
         mov r3,#2
-        bl AttackStatUp
+        bl  AttackStatUp
         
         ; Raise speed 
         mov r3,#0
@@ -84,7 +84,7 @@
         mov r1,r4
         mov r2,#2
         mov r3,#0 ; default turns
-        bl SpeedStatUp
+        bl  SpeedStatUp
         
         mov r0,#0
         mov r1,r4
