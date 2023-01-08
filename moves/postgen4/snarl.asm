@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/12/2022 - Confirmed Working 1/6/2023
+; Jawshoeuh 11/12/2022 - Confirmed Working 1/8/2023
 ; Snarl deals damage and lowers the opponent's special attack. Despite
 ; being so simple, there is a lot of work behind the scenes because snarl
 ; is a sound based move.
@@ -56,14 +56,23 @@
         mov r3,#0x100 ; normal damage
         bl  DealDamage
         
-        ;Check for succesful hit.
+        ; Check for succesful hit.
+        cmp r0,#0
+        beq unallocate_memory
+        mov r10,#1
+        
+        ; Basiclly just a valid/shield dust check.
+        mov r0,r9
+        mov r1,r4
+        mov r2,#0 ; guaranteed
+        bl  RandomChanceUT
         cmp r0,#0
         beq unallocate_memory
         
         ; Lower special attack if hit target.
-        str r10,[sp,#0x4] ; don't display message on failure, r10 = 0 here
-        mov r10,#1        ; set r10 early to use to str as parameter
-        str r10,[sp,#0x0] ; check items/abilities
+        mov r12,#0
+        str r12,[sp,#0x4] ; don't display message on failure
+        str r10,[sp,#0x0] ; check items/abilities, r10 = 1 here
         mov r0,r9
         mov r1,r4
         mov r2,#1 ; special attack

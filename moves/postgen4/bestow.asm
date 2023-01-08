@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 12/29/2022 - Confirmed Working 12/30/2022
+; Jawshoeuh 12/29/2022 - Confirmed Working 1/8/2023
 ; Bestow gives the target their held item. This move is probably extremely
 ; useless as you can normally just throw items to give them or open
 ; the menu to give them to your partner. However, it exists for the

@@ -1,6 +1,7 @@
 ; ------------------------------------------------------------------------------
 ; Jawshoeuh 1/7/2023 - Confirmed Working 1/8/2023
-; Confide lowers special attack, but it's a sound move!
+; Sparkling Aria does damage and heals the target of their burn. Also accept
+; sound move, so check for Soundproof.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -17,12 +18,14 @@
 .include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
+.definelabel EndBurnClassStatus, 0x023061A8
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
+;.definelabel HealDamagingVolatileStatusCondition, 0x????????
 
 ; Universal
 .definelabel SoundproofAbilityID, 0x3C ; 60
@@ -44,19 +47,40 @@
         mov r10,#0
         bne failed_soundproof
 
-        sub sp,sp,#0x8
-        mov r10,#1 ; set r10 early to use to str as parameter
-        ; Simply lower special attack
-        str r10,[sp,#0x4] ; display message on fail
-        str r10,[sp,#0x0] ; check items/abilities
+        ; Deal damage.
+        sub sp,sp,#0x4
+        str r7,[sp]
         mov r0,r9
         mov r1,r4
-        mov r2,#1 ; special attack
-        mov r3,#1 ; 1 stage
-        bl  AttackStatDown
-        add sp,sp,#0x8
+        mov r2,r8
+        mov r3,#0x100 ; normal damage
+        bl  DealDamage
+        add sp,sp,#0x4
         
-        b MoveJumpAddress   
+        ; Check for succesful hit.
+        cmp r0,#0
+        beq MoveJumpAddress
+        mov r10,#1
+        
+        ; For some twisted reason, Sparkling Aria won't heal a target's
+        ; burn if they have Shield Dust. Why? WHY?
+        mov r0,r9
+        mov r1,r4
+        mov r2,#0 ; guaranteed
+        bl  RandomChanceUT
+        cmp r0,#0
+        beq MoveJumpAddress
+        
+        ; Check for Burn, heal if has Burn
+        ldr  r0,[r9,#0xB4]
+        ldrb r1,[r0,#0xBF]
+        cmp  r1,#0x1
+        bne  MoveJumpAddress
+        mov  r0,r9
+        mov  r1,r4
+        bl   EndBurnClassStatus
+        b    MoveJumpAddress
+        
     failed_soundproof:
         mov r0,#1
         mov r1,r4

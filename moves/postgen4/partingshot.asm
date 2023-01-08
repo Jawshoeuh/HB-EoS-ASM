@@ -1,9 +1,11 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/12/2022 - Confirmed Working 11/30/2022
-; U-turn deals damage and then the user swaps with an ally behind them.
-; Currently functions identically to Adex-8x's implementation, but uses
-; a bit of cleverness for determining the tile behind and whether or not
-; the monster behind is an ally or enemy.
+; Jawshoeuh 1/7/2023 - Confirmed Working 1/8/2023
+; Parting Shot reduces Attack & Special Attack of the Target. Since Gen 7,
+; this move fails if the user's attack/special attack doesn't get dropped.
+; Since that's such a niche scenario (the target must be at the lowest
+; attack AND special attack), I decided not to implement it. However,
+; I have implemented a check for Clear Body/White Smoke/Exclusive Item
+; Effect? and Twist Band.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -20,6 +22,7 @@
 .include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
+.definelabel StatsCanBeLowered,0x02301B2C ; convenient function
 .definelabel TrySwitchPlace, 0x022EB178
 .definelabel DIRECTIONS_XY, 0x0235171C
 .definelabel GetTile, 0x023360FC
@@ -29,30 +32,69 @@
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
+;.definelabel StatsCanBeLowered,0x????????
 ;.definelabel TrySwitchPlace, 0x022EBB28
 ;.definelabel DIRECTIONS_XY, 0x2352328
 ;.definelabel GetTile, 0x2336CCC
+
+; Universal
+.definelabel SoundproofAbilityID, 0x3C ; 60
+.definelabel SoundproofStrID, 0xEB9 ; 3769
+.definelabel TwistBandItemID, 0x12 ; 18
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
+    
+        ; There is a list of sound moves in the base game. A skypatch could
+        ; be added to make a specific move id return positive, but this
+        ; is more useful ease of use across multiple hacks. Before we do
+        ; anything, check if the target has soundproof.
+        mov r0,r4
+        mov r1,SoundproofAbilityID
+        bl  HasAbility
+        cmp r0,#0
+        mov r10,#0
+        bne failed_soundproof
         
-        ; Deal damage.
-        sub sp,sp,#0x4
-        str r7,[sp]
+        sub sp,sp,#0x8
+        ; Lower attack.
+        mov r2,#0 ; attack
+        mov r3,#1 ; 1 stage
+        str r3,[sp,#0x4] ; display message on failure
+        str r3,[sp,#0x0] ; check items/abilities
         mov r0,r9
         mov r1,r4
-        mov r2,r8
-        mov r3,#0x100 ; normal damage
-        bl  DealDamage
-        add sp,sp,#0x4
+        bl  AttackStatDown
         
-        ; Check for succesful hit.
-        cmp r0, #0
-        mov r10,#0
-        beq MoveJumpAddress
+        ; Lower special attack.
+        mov r2,#1 ; special attack
+        mov r3,#1 ; 1 stage
+        str r3,[sp,#0x4] ; display message on failure
+        str r3,[sp,#0x0] ; check items/abilities
+        mov r0,r9
+        mov r1,r4
+        bl  AttackStatDown
+        add sp,sp,#0x8
         
+        ; Check for some exclusive items/clear body/white smoke
+        mov r0,r9
+        mov r1,r4
+        mov r2,#0 ; no messages, silently check
+        bl  StatsCanBeLowered
+        cmp r0,#0
+        bne MoveJumpAddress
+        
+        ; Check for Twist Band
+        mov r0,r4
+        mov r1,#0x12
+        bl  HasItem
+        cmp r0,#0
+        bne MoveJumpAddress
+        mov r10,#1
+        
+        ; FINALLY switch places with ally behind us (if possible).
         ; Get User Direction and Flip
         ldr  r0, [r9,#0xB4]
         ldrb r12,[r0,#0x4C] ; User Direction
@@ -102,13 +144,21 @@
         ; Try to swap places
         mov r0,r9
         ; Monster behind still in r1.
-        bl TrySwitchPlace
+        bl  TrySwitchPlace
+        b MoveJumpAddress
         
-        ; TODO: Make the swapping animation prettier.
-        ; Currently, it's very jarring...
+    failed_soundproof:
+        mov r0,#1
+        mov r1,r4
+        mov r2,#0
+        bl  ChangeString ; Sub Target
         
-        mov r10,#1
-        ; Always branch at the end
+        ; Display soundproof msg.
+        ldr r2,=SoundproofStrID
+        mov r0,r9
+        mov r1,r4
+        bl  SendMessageWithIDCheckUTLog
+        
         b MoveJumpAddress
         .pool
     .endarea

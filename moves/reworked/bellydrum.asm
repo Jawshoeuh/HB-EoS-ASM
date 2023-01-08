@@ -55,20 +55,20 @@
         bl  SendMessageWithStringLog
         
         mov r10,#0
-        b MoveJumpAddress
+        b   MoveJumpAddress
         
     success:
         ; Simply set our health lower and update.
         strh r3,[r0,#0x10]
-        mov r0,r4
-        bl UpdateStatusIconFlags
+        mov  r0,r4
+        bl   UpdateStatusIconFlags
         
         ; SKYROCKET attack
         mov r0,r9
         mov r1,r4
         mov r2,#0
         mov r3,#0x63
-        bl AttackStatUp
+        bl  AttackStatUp
         
         mov r0,#0
         mov r1,r4

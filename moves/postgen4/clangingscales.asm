@@ -1,6 +1,7 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/7/2023 - WIP
-; Clanging Scales does damage and lowers the user's defense.
+; Jawshoeuh 1/7/2023 - Confirmed Working 1/8/2023
+; Clanging Scales does damage and lowers the user's defense. Also a 
+; sound based move.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -45,17 +46,11 @@
         bne failed_soundproof
 
         sub sp,sp,#0x8
-        ; Deal damage.
-        str r7,[sp]
-        mov r0,r9
-        mov r1,r4
-        mov r2,r8
-        mov r3,#0x100 ; normal damage
-        bl  DealDamage
         
+        ; Check if first target.
         ldr r0,[sp,#0x80] ; Some magical expletive value (0x78 from call)
         cmp r0,#0x0
-        bne unallocate_memory ; only lower our defense once
+        bne not_first_target
         
         ; Lower defense.
         mov r0,r9
@@ -64,12 +59,23 @@
         str r2,[sp,#0x4]
         mov r3,#1
         str r3,[sp,#0x0] ; don't check user abilities
-        bl DefenseStatDown
+        bl  DefenseStatDown
         
-    unallocate_memory:
-        mov r10,#1
-        add sp,sp,#0x8
-        b MoveJumpAddress   
+    not_first_target:
+        ; Deal damage.
+        str r7,[sp]
+        mov r0,r9
+        mov r1,r4
+        mov r2,r8
+        mov r3,#0x100 ; normal damage
+        bl  DealDamage
+        
+        ; Check for succesful hit.
+        cmp   r0,#0
+        movne r10,#1
+        add   sp,sp,#0x8
+        b     MoveJumpAddress
+        
     failed_soundproof:
         mov r0,#1
         mov r1,r4

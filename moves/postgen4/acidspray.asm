@@ -30,30 +30,40 @@
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
-        
-        sub sp,sp,#0x4
+        sub sp,sp,#0x8
         str r7,[sp]
         mov r0,r9
         mov r1,r4
         mov r2,r8
         mov r3,#0x100 ; normal damage
         bl  DealDamage
-        add sp,sp,#0x4
         
         ; Check for succesful hit.
-        cmp   r0,#0
-        movne r10,#1
-        moveq r10,#0
-        beq   MoveJumpAddress
+        cmp r0,#0
+        mov r10,#0
+        beq unallocate_memory
+        mov r10,#1
         
-        ; If so, lower special defense
+        ; Basiclly just a valid/shield dust check.
         mov r0,r9
         mov r1,r4
-        mov r2,#1
+        mov r2,#0 ; guaranteed
+        bl  RandomChanceUT
+        cmp r0,#0
+        beq unallocate_memory
+        
+        ; If so, lower special defense
+        mov r12,#0
+        mov r0,r9
+        mov r1,r4
+        mov r2,#1 ; special defense
+        str r2,[sp,#0x0]
         mov r3,#2 ; 2 stages
+        str r12,[sp,#0x4]
         bl  DefenseStatDown
 
-        ; Always branch at the end
+    unallocate_memory:
+        add sp,sp,#0x8
         b MoveJumpAddress
         .pool
     .endarea

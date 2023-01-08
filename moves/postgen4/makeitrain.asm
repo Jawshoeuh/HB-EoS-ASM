@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/28/2022 - Confirmed Working 1/6/2023
+; Jawshoeuh 11/28/2022 - Confirmed Working 1/8/2023
 ; Make It Rain deals damage, drops coins and lowers user special attack.
 ; Unfortunately, the special attack is lowered after the first target.
 ; HOWEVER, I wont be fixing this because Draco Meteor does this too (and
@@ -51,6 +51,7 @@
         cmp r0,#0
         mov r10,#0
         beq unallocate_memory
+        mov r10,#1
         
         ; Check if monster died.
         mov r0,r4
@@ -74,7 +75,7 @@
         mov  r0,r9
         mov  r1,r4
         bl   SpawnItemDrop
-        
+         
     entity_lived:
         ; I don't know why, I don't want to know why, but Draco Meteor does
         ; this while Overheat does something much simpler and causes the
@@ -97,7 +98,6 @@
         mov r3,#1 ; 1 stage
         bl  AttackStatDown
         
-        mov r10,#1
     unallocate_memory:
         add sp,sp,#0x10
         ; Always branch at the end

@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/6/2023 - Confirmed Working 1/6/2023
+; Jawshoeuh 1/6/2023 - Confirmed Working 1/8/2023
 ; Relic Song deals damage and has 10% chance to sleep the target. Lots of
 ; work behind scenes because Relic song is a sound based move.
 ; Based on the template provided by https://github.com/SkyTemple
@@ -61,10 +61,10 @@
         add sp,sp,#0x4
         
         ; Check for succesful hit.
-        cmp   r0,#0
-        beq   MoveJumpAddress
-        
+        cmp r0,#0
+        beq MoveJumpAddress
         mov r10,#1
+        
         ; Check to snooze target.
         mov r0,r9
         mov r1,r4

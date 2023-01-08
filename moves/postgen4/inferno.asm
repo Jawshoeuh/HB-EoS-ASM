@@ -52,6 +52,15 @@
         cmp r0,#0
         mov r10,#0
         beq MoveJumpAddress
+        mov r10,#1
+        
+        ; Basiclly just a valid/shield dust check.
+        mov r0,r9
+        mov r1,r4
+        mov r2,#0 ; guaranteed
+        bl  RandomChanceUT
+        cmp r0,#0
+        beq MoveJumpAddress
         
         ;If so, lower burn.
         mov r3,#0
@@ -61,9 +70,6 @@
         mov r2,#0
         mov r3,#1
         bl  Burn
-        
-        mov r10,#1
-        ; Always branch at the end
         b MoveJumpAddress
         .pool
     .endarea

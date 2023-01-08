@@ -1,8 +1,7 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/7/2023 - WIP
-; This version of Eerie Spell is more like the later installments and how
-; spite in those games sharply lowers, but doesn't 0 the PP of the last
-; move used by the target.
+; Jawshoeuh 1/7/2023 - Confirmed Working 1/8/2023
+; This version of Eerie Spell is more like the mainline games (and later
+; PMD titles) by just reducing the target's PP.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -29,6 +28,9 @@
 ; Universal
 .definelabel SoundproofAbilityID, 0x3C ; 60
 .definelabel SoundproofStrID, 0xEB9 ; 3769
+.definelabel PPZeroedStrID, 0xECE ; 3790
+.definelabel FailedStrID, 0xECF ; 3791
+.definelabel PPLost, 3
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
@@ -46,10 +48,68 @@
         mov r10,#0
         bne failed_soundproof
 
+        ; Deal damage.
+        sub sp,sp,#0x4
+        str r7,[sp]
+        mov r0,r9
+        mov r1,r4
+        mov r2,r8
+        mov r3,#0x100 ; normal damage
+        bl  DealDamage
+        add sp,sp,#0x4
         
-        
+        ; Check for succesful hit.
+        cmp r0,#0
+        beq MoveJumpAddress
         mov r10,#1
-        b MoveJumpAddress   
+        
+        ; Basiclly just a valid/shield dust check.
+        mov r0,r9
+        mov r1,r4
+        mov r2,#0 ; guaranteed
+        bl  RandomChanceUT
+        cmp r0,#0
+        beq MoveJumpAddress
+        
+        ; Substitute strings before hand.
+        mov r0,#1
+        mov r1,r4
+        mov r2,#0
+        bl  ChangeString
+        
+        ; Could branch to DoMoveSpite, but I personally like doing the
+        ; work by 'hand' in the ASM effect itself (for precise control).
+        ldr r12,[r4,#0xB4]
+        add r12,r12,#0x124 ; Monster Move Data
+        mov r3,#0  ; Iterator
+    loop:
+        add   r0,r12,r3, lsl #0x3
+        ldrb  r1,[r0]
+        tst   r1,#0b1    ; test existence bit
+        beq   iter_loop  ; invalid move, try again
+        tst   r1,#0b10000 ; test last used flag
+        beq   iter_loop  ; not last used, try again
+        ldrb  r2,[r0,#0x6]
+        subs  r2,r2,PPLost
+        movlt r2,#0      ; if PP < 3...
+        strb  r2,[r0,#0x6] ; Set PP to Max(0, PP-3)
+        ldrlt r1,=eeriespell_half_str
+        ldrge r1,=eeriespell_full_str
+        mov   r0,r4
+        bl    SendMessageWithStringLog
+        b     MoveJumpAddress ; Done, found last move.
+        
+    iter_loop:
+        add r3,r3,#1
+        cmp r3,#4
+        blt loop
+        
+        ldr r2,=FailedStrID
+        mov r0,r9
+        mov r1,r4
+        bl  SendMessageWithIDCheckUTLog
+        b   MoveJumpAddress ; Done no last move found.
+        
     failed_soundproof:
         mov r0,#1
         mov r1,r4
@@ -64,5 +124,9 @@
         
         b MoveJumpAddress
         .pool
+    eeriespell_full_str:
+        .asciiz "The last move used by [string:1] lost[R]some [CS:E]PP[CR]!"
+    eeriespell_half_str:
+        .asciiz "The last move used by [string:1] lost[R]the remaining[CS:E]PP[CR]!"
     .endarea
 .close

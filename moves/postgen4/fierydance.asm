@@ -53,10 +53,10 @@
         add sp,sp,#0x4
         
         ; Check for succesful hit.
-        cmp   r0,#0
-        movne r10,#1
-        moveq r10,#0
-        beq   MoveJumpAddress
+        cmp r0,#0
+        mov r10,#0
+        beq MoveJumpAddress
+        mov r10,#1
         
         ; Check to boost special attack (50% chance)
         mov r0,r9

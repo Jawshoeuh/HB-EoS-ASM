@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/7/2023 - WIP
+; Jawshoeuh 1/7/2023 - Confirmed Working 1/8/2023
 ; Boomburst does damage, but is a sound move!
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
@@ -54,8 +54,11 @@
         bl  DealDamage
         add sp,sp,#0x4
         
-        mov r10,#1
-        b MoveJumpAddress   
+        ; Check for succesful hit.
+        cmp   r0,#0
+        movne r10,#1
+        b MoveJumpAddress
+        
     failed_soundproof:
         mov r0,#1
         mov r1,r4
