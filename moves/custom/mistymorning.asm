@@ -1,6 +1,7 @@
 ; ------------------------------------------------------------------------------
 ; Jawshoeuh 11/29/2022 - Confirmed Working 11/30/2022
-; Misty Morning causes the weather to be fog.
+; Misty Morning causes the weather to be fog. Changed to match Adex-8x's
+; better naming convention and loading the turn count from the source.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 

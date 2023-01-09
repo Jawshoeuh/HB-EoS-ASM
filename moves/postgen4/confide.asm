@@ -45,17 +45,18 @@
         bne failed_soundproof
 
         sub sp,sp,#0x8
-        mov r10,#1 ; set r10 early to use to str as parameter
+        
         ; Simply lower special attack
-        str r10,[sp,#0x4] ; display message on fail
-        str r10,[sp,#0x0] ; check items/abilities
         mov r0,r9
         mov r1,r4
         mov r2,#1 ; special attack
+        str r2,[sp,#0x4] ; display message on fail
+        str r2,[sp,#0x0] ; check items/abilities
         mov r3,#1 ; 1 stage
         bl  AttackStatDown
-        add sp,sp,#0x8
         
+        mov r10,#1
+        add sp,sp,#0x8
         b MoveJumpAddress   
     failed_soundproof:
         mov r0,#1

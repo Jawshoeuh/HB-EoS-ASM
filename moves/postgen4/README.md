@@ -16,10 +16,10 @@ Completed Move Effects:<br/>
 Boomburst, Confide, Disarming Voice (See Boomburst), Fell Stinger, Mystical Fire, Noble Roar, Parting Shot, Steam Eruption (See Scald), Sticky Web, Topsy-Turvy
 
 Moves Todo:<br/>
-Aromatic Mist, Belch, Crafty Shield, Diamond Storm, Draining Kiss, Eerie Impulse, Fairy Lock, Flower Shield, Flying Press, Forest's Curse, Freeze-Dry, Geomancy, Hyperspace Fury, Hyperspace Hole, Infestation, Magnetix Flux, Mat Block, Nuzzle, Oblivion Wing (see Draining Kiss), Play Rough, Power-Up Punch, Rototiller, Trick-or-Treat, Venom Drench
+Aromatic Mist, Belch, Diamond Storm, Draining Kiss, Eerie Impulse, Fairy Lock, Flower Shield, Flying Press, Forest's Curse, Freeze-Dry, Geomancy, Hyperspace Fury, Hyperspace Hole, Infestation, Magnetix Flux, Mat Block, Nuzzle, Oblivion Wing (see Draining Kiss), Play Rough, Power-Up Punch, Rototiller, Trick-or-Treat, Venom Drench
 
 Moves Not Planned:<br/>
-Electric Terrain, Electrify, Grassy Terrain, Happy Hour, Hold Hands, Ion Deluge, King's Shield, Misty Terrain, Powder, Spiky Shield
+Crafty Shield, Electric Terrain, Electrify, Grassy Terrain, Happy Hour, Hold Hands, Ion Deluge, King's Shield, Misty Terrain, Powder, Spiky Shield
 
 # Gen 7
 Moves With Existing Effects:<br/>

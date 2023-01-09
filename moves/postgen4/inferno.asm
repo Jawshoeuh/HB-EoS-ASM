@@ -30,6 +30,7 @@
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
+        sub sp,sp,#0x4
     
         ; Try to thaw target.
         mov r0,r9
@@ -39,19 +40,17 @@
         bl  TryThawTarget
         
         ; Deal damage.
-        sub sp,sp,#0x4
         str r7,[sp]
         mov r0,r9
         mov r1,r4
         mov r2,r8
         mov r3,#0x100 ; normal damage
         bl  DealDamage
-        add sp,sp,#0x4
         
         ;Check for succesful hit.
         cmp r0,#0
         mov r10,#0
-        beq MoveJumpAddress
+        beq unallocate_memory
         mov r10,#1
         
         ; Basiclly just a valid/shield dust check.
@@ -60,16 +59,18 @@
         mov r2,#0 ; guaranteed
         bl  RandomChanceUT
         cmp r0,#0
-        beq MoveJumpAddress
+        beq unallocate_memory
         
-        ;If so, lower burn.
-        mov r3,#0
-        str r3,[sp]
+        ;If so, like burn.
         mov r0,r9
         mov r1,r4
         mov r2,#0
-        mov r3,#1
+        str r2,[sp]
+        mov r3,#0
         bl  Burn
+    
+    unallocate_memory:
+        add sp,sp,#0x4
         b MoveJumpAddress
         .pool
     .endarea

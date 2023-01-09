@@ -53,6 +53,14 @@
         beq unallocate_memory
         mov r10,#1
         
+        ; Check if we died. Unlikely, but check anyway. DoMovePayDay uses
+        ; DungeonRandOutcomeUserAction (RandomChanceU), but a validity
+        ; check is enonugh.
+        mov r0,r9
+        bl  EntityIsValid
+        cmp r0,#0
+        beq unallocate_memory
+        
         ; Check if monster died.
         mov r0,r4
         bl  EntityIsValid

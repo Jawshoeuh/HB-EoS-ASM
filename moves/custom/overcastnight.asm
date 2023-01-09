@@ -1,6 +1,7 @@
 ; ------------------------------------------------------------------------------
 ; Jawshoeuh 11/29/2022 - Confirmed Working 11/30/2022
-; Overcast Night causes the weather to be cloudy.
+; Overcast Night causes the weather to be cloudy. Changed to match Adex-8x's
+; better naming convention and loading the turn count from the source.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -17,14 +18,16 @@
 .include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
-.definelabel WeatherChanged, 0x023354C4
+.definelabel WeatherTurnValue, 0x022C4654 ; 0xBB8 (3000) by default.
+.definelabel TryActivateWeather, 0x023354C4
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel WeatherChanged, 0x????????
+;.definelabel WeatherTurnValue, 0x022C4FAC ; 0xBB8 (3000) by default.
+;.definelabel TryActivateWeather, 0x02335F04
 
 ; Universal
 .definelabel WeatherUnchangedStr, 0xEC5 ; 3781

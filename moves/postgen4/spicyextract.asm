@@ -8,7 +8,6 @@
 .nds
 .arm
 
-
 .definelabel MaxSize, 0x2598
 
 ; Uncomment the correct version
@@ -25,17 +24,20 @@
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
 
-
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
+        sub sp,sp,#0x8
     
         ; Lower defense.
+        mov r10,#1 ; use to store 1 into sp
         mov r0,r9
         mov r1,r4
         mov r2,#0
-        mov r3,#2 ; 2 stages
+        str r10,[sp,#0x4]
+        mov r3,#2
+        str r10,[sp,#0x0]
         bl DefenseStatDown
         
         ; Raise attack.
@@ -45,8 +47,7 @@
         mov r3,#2 ; 2 stages
         bl AttackStatUp
         
-        mov r10,#1
-        ; Always branch at the end
+        add sp,sp,#0x8
         b MoveJumpAddress
         .pool
     .endarea

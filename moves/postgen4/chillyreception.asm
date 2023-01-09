@@ -3,7 +3,8 @@
 ; Chilly Reception causes the user to summon a snowstorm, and swap with
 ; an ally behind them. There is a working, less optimized version
 ; that causes hail in the legacy folder. If you wanted to cause hail,
-; with this version, change line 54 from #0x48 to 0x44.
+; with this version, change line 54 from #0x48 to 0x44. Changed to match
+; Adex-8x's better naming convention and loading the turn count from a ptr.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
