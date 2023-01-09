@@ -34,10 +34,11 @@
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
         
-        ; Attempt to set weather to snow.
-        ldr   r3,=0xBB8 ; Probably turn count.
+        ; Attempt to set weather to cloudy.
+        ldr   r3,=WeatherTurnValue
+        ldrsh r3,[r3]
         ldr   r2,=DungeonBaseStructurePtr
-        ldr   r2,[r2,#0x0] ; DungeonBaseStrPtr
+        ldr   r2,[r2] ; DungeonBaseStrPtr
         add   r2,r2,#0xCD00
         mov   r0,#0x1
         mov   r1,#0x0

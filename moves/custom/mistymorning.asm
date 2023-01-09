@@ -17,14 +17,16 @@
 .include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
-.definelabel WeatherChanged, 0x023354C4
+.definelabel WeatherTurnValue, 0x022C4654 ; 0xBB8 (3000) by default.
+.definelabel TryActivateWeather, 0x023354C4
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel WeatherChanged, 0x????????
+;.definelabel WeatherTurnValue, 0x022C4FAC ; 0xBB8 (3000) by default.
+;.definelabel TryActivateWeather, 0x02335F04
 
 ; Universal
 .definelabel WeatherUnchangedStr, 0xEC5 ; 3781
@@ -34,10 +36,11 @@
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
         
-        ; Attempt to set weather to snow.
-        ldr   r3,=0xBB8 ; Probably turn count.
+        ; Attempt to set weather to fog.
+        ldr   r3,=WeatherTurnValue
+        ldrsh r3,[r3]
         ldr   r2,=DungeonBaseStructurePtr
-        ldr   r2,[r2,#0x0] ; DungeonBaseStrPtr
+        ldr   r2,[r2] ; DungeonBaseStrPtr
         add   r2,r2,#0xCD00
         mov   r0,#0x1
         mov   r1,#0x0

@@ -21,7 +21,8 @@
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
 .definelabel TrySwitchPlace, 0x022EB178
-.definelabel WeatherChanged, 0x023354C4
+.definelabel TryActivateWeather, 0x023354C4
+.definelabel WeatherTurnValue, 0x022C4654 ; 0xBB8 (3000) by default.
 .definelabel DIRECTIONS_XY, 0x0235171C
 .definelabel GetTile, 0x023360FC
 
@@ -31,7 +32,8 @@
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
 ;.definelabel TrySwitchPlace, 0x022EBB28
-;.definelabel WeatherChanged, 0x????????
+;.definelabel TryActivateWeather, 0x02335F04
+;.definelabel WeatherTurnValue, 0x022C4FAC ; 0xBB8 (3000) by default.
 ;.definelabel DIRECTIONS_XY, 0x2352328
 ;.definelabel GetTile, 0x2336CCC
 
@@ -44,7 +46,8 @@
     .area MaxSize ; Define the size of the area
         
         ; Attempt to set weather to snow.
-        ldr   r3,=0xBB8 ; Probably turn count.
+        ldr   r3,=WeatherTurnValue
+        ldrsh r3,[r3]
         ldr   r2,=DungeonBaseStructurePtr
         ldr   r2,[r2] ; DungeonBaseStrPtr
         add   r2,r2,#0xCD00
