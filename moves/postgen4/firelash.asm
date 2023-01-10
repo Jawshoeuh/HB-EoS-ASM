@@ -51,6 +51,7 @@
         cmp r0,#0
         mov r10,#0
         beq unallocate_memory
+        mov r10,#1
         
         ; Basiclly just a valid/shield dust check.
         mov r0,r9
@@ -69,7 +70,6 @@
         str r3,[sp,#0x0] ; check abilities
         bl  DefenseStatDown
         
-        mov r10,#1
     unallocate_memory:
         add sp,sp,#0x8
         b MoveJumpAddress

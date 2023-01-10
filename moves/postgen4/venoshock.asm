@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/17/2022 - Confirmed Working 12/26/2022
+; Jawshoeuh 11/17/2022 - Confirmed Working 1/10/2023
 ; Venoshock deals extra damage if the pokemon is poisoned.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
@@ -28,6 +28,7 @@
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
+        sub sp,sp,#0x4
         
         ; Get poisoned status.
         ldr  r0,[r4,#0xb4]
@@ -39,16 +40,19 @@
         moveq r3,#0x200 ; Damage amp if badly poisoned/poisoned
         movne r3,#0x100 ; Regular damage otherwise.
         
-        sub sp,sp,#0x4
         str r7,[sp]
         mov r0,r9
         mov r1,r4
         mov r2,r8
         ; damage multipler already in r3
         bl  DealDamage
-        add sp,sp,#0x4
         
-        ; Always branch at the end
+        ; Check damage for r10 return value
+        cmp   r0,#0
+        movne r10,#1
+        moveq r10,#0
+        
+        add sp,sp,#0x4
         b MoveJumpAddress
         .pool
     .endarea

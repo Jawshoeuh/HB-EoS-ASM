@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/8/2023 - WIP
+; Jawshoeuh 1/8/2023 - Confirmed Working 1/10/2023
 ; Play Rough does damage and has a 10% chance to lower attack of target.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
@@ -45,6 +45,7 @@
         cmp r0,#0
         mov r10,#0
         beq unallocate_memory
+        mov r10,#1
         
         ; Basiclly just a valid/shield dust check.
         mov r0,r9
@@ -63,7 +64,6 @@
         str r3,[sp,#0x0] ; check items/abilities
         bl  AttackStatDown
         
-        mov r10,#1
     unallocate_memory:
         add sp,sp,#0x8
         b MoveJumpAddress

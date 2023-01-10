@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/9/2023 - WIP
+; Jawshoeuh 1/9/2023 - Confirmed Working 1/10/2023
 ; Nuzzle deals damage and paralyzes the target.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
@@ -42,6 +42,7 @@
         cmp r0,#0
         mov r10,#0
         beq unallocate_memory
+        mov r10,#1
         
         ; Basiclly just a valid/shield dust check.
         mov r0,r9
@@ -57,7 +58,6 @@
         mov r3,#0 ; not a check
         bl  Paralyse
         
-        mov r10,#1
     unallocate_memory:
         add sp,sp,#0x4
         b MoveJumpAddress

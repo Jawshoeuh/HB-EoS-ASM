@@ -56,6 +56,7 @@
         cmp r0,#0 ; 0 means we didn't deal any damage
         mov r10,#0
         beq MoveJumpAddress
+        mov r10,#1
         
         ; Check if we shouuld burn with 30%
         mov r0,r9
@@ -63,7 +64,6 @@
         mov r2,BurnChance
         bl  RandomChanceUT
         cmp r0,#0
-        mov r10,#1
         beq MoveJumpAddress
         
         ; Burn if chance passes.
@@ -74,8 +74,7 @@
         mov r2,#0
         mov r3,#0
         bl  Burn
-        
-        mov r10,#1
+
         ; Always branch at the end
         b MoveJumpAddress
         .pool

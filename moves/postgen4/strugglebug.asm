@@ -42,6 +42,7 @@
         cmp r0,#0
         mov r10,#0
         beq unallocate_memory
+        mov r10,#1
         
         ; Basiclly just a valid/shield dust check.
         mov r0,r9
@@ -52,12 +53,11 @@
         beq unallocate_memory
         
         ; Lower special attack if hit target.
-        str r10,[sp,#0x4] ; don't display message on failure, r10 = 0 here
-        mov r10,#1        ; set r10 early to also use its value to store
-        str r10,[sp,#0x0] ; check items/abilities
         mov r0,r9
         mov r1,r4
         mov r2,#1 ; special attack
+        str r2,[sp,#0x4] ; don't display message on failure, r10 = 0 here
+        str r2,[sp,#0x0] ; check items/abilities
         mov r3,#1 ; 1 stage
         bl  AttackStatDown
         

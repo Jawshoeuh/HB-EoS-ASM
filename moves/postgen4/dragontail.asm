@@ -49,6 +49,7 @@
         cmp r0, #0
         mov r10,#0
         beq MoveJumpAddress
+        mov r10,#!
         
         ; Check if still alive.
         mov r0,r4
@@ -63,7 +64,6 @@
         ldrb r2,[r2,#0x4C]
         bl TryBlowAway
         
-        mov r10,#1
         ; Always branch at the end
         b MoveJumpAddress
         .pool

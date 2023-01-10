@@ -1,8 +1,9 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/9/2023 - WIP
+; Jawshoeuh 1/9/2023 - Confirmed Workign 1/10/2023
 ; Fairy Lock is kinda weird. My PMD interpretation will inflict 
 ; Shadow Hold for 1 turn, but it's intended to be used on an entire room.
-; So... maybe not a useful interpretation but...
+; So... maybe not a useful interpretation but... I would make it 1 or 2
+; turns; however, the leader and allies will immediately breakout with 2
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------ brb!
 
@@ -26,6 +27,9 @@
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
 
+; Universal
+.definelabel FairyLockShadowHoldTurns, 3
+
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
     .org MoveStartAddress
@@ -45,10 +49,10 @@
         ; immunity to shadow hold, it will still work :).
         ldr  r12,[r4,#0xB4]
         ldrb r0,[r12,#0xC4]
-        cmp  r0,#0x2
-        bne MoveJumpAddress
-        mov  r1,#2
-        strb r1,[r12,#0xCC] ; set turns of immobilize to 2
+        cmp  r0,#0x2 ; Shadow Hold 
+        bne  MoveJumpAddress
+        mov  r1,FairyLockShadowHoldTurns
+        strb r1,[r12,#0xCC] ; set turns of immobilize to 3
         
         b MoveJumpAddress
         .pool
