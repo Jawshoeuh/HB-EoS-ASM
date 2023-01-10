@@ -4,7 +4,7 @@
 ; Shadow Hold for 1 turn, but it's intended to be used on an entire room.
 ; So... maybe not a useful interpretation but...
 ; Based on the template provided by https://github.com/SkyTemple
-; ------------------------------------------------------------------------------
+; ------------------------------------------------------------------------------ brb!
 
 .relativeinclude on
 .nds
@@ -34,8 +34,8 @@
         ; Immobilize the target.
         mov r0,r9
         mov r1,r4
-        mov r2,#1 ; yes, failure message
-        bl  Immobilize
+        mov r2,#0      ; r2 = just check probably, contrary to what
+        bl  Immobilize ; pmdsky-debug says about this, it's not fail msg
         cmp r0,#0
         mov r10,#1
         beq MoveJumpAddress
@@ -44,7 +44,11 @@
         ; call is so that if anyone has patches that give ghost types
         ; immunity to shadow hold, it will still work :).
         ldr  r12,[r4,#0xB4]
-        strb r10,[r12,#0xCC] ; set turns of immobilize to 1
+        ldrb r0,[r12,#0xC4]
+        cmp  r0,#0x2
+        bne MoveJumpAddress
+        mov  r1,#2
+        strb r1,[r12,#0xCC] ; set turns of immobilize to 2
         
         b MoveJumpAddress
         .pool

@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/8/2023 - WIP
+; Jawshoeuh 1/8/2023 - Confirmed Working 1/9/2023
 ; Quiver Dance raises special attack, special defense, and speed by 1.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
@@ -40,7 +40,7 @@
         mov r0,r9
         mov r1,r4
         mov r2,#1 ; special
-        mob r3,#1 ; 1 stage
+        mov r3,#1 ; 1 stage
         bl DefenseStatUp
         
         ; Raise speed one stages.

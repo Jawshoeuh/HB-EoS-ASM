@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/8/2023 - WIP
+; Jawshoeuh 1/9/2023 - Confirmed Working 1/9/2023
 ; V-Create thaws, deals damage, and lowers defense, special defense, and
 ; speed by one stage.
 ; Based on the template provided by https://github.com/SkyTemple
@@ -60,7 +60,7 @@
         str r2,[sp,#0x4]
         mov r3,#1
         str r3,[sp,#0x0]
-        bl DefenseStatDown
+        bl  DefenseStatDown
         
         ; Lower special defense.
         mov r12,#0
@@ -70,11 +70,11 @@
         mov r2,#1 ; special defense
         mov r3,#1
         str r3,[sp,#0x0]
-        bl DefenseStatDown
+        bl  DefenseStatDown
         
         ; Lower speed
         mov r0,r9
-        mov r1,r4
+        mov r1,r9
         mov r2,#1
         mov r3,#1 ; DoMoveHammerArm uses 1 here.
         bl  SpeedStatDown

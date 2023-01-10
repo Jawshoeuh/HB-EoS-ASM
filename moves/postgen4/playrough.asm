@@ -55,12 +55,12 @@
         beq unallocate_memory
         
         ; Lower attack if hit target.
-        str r10,[sp,#0x4] ; don't display message on failure, r10 = 0 here
         mov r0,r9
         mov r1,r4
         mov r2,#0 ; attack
-        str r2,[sp,#0x0] ; check items/abilities
+        str r2,[sp,#0x4] ; don't display message on failure
         mov r3,#1 ; 1 stage
+        str r3,[sp,#0x0] ; check items/abilities
         bl  AttackStatDown
         
         mov r10,#1

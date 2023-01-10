@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/9/2023 - WIP
+; Jawshoeuh 1/9/2023 - Confirmed Working 1/9/2023
 ; Eerie impulse lowers special attack by two! Almost trivial, except
 ; moves that drop two or more stages use some weird multipliers instead...
 ; Based on the template provided by https://github.com/SkyTemple

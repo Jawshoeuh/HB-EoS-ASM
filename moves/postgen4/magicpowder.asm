@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/9/2023 - WIP
+; Jawshoeuh 1/9/2023 - Confirmed Working 1/9/2023
 ; Magic Powder changes the target's type to psychic. Appropritely fail if
 ; the user has Forecast active.
 ; Based on the template provided by https://github.com/SkyTemple

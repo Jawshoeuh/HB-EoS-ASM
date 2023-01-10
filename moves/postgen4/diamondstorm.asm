@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/9/2023 - WIP
+; Jawshoeuh 1/9/2023 - Confirmed Working 1/9/2023
 ; Diamond Storms deals damage and has a 50% chance to raise the user's
 ; defense by 2. (Only 1 stage in Gen VI).
 ; Based on the template provided by https://github.com/SkyTemple

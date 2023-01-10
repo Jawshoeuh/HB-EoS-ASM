@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/8/2023 - WIP
+; Jawshoeuh 1/8/2023 - Confirmed Working 1/9/2023
 ; Armor Cannon thaws, does damage, and lowers defense/special defense.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
@@ -59,7 +59,7 @@
         str r2,[sp,#0x4]
         mov r3,#1
         str r3,[sp,#0x0]
-        bl DefenseStatDown
+        bl  DefenseStatDown
         
         ; Lower special defense.
         mov r12,#0
@@ -69,7 +69,7 @@
         mov r2,#1 ; special defense
         mov r3,#1
         str r3,[sp,#0x0]
-        bl DefenseStatDown
+        bl  DefenseStatDown
         
         mov r10,#1
     unallocate_memory:

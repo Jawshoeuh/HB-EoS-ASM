@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/8/2023 - WIP
+; Jawshoeuh 1/8/2023 - Confirmed Working 1/9/2023
 ; Fire Lash thaws the target, deals damage, then lowers their defense.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------

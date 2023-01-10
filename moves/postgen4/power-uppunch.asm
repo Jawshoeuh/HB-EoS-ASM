@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/9/2023 - WIP
+; Jawshoeuh 1/9/2023 - Confirmed Working 1/9/2023
 ; Power Up Punch deals damage and boosts the user's attack.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
@@ -48,10 +48,11 @@
         beq unallocate_memory
         mov r10,#1
         
-        ; Would normally be, RandomChanceU, but if the chance is guaranteed
-        ; its basically just a validity check. So I just check validity.
+        ; Basically a validity check, why does the game not check validity
+        ; instead? I don't know.
         mov r0,r9
-        bl EntityIsValid
+        mov r1,#0 ; guaranteed
+        bl  RandomChanceU
         cmp r0,#0
         beq unallocate_memory
         
@@ -59,7 +60,7 @@
         mov r0,r9
         mov r1,r9
         mov r2,#0 ; attack
-        mob r3,#1 ; 1 stage
+        mov r3,#1 ; 1 stage
         bl AttackStatUp
         
         mov r10,#1
