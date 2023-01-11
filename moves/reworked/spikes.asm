@@ -1,5 +1,6 @@
 ; ------------------------------------------------------------------------------
 ; Jawshoeuh 12/5/2022
+; TODO: Make this move better (works but not well made).
 ; This reworked spikes activates the trap below the target. So
 ; that it is a damgaing move like in PLA. If a trap can't be placed
 ; (like in hallways), call the effect directly on the target.

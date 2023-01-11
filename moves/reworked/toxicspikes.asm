@@ -1,5 +1,6 @@
 ; ------------------------------------------------------------------------------
 ; Jawshoeuh 12/5/2022
+; TODO: Make this move better (works but not well made).
 ; This reworked toxic spikes activates the trap below the target. So
 ; that it is similar to PLA entry hazards. It's much simpler
 ; than some of the other traps and just causes poison.

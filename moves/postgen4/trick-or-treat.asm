@@ -52,32 +52,51 @@
         mov r0,r9
         mov r1,ForecastAbilityID
         bl  HasAbility
-        cmp r0,#0
-        beq success
-        
-        ldr r2,=ForecastPreventStr
-        mov r0,r9
-        mov r1,r4
-        bl  SendMessageWithIDCheckUTLog
         mov r10,#0
-        b   MoveJumpAddress
+        cmp r0,#0
+        bne failed_forecast
         
-    success:
+        mov r2,GhostTypeID
+        ; Check for grass type.
+        ldr   r12,[r4,#0xB4]
+        ldrb  r0,[r12,#0x5E]  ; Type 1
+        ldrb  r1,[r12,#0x5F]  ; Type 2
+        cmp   r0,r2
+        cmpne r1,r2
+        beq   failed_ghost
+        
         mov  r10,#1 ; set r10 to be true, and use later for 0xFF
         mov  r0,GhostTypeID
         mov  r2,#0
         ldr  r12,[r4,#0xB4]
-        strb r0,[r12,#0x5F]  ; Type 2 = Ghost
+        strb r0,[r12,#0x5F]  ; Type 2 = Grass
         strb r10,[r12,#0xFF] ; Use r10 to set flag that type was changed
         
         ; Feedback message.
-        ldr r1,=forestscurse_str
-        mov r0,r4
-        bl  SendMessageWithStringLog
+        ldr r2,=trickortreat_str
+        mov r0,r9
+        mov r1,r4
+        bl  SendMessageWithStringCheckUTLog
+        b   MoveJumpAddress
+        
+    failed_forecast:
+        ldr r2,=ForecastPreventStr
+        mov r0,r9
+        mov r1,r4
+        bl  SendMessageWithIDCheckUTLog
+        b   MoveJumpAddress
+    
+    failed_ghost:
+        ldr r2,=trickortreat_fail_str
+        mov r0,r9
+        mov r1,r4
+        bl  SendMessageWithStringCheckUTLog
 
         b MoveJumpAddress
         .pool
-    forestscurse_str:
+    trickortreat_str:
         .asciiz "[string:1] secondary type converted[R]to the Ghost type!"
+    trickortreat_fail_str:
+        .asciiz "[string:1] is aleady Ghost type!"
     .endarea
 .close

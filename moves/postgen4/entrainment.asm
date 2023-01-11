@@ -84,9 +84,10 @@
         ldrsh r2,[r1,#0x0]
         strb  r0,[r2,#0xe]
         
+        ldr r2,=entrainment_str
         mov r0,r9
-        ldr r1,=entrainment_str
-        bl  SendMessageWithStringLog
+        mov r1,r4
+        bl  SendMessageWithStringCheckUTLog
         
         ; Double check if this new ability would end statuses.
         mov r0,r9
@@ -97,17 +98,19 @@
         b MoveJumpAddress
         
     failed_ability:
-        ldr r1,=failed_entrainment_str
-        mov r0,r4
-        bl  SendMessageWithStringLog
+        ldr r2,=failed_entrainment_str
+        mov r0,r9
+        mov r1,r4
+        bl  SendMessageWithStringCheckUTLog
         
         mov r10,#0
         b MoveJumpAddress
 
     failed_ability_truant:
-        ldr r1,=failed_entrainment_truant_str
-        mov r0,r4
-        bl SendMessageWithStringLog
+        ldr r2,=failed_entrainment_truant_str
+        mov r0,r9
+        mov r1,r4
+        bl  SendMessageWithStringCheckUTLog
         
         mov r10,#0
         b MoveJumpAddress

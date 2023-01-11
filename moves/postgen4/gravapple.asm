@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/8/2023 - WIP
+; Jawshoeuh 1/8/2023 - Confirmed Working 1/11/2023
 ; Grav Apple deals (more if gravity is in effect) and reduced defense
 ; by one stage.
 ; Based on the template provided by https://github.com/SkyTemple
