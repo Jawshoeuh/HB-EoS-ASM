@@ -1,7 +1,7 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/11/2023 - Confirmed Working 1/11/2023
-; Stealth Rock reworked version does damage and then leaves
-; 'jagged splinters' (spikes) behind.
+; Jawshoeuh 1/11/2023
+; Toxic Spikes with PLA mechancics so it does damage and then leaves behind
+; some hazards for opposing Pokemon.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -32,7 +32,7 @@
 ;.definelabel UpdateDisplay, 0x????????
 
 ; Universal
-.definelabel StealthRockTrapID, 0x14
+.definelabel ToxicSpikesTrapID, 0xC
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
@@ -60,7 +60,7 @@
         
         ; Try to place a stealth rock  trap
         add   r0,r4,#0x4           ; r0 = pointer to x/y
-        mov   r1,StealthRockTrapID ; r1 = trap id
+        mov   r1,ToxicSpikesTrapID ; r1 = trap id
         ldr   r2,[r9,#0xB4]        ; r2 = trap alignment
         ldrb  r2,[r2,#0x6]         ; notably it just checks for the non
         cmp   r2,#0                ; team member flag, so I guess traps

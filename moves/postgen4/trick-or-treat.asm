@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/9/2023 - Confirmed Working 1/10/2023
+; Jawshoeuh 1/9/2023 - Confirmed Working 1/11/2023
 ; Trick-or-Treat normally adds the ghost type. However, that's not exactly
 ; easy to do. As a compromise, I overwrite the secondary type with
 ; the Ghost type.
