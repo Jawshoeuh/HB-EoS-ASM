@@ -1,19 +1,16 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/14/2023 - Confirmed Working 1/15/2023
-; Topsy-Turvy switches all stat boosts. Buffs to attack become debuffs and
-; same for all other stats. For the stat multipliers, I realized the bits
-; needed to be reversed. Unfortunately this version of arm doesn't have
-; rbit. So, I based the algorithm based upon
-; https://github.com/hcs0/Hackers-Delight/blob/master/reverse.c.txt
-; function rev11. That rev11 function is based on "an old algorithm by
-; Christopher Strachey (Bitwise Operations. Communications of the ACM 4, 3
-; (March 1961), 146)."
+; Jawshoeuh 12/7/2022 - Confirmed Working 12/7/2022
+; Topsy-Turvy switches all stat boosts. Buffs to attack become debuffs,
+; defense buffs become debuff... etc. This old version isn't very good
+; because it does a lot of shifting of a max value to figure out
+; the new value. It's basically an overly complicated bit shift :(
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
 .relativeinclude on
 .nds
 .arm
+
 
 .definelabel MaxSize, 0x2598
 
@@ -41,15 +38,14 @@
 .definelabel LastStatStage,0x2E
 .definelabel FirstStatModifier,0x34
 .definelabel LastStatModifier,0x40
-.definelabel MaxStatMultiplier, 0x10000 ; 65536 (256.0)
-.definelabel NormalStatMultiplier, 0x100
+.definelabel MaxStatMultiplier, 0x10000 ; 65536
+
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
-        push r5,r6,r7
-
+    
         ; Store monster stuff in r12
         ldr r12,[r4,#0xB4]
         
@@ -66,29 +62,15 @@
         
         ; init stat modifier loop
         mov r2,FirstStatModifier
-        ldr r5,=#0xF0F0F0F0
-        ldr r6,=#0xCCCCCCCC
-        ldr r7,=#0xAAAAAAAA
     stat_modifier_loop:
-        ldr r3,[r12,r2]
-        cmp r3,MaxStatMultiplier
-        movge r0,#1
-        bge store_new_value   ; Read more about this part below.
-        and r0,r3,#0xFF       ; x = x | ((x & 0xFF) << 16)
-        orr r3,r3,r0, lsl #16
-        and r0,r3,r5          ; x = (x & 0xF0F0F0F0) | ((x & 0x0F0F0F0F) << 8);
-        and r1,r3,r5, lsr #4
-        orr r3,r0,r1, lsl #8
-        and r0,r3,r6          ; x = (x & 0xCCCCCCCC) | ((x & 0x33333333) << 4);
-        and r1,r3,r6, lsr #2
-        orr r3,r0,r1, lsl #4
-        and r0,r3,r7          ; x = (x & 0xAAAAAAAA) | ((x & 0x55555555) << 2);zz
-        and r1,r3,r7, lsr #1
-        orr r3,r0,r1, lsl #2
-        lsr r0,r3,#14         ; x = x >> 15, 15 to actually reverse, but 14
-                              ; because need to shift left by one
-        store_new_value: ; indented to show it's part of the loop
-        str r0,[r12,r2]  ; store new modifier value
+        ldr r0,[r12,r2]
+        mov r1,MaxStatMultiplier
+        new_modifier_calc_loop: ; See bottom of file for detailed
+            cmp   r0,#0x1       ; description of this loop.
+            lsr   r0,r0,#0x1 ; divide by 2
+            lsrgt r1,r1,#0x1 ; divide by 2
+            bgt   new_modifier_calc_loop
+        str r1,[r12,r2] ; store new modifier value
         add r2,r2,#0x4
         cmp r2,LastStatModifier
         ble stat_modifier_loop
@@ -120,7 +102,7 @@
         bl SendMessageWithStringLog
         
         mov r10,#1
-        pop r5,r6,r7
+        ; Always branch at the end
         b MoveJumpAddress
         .pool
     topsyturvy_str:
@@ -128,8 +110,10 @@
     .endarea
 .close
 
-; Unfortunately, there isn't an innate way to reverse the bits in the
-; version of arm in use. So, I resort to using a specialized algorithm to
-; invert the last 16 bits. However we actually need to invert 17 bits.
-; Since we know the 17th bit is 0 (we check before), we just shift the
-; result one to the left. We manually check if the value needs to be 1/256.
+; The new_modifier_calc_loop takes the current multiplier and the
+; max multiplier. It divides both by two until the original multiplier
+; is 0x1. For example, with the default 0x100 (0b100000000) gets divided
+; by 2 until it equals 0x1 (0b1). While this is going on, the max
+; multiplier has been divided by 2 eight times (in other words divided
+; by 2^8. 35536/(2^8) = 256 = 0x100. If the smallest value of 0x1,
+; the new value will be the max. 
