@@ -85,8 +85,9 @@
         and r0,r3,r7          ; x = (x & 0xAAAAAAAA) | ((x & 0x55555555) << 2);zz
         and r1,r3,r7, lsr #1
         orr r3,r0,r1, lsl #2
-        lsr r0,r3,#14         ; x = x >> 15, 15 to actually reverse, but 14
-                              ; because need to shift left by one
+        lsr r0,r3,#15         ; x = x >> 15, 15 to actually reverse
+        lsl r0,r0,#1          ; need to shift left 1 cause its 17 bits
+                              
         store_new_value: ; indented to show it's part of the loop
         str r0,[r12,r2]  ; store new modifier value
         add r2,r2,#0x4

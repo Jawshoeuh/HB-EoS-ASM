@@ -56,21 +56,21 @@
         movne r2,#2           ; placed by allied NPCs can hurt us?
         moveq r2,#1
         mov   r3,#1           ; r3 = trap visible (bool)?
-        bl TryCreateTrap
+        bl    TryCreateTrap
         
         ;Show trap if made.
         cmp r0,#0
         beq failed_trap
-        bl UpdateDisplay
+        bl  UpdateDisplay
         
         mov r10,#1
-        b MoveJumpAddress
+        b   MoveJumpAddress
         
     failed_trap:
         mov r0,r9
         mov r1,r4
         ldr r2,=TrapFailedStr
-        bl SendMessageWithIDCheckUTLog
+        bl  SendMessageWithIDCheckUTLog
         
         mov r10,#0
         ; Always branch at the end
