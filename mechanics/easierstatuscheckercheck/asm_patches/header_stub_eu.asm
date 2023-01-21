@@ -10,7 +10,7 @@
 .definelabel MonsterHPBelowFourth, 0x02301208 ; uncertain, looks weird
 .definelabel CeilFixedPoint, 0x0205139C
 .definelabel GetTileAtEntity, 0x022E1F68
-.definelabel EntityIsValid, 0x0233349EC
+.definelabel EntityIsValid, 0x023349EC
 .definelabel CanSeeTarget, 0x022E308C
 .definelabel SomeDiveDigTileCheck, 0x023389FC ; poorly named
 .definelabel MonsterIsType, 0x0230287C

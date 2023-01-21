@@ -3,12 +3,15 @@
 ; a move's status checker check can easily be changed. To fit
 ; the table and some checks into the original spot, some weird
 ; 'optimizations' (for instructions, not runtime) have been made.
+; Additionally, checks can be deleted if you are confident you will not
+; need them in your game (for example, removing check_lucky_chant or 
+; evasion_speed_boost_not_max).
 ; Here are the conditions after branching from the large switch statement.
 ; r9 = Move ID (can be overwritten later if not needed)
-; r8 = Pointer to the entity that is considering using the move
+; r8 = Pointer to the entity that is considering using the move ()
 ; r7 = Pointer to extra Pokemon data (can be overwritten later if not needed)
 ; r6 = DUNGEON_PTR (can be overwritten later if not needed)
-; r4,r5 = reserved for scratch register in this function
+; r4,r5 = reserved for scratch register in this function in
 ;-------------------------------------
 
 .org StatusCheckerCheck
@@ -62,7 +65,7 @@
     b return_true                                          ; ID = 37
     b not_protected_d5                                     ; ID = 38
     b return_true                                          ; ID = 39
-    b not_protected_d5                                     ; ID = 40
+    b check_mirror_move                                    ; ID = 40
     b return_true                                          ; ID = 41
     b return_true                                          ; ID = 42
     b not_fixed_room_boss_fight                            ; ID = 43
@@ -486,7 +489,7 @@
     b return_true                                          ; ID = 461
     b return_true                                          ; ID = 462
     b return_true                                          ; ID = 463
-    b has_curable_status_condition                         ; ID = 464
+    b has_negative_status_condition                        ; ID = 464
     b return_true                                          ; ID = 465
     b return_true                                          ; ID = 466
     b return_true                                          ; ID = 467
@@ -581,7 +584,7 @@
     b return_true                                          ; ID = 556
     b return_true                                          ; ID = 557
     b return_true                                          ; ID = 558
-    b return_true                                          ; ID = 559 (INVALID)
+    b return_false                                         ; ID = 559 (INVALID)
 attack_boost_not_max:
     ldrsh r0,[r7,#0x24]
     b     stat_boost_not_max
@@ -781,8 +784,8 @@ not_active_decoy:
     add  r0,r6,#0x3000
     ldrb r0,[r0,#0xE38]
     b    equal_to_zero
-has_curable_status_condition:
-    bl    HasCurableStatusCondition
+has_negative_status_condition:
+    bl    MonsterHasNegativeStatus
     ldmia sp!,{r3,r4,r5,r6,r7,r8,r9,pc}
 has_sticky_item: ; CLEANSE (modified) Base Game
     ldrb r0,[r7,#0x62]
@@ -814,6 +817,10 @@ check_dig_and_dive: ; DO NOT USE FOR ANYTHING THAT'S NOT DIG/DIVE
     cmp   r0,#0x1
     beq   return_true
     b     return_false
+check_mirror_move: ; Some exclusive item effects makes mirror move different
+    mov r0,r8
+    bl  IsMirrorMoveEffectActive
+    b   equal_to_zero
 check_helping_hand_acupressure: ; Uses Helping Hand check unless ID = 492
     ldrb  r0,[r6,#0x6]
     cmp   r0,#0x0
@@ -833,7 +840,7 @@ check_helping_hand_acupressure: ; Uses Helping Hand check unless ID = 492
     beq   helping_hand_acupressure_loop_iter
     mov   r0,r8
     mov   r1,r7
-    bl    HasVisionOfMonster
+    bl    CanSeeTarget
     cmp   r0,#0
     beq   helping_hand_acupressure_loop_iter
     ldr   r0,[r7,#0xB4]
@@ -862,7 +869,7 @@ check_rest:
     mov r0,r8
     bl  MonsterHPBelowFourth
     cmp r0,#0
-    beq has_curable_status_condition
+    beq has_negative_status_condition
     b   return_true
 check_ingrain: ; Maybe could use not_protected_d5, but original 
     ldrb  r0,[r7,#0xC4] ; never checks 0xD5 despite Ingrain setting it.
@@ -936,11 +943,11 @@ check_lucky_chant: ; Could also be not_protected_d5_in_room
     bl    EntityIsValid
     cmp   r0,#0
     beq   lucky_chant_loop_iter
-    cmp   r7,r8
+    cmp   r7,r8 ; Check if ally isn't same? Not necessary but base game does it
     beq   lucky_chant_loop_iter
     mov   r0,r8
     mov   r1,r7
-    bl    HasVisionOfMonster
+    bl    CanSeeTarget
     cmp   r0,#0
     beq   lucky_chant_loop_iter
     ldr   r0,[r7,#0xB4]
@@ -989,8 +996,3 @@ return_true:
 ; Original StatusCheckerCheck Ends At 0x02333F97 (NA)
 ; So original space is 969 Instructions, some of which will be needed
 ; for the PTR_DUNGEON_PTR and other variables in the pool.
-
-; If you are using Notepad++, you can find all your labels by 
-; doing ctrl + f and put ".*:" then press find all in current document
-; to help you calculate how many actual instructions you have baed upon
-; line count.

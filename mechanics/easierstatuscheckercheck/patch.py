@@ -19,13 +19,14 @@ from typing import Callable
 from ndspy.rom import NintendoDSRom
 
 from skytemple_files.common.util import read_u32, get_binary_from_rom
-from skytemple_files.common.ppmdu_config.data import Pmd2Data, GAME_VERSION_EOS, GAME_REGION_US
+from skytemple_files.common.ppmdu_config.data import Pmd2Data, GAME_VERSION_EOS, GAME_REGION_US, GAME_REGION_EU
 from skytemple_files.patch.category import PatchCategory
-from skytemple_files.patch.handler.abstract import AbstractPatchHandler
+from skytemple_files.patch.handler.abstract import AbstractPatchHandler#, DependantPatch
 from skytemple_files.common.i18n_util import f, _
 
 ORIGINAL_INSTRUCTION = 0xE92D40F8
 OFFSET_US = 0x56E34
+OFFSET_EU = 0x56E34 # It's the same?
 
 class PatchHandler(AbstractPatchHandler):
 
@@ -50,8 +51,9 @@ class PatchHandler(AbstractPatchHandler):
          if config.game_version == GAME_VERSION_EOS:
              if config.game_region == GAME_REGION_US:
                  return read_u32(overlay29, OFFSET_US) != ORIGINAL_INSTRUCTION
+             if config.game_region == GAME_REGION_EU:
+                 return read_u32(overlay29, OFFSET_EU) != ORIGINAL_INSTRUCTION
          raise NotImplementedError()
-
 
     def apply(self, apply: Callable[[], None], rom: NintendoDSRom, config: Pmd2Data):
         # Apply the patch

@@ -11,7 +11,7 @@
 .definelabel CeilFixedPoint, 0x02051064
 .definelabel GetTileAtEntity, 0x022E1628
 .definelabel EntityIsValid, 0x02333FAC
-.definelabel CanSeeTarget, 0x022E274C ; uncertain
+.definelabel CanSeeTarget, 0x022E274C
 .definelabel SomeDiveDigTileCheck, 0x02337E2C ; poorly named
 .definelabel MonsterIsType, 0x02301E50
 .definelabel IsMirrorMoveEffectActive, 0x02319748
