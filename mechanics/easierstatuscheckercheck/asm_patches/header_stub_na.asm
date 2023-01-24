@@ -15,6 +15,9 @@
 .definelabel SomeDiveDigTileCheck, 0x02337E2C ; poorly named
 .definelabel MonsterIsType, 0x02301E50
 .definelabel IsMirrorMoveEffectActive, 0x02319748
+.definelabel GravityIsActive, 0x02338390
+.definelabel LevitateIsActive, 0x02301E18
+.definelabel HasLowHealth, 0x022FB610
 
 .definelabel PTR_DUNGEON_PTR, 0x02353538
 .definelabel PTR_CAMOUFLAGE_TYPES, 0x022C6322

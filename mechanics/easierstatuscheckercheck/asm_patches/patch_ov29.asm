@@ -752,27 +752,27 @@ weather_not_equal:
     bne return_true
     b   return_false
 not_protected_d5:
-    ldr r0,[r7,#0xD5]
+    ldrb r0,[r7,#0xD5]
     b   equal_to_zero
 not_biding_d2:
-    ldr r0,[r7,#0xD2]
+    ldrb r0,[r7,#0xD2]
     b   equal_to_zero
 not_accuracy_modified_ec:
-    ldr r0,[r7,#0xEC]
+    ldrb r0,[r7,#0xEC]
     b   equal_to_zero
 not_bearing_grudge_fd: ; GRUDGE Base Game
-    ldr r0,[r7,#0xFD]
+    ldrb r0,[r7,#0xFD]
     b   equal_to_zero
 not_magnet_rised_f7: ; MAGNET RISE Base Game
-    ldr r0,[r7,#0xF7]
+    ldrb r0,[r7,#0xF7]
     b   equal_to_zero
 has_stockpiled: ; SPIT UP Base Game
-    ldr r0,[r7,#0x11E]
+    ldrb r0,[r7,#0x11E]
     cmp r0,#0
     beq return_false
     b   return_true
 not_max_stockpiled: ; STOCKPILE Base Game
-    ldr r0,[r7,#0x11E]
+    ldrb r0,[r7,#0x11E]
     cmp r0,MAX_STOCKPILE
     blt return_true
     b   return_false
@@ -797,6 +797,10 @@ has_no_item: ; TAKEAWAY Base Game
     and  r0,r0,#0b1
     eor  r0,r0,#0b1
     ldmia sp!,{r3,r4,r5,r6,r7,r8,r9,pc}
+has_item: ; UNUSED Base Game
+    ldrb r0,[r7,#0x62]
+    and  r0,r0,#0b1
+    ldmia sp!,{r3,r4,r5,r6,r7,r8,r9,pc}
 not_empty_belly: ; Part of BELLY DRUM Base Game
     add  r0,r7,#0x100
     ldr  r0,[r0,#0x46]
@@ -804,6 +808,17 @@ not_empty_belly: ; Part of BELLY DRUM Base Game
     cmp  r0,#1
     bge  return_true
     b    return_false
+gravity_not_active: ; UNUSED Base Game
+    bl   GravityIsActive
+    b    equal_to_zero
+has_levitate: ; UNUSED Base Game
+    mov   r0,r8
+    bl    LevitateIsActive
+    ldmia sp!,{r3,r4,r5,r6,r7,r8,r9,pc}
+has_low_health: ; UNUSED Base Game
+    mov   r0,r8
+    bl    HasLowHealth
+    ldmia sp!,{r3,r4,r5,r6,r7,r8,r9,pc}
 check_dig_and_dive: ; DO NOT USE FOR ANYTHING THAT'S NOT DIG/DIVE
     mov   r0,r8
     bl    GetTileAtEntity
