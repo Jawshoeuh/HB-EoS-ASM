@@ -1,6 +1,6 @@
 ; ------------------------------------------------------------------------------
 ; Jawshoeuh 11/12/2022 - Confirmed Working 11/29/2022
-; Work Up raises the Attack and Defense of the User.
+; Work Up raises the Attack and Special Attack of the User.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -38,15 +38,14 @@
         mov r3,#1
         bl  AttackStatUp
         
-        ; Raise defense.
+        ; Raise special attack.
         mov r0,r9
         mov r1,r4
-        mov r2,#0
+        mov r2,#1
         mov r3,#1
-        bl  DefenseStatUp
+        bl  AttackStatUp
         
         mov r10,#1
-        ; Always branch at the end
         b MoveJumpAddress
         .pool
     .endarea
