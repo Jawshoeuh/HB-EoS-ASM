@@ -30,8 +30,8 @@
 .definelabel MemAlloc, 0x02001170
 .definelabel AdvanceFrame, 0x022E9FE0
 .definelabel ChangeStringNumber, 0x0234B09C
-.definelabel LoadAnimation, 0x022BDEB4
-.definelabel PlayAnimation, 0x022E35E4
+.definelabel GetEffectAnimationField0x19, 0x022BDEB4
+.definelabel PlayEffectAnimation, 0x022E35E4
 .definelabel FramesBetweenAnimations, 80
 .definelabel FramesAfterText, 20
 .definelabel FirstAnimation, 0
@@ -45,8 +45,8 @@
 ;.definelabel MemAlloc, 0x02001170
 ;.definelabel AdvanceFrame, 0x022EA990
 ;.definelabel ChangeStringNumber, 0x????????
-;.definelabel LoadAnimation, 0x????????
-;.definelabel PlayAnimation, 0x????????
+;.definelabel GetEffectAnimationField0x19, 0x????????
+;.definelabel PlayEffectAnimation, 0x022E3F94
 ;.definelabel FramesBetweenAnimations, 80
 ;.definelabel FramesAfterText, 20
 ;.definelabel FirstAnimation, 0
@@ -80,18 +80,18 @@
         blt wait1
         
         ; Load or get the animation.
-        ; This is almost always called before PlayAnimation. However,
+        ; This is almost always called before PlayEffectAnimation. However,
         ; is sparsely not loaded beforehand. Perhaps there is another
         ; function to load animations or this function is embedded in
         ; another that gets called?
         mov r0,r7
-        bl  LoadAnimation
+        bl  GetEffectAnimationField0x19
         
         ; Play the animation.
         ; r0 = Entity/Monster to display animation on.
         ; r1 = Annimation ID
         ; r2 = Usually 1.
-        ; r3 = Output of LoadAnimation, maybe just a pointer to anim data.
+        ; r3 = Output of GetEffectAnimationField0x19, maybe just a pointer to anim data.
         ; sp = Usually 2.
         ; sp+0x4 = Usually 0
         ; sp+0x8 = Usually 0xFFFFFFFF
@@ -108,7 +108,7 @@
         mov r1,r7
         mov r2,#0x1
         str r12,[sp,#0xC]
-        bl  PlayAnimation
+        bl  PlayEffectAnimation
         
     ; Give time for animation to playout.
         mov r4,#0
