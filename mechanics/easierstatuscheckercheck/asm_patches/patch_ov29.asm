@@ -841,8 +841,8 @@ check_helping_hand_acupressure: ; Uses Helping Hand check unless ID = 492
     cmp   r0,#0x0
     mov   r5,#0x12800
     orrne r4,r5,#0x338 ; r6 = 0x12B38 (Start Enemy, inclusive)
-    orrne r5,r5,#0x378 ; r8 = 0x12B38 (End Enemy, not inclusive)
-    orreq r4,r5,#0x328 ; r6 = 0x12B78 (Start Ally, inclusive)
+    orrne r5,r5,#0x378 ; r8 = 0x12B78 (End Enemy, not inclusive)
+    orreq r4,r5,#0x328 ; r6 = 0x12B28 (Start Ally, inclusive)
     orreq r5,r5,#0x338 ; r8 = 0x12B38 (End Ally, not inclusive)
     helping_hand_acupressure_loop:
     add   r0,r4,r6
@@ -948,8 +948,8 @@ check_lucky_chant: ; Could also be not_protected_d5_in_room
     cmp   r0,#0x0
     mov   r5,#0x12800
     orrne r4,r5,#0x338 ; r6 = 0x12B38 (Start Enemy, inclusive)
-    orrne r5,r5,#0x378 ; r8 = 0x12B38 (End Enemy, not inclusive)
-    orreq r4,r5,#0x328 ; r6 = 0x12B78 (Start Ally, inclusive)
+    orrne r5,r5,#0x378 ; r8 = 0x12B78 (End Enemy, not inclusive)
+    orreq r4,r5,#0x328 ; r6 = 0x12B28 (Start Ally, inclusive)
     orreq r5,r5,#0x338 ; r8 = 0x12B38 (End Ally, not inclusive)
     lucky_chant_loop:
     add   r0,r4,r6

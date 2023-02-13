@@ -22,9 +22,6 @@
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
 .definelabel ChangeStringAbility, 0x0234B084
-.definelabel InsomniaFailedStr, 0xF13
-.definelabel InsomniaAbiilityID, 0x36 ; 54
-.definelabel TruantAbilityID, 0x2A ; 40
 .definelabel TryWakeUp, 0x02305FDC
 
 ; For EU
@@ -33,10 +30,12 @@
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
 ;.definelabel ChangeStringAbility, 0x????????
-;.definelabel InsomniaFailedStr, 0x???
-;.definelabel InsomniaAbiilityID, 0x36 ; 54
-;.definelabel TruantAbilityID, 0x2A ; 40
 ;.definelabel TryWakeUp, 0x????????
+
+; Universal
+.definelabel InsomniaFailedStr, 0xF13
+.definelabel InsomniaAbiilityID, 0x36 ; 54
+.definelabel TruantAbilityID, 0x2A ; 40
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
@@ -66,14 +65,6 @@
         ldr r1,=worryseed_str
         bl SendMessageWithStringLog
         
-        ; Skill Swap/Role Play do this when a target's ability is changed.
-        ; Mark that a move was used on the target.
-        ldr    r3,[r4,#0xB4]
-        ldrb   r0,[r3,#0x108]
-        cmp    r0,#0x0
-        moveq  r0,#0x1
-        streqb r0,[r3,#0x108]
-        
         ; Check If Asleep (see 0x022fa8f0 for reference)
         ldr   r0,[r4,#0xB4]
         ldrb  r1,[r0,#0xBD] ; IsAsleep?
@@ -82,7 +73,7 @@
         cmpne r1,#4
         cmpne r1,#5
         mov   r10,#1
-        bne MoveJumpAddress
+        bne   MoveJumpAddress
         
         ; Attempt to wakeup target. Normally for ability changes,
         ; you should call 022FA7DC, but since we definitely know the

@@ -38,9 +38,13 @@
 ;.definelabel DisplayTextAbove, 0x????????
 ;.definelabel PlayMissSound, 0x???????? ; May be wrongly named.
 ;.definelabel MoveHitCheckJump, 0x???????? ; instruction = 00 80 a0 e1
-;.definelabel ConfusionChance, 30
-;.definelabel NormalAccuracy, 73 ; based off of Thunder
-;.definelabel SunnyAccuracy, 50 ; based off of Thunder
+
+; Universal 
+.definelabel ConfusionChance, 30
+.definelabel NormalAccuracy, 73 ; based off of Thunder
+.definelabel SunnyAccuracy, 50 ; based off of Thunder
+.definelabel RainWeatherID, 4
+.definelabel MissStr, 0xEC3
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
@@ -51,7 +55,7 @@
         ; Check if it is raining.
         mov   r0,r9
         bl    GetApparentWeather
-        cmp   r0,#0x4 ; Rain ID
+        cmp   r0,RainWeatherID
         beq   success ; skip check if raining
         
         ; Branch into middle of move hit check in the middle.
@@ -79,7 +83,7 @@
         mov r1,r4      ; entityt to display text above
         sub r3,r2,#0x2 ; color related, 0xfffffff normally, 0xb for stockpile
         bl  DisplayTextAbove
-        ldr r2,=0xEC3
+        ldr r2,=MissStr
         mov r0,r9
         mov r1,r4
         bl  SendMessageWithIDCheckUTNoLog

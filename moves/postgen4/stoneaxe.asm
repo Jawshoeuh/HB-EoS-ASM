@@ -1,7 +1,7 @@
 ; ------------------------------------------------------------------------------
 ; Jawshoeuh 12/3/2022 - WIP
 ; Stone Axe does damage, does stealth rock damage, and then tries to place
-; a trap below the target.
+; a trap below the target. Currently, there is a bug that causes a freeze
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -99,7 +99,7 @@
         mov   r3,#1                 ; r3 = trap visible (bool)?
         bl    TryCreateTrap
         
-        bl UpdateDisplay
+        bl    UpdateDisplay
     unallocate_memory:
         add sp,sp,#0x4
         b MoveJumpAddress

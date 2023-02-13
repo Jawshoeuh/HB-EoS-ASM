@@ -38,26 +38,26 @@
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
-    
+        sub  sp,sp,#0x20
+        
         ; Get move type.
-        sub sp,sp,#0x20
-        mov r0,#0
-        strb r0,[sp,#0x1C]
-        mov r0,r8
-        bl GetMoveType
-        mov r3,r0
-        add r0,sp,#0x1C
+        mov   r0,#0
+        strb  r0,[sp,#0x1C]
+        mov   r0,r8
+        bl    GetMoveType
+        mov   r3,r0
+        add   r0,sp,#0x1C
         stmia sp,{r0,r3}
 
         ; Get move category
         ldrh r0,[r8,#0x4]
-        bl GetMoveCategory
-        str r0,[sp,#+0x8]
+        bl   GetMoveCategory
+        str  r0,[sp,#0x8]
 
         ; Get faint reason (if move knocks out)
         mov r0,r8
         mov r1,r7
-        bl GetFaintReasonWrapper
+        bl  GetFaintReasonWrapper
         str r0,[sp,#0xC]
         
         ; Prepare calcdamagefixedwrapper
@@ -66,19 +66,19 @@
         str r2,[sp,#0x10]
         str r3,[sp,#0x14]
         str r2,[sp,#0x18]
-        mov r2, FlatDamage
+        mov r2,FixedDamage
         mov r1,r4
         mov r0,r9
-        bl CalcDamageFixedWrapper
+        bl  CalcDamageFixedWrapper
 
         ; return success/failure
-        ldrb r0,[sp]
-        cmp r0,#0x0
+        ldrb  r0,[sp]
+        cmp   r0,#0x0
         moveq r10,#0x1
         movne r10,#0x0
+        
         add sp,sp,#0x20
-        ; Always branch at the end
-        b MoveJumpAddress
+        b   MoveJumpAddress
         .pool
     .endarea
 .close
