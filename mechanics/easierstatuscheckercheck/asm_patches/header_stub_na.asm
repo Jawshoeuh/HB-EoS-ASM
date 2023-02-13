@@ -5,16 +5,16 @@
 .definelabel StatusCheckerCheck, 0x02333074
 .definelabel GetApparentWeather, 0x02334D08
 .definelabel IsCurrentFixedRoomBossFight, 0x022E0880
-.definelabel CanPlaceTrapBelow, 0x022EDC30
+.definelabel CanPlaceTrapBelow, 0x022EDC30 ; not in pmdsky-debug
 .definelabel MonsterHasNegativeStatus, 0x02300634
-.definelabel MonsterHPBelowFourth, 0x023007DC ; uncertain, looks weird
+.definelabel MonsterHPBelowFourth, 0x023007DC ; not in pmdsky-debug
 .definelabel CeilFixedPoint, 0x02051064
 .definelabel GetTileAtEntity, 0x022E1628
 .definelabel EntityIsValid, 0x02333FAC
 .definelabel CanSeeTarget, 0x022E274C
-.definelabel SomeDiveDigTileCheck, 0x02337E2C ; poorly named
+.definelabel SomeDiveDigTileCheck, 0x02337E2C ; not in pmdsky-debug
 .definelabel MonsterIsType, 0x02301E50
-.definelabel IsMirrorMoveEffectActive, 0x02319748
+.definelabel IsMirrorMoveEffectActive, 0x02319748 ; not in pmdsky-debug
 .definelabel GravityIsActive, 0x02338390
 .definelabel LevitateIsActive, 0x02301E18
 .definelabel HasLowHealth, 0x022FB610
