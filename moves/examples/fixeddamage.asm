@@ -72,7 +72,7 @@
         bl  CalcDamageFixedWrapper
 
         ; return success/failure
-        ldrb  r0,[sp]
+        ldrb  r0,[sp,#0x1C]
         cmp   r0,#0x0
         moveq r10,#0x1
         movne r10,#0x0

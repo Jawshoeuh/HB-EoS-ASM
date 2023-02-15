@@ -1,3 +1,7 @@
+; ------------------------------------------------------------------------------
+; Jawshoeuh 2/14/2023
+; Will update function names when/if they get added to pmdsky-debug.
+; ------------------------------------------------------------------------------
 .relativeinclude on
 .nds
 .arm

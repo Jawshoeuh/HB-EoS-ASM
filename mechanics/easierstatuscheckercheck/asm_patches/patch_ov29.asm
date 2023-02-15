@@ -1,4 +1,5 @@
-;-------------------------------------
+; ------------------------------------------------------------------------------
+; Jawshoeuh 2/14/202 - Confirmed Working
 ; Turn StatusCheckerCheck into a big 'switch' statement so
 ; a move's status checker check can easily be changed. To fit
 ; the table and some checks into the original spot, some weird
@@ -12,7 +13,7 @@
 ; r7 = Pointer to extra Pokemon data (can be overwritten later if not needed)
 ; r6 = DUNGEON_PTR (can be overwritten later if not needed)
 ; r4,r5 = reserved for scratch register in this function in
-;-------------------------------------
+; ------------------------------------------------------------------------------
 
 .org StatusCheckerCheck
 .area 0xF24 ; If run into space errors, use overlay 36, don't increasce area here.
