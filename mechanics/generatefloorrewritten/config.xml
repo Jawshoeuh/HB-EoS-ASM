@@ -1,0 +1,27 @@
+<PMD2>
+  <!--=======================================================================-->
+  <!--ASM Patches Constants-->
+  <!--=======================================================================-->
+  <!--Put the data defining your patch here.-->
+  <ASMPatchesConstants>
+
+    <!--*******************-->
+    <!--Patches list-->
+    <!--*******************-->
+    <!--Patching steps for applying various asm patches on the game-->
+    <Patches>
+      <Game id="EoS_NA" id2="EoS_EU">
+        <Patch id="GenerateFloorRewritten" >
+          <OpenBin filepath="overlay/overlay_0029.bin">
+            <Include filename ="patch_ov29.asm"/>
+          </OpenBin>
+          <!-- Remove this comment to use overlay36
+          <OpenBin filepath="overlay/overlay_0036.bin">
+            <Include filename ="patch_ov36.asm"/>
+          </OpenBin> -->
+        </Patch>
+      </Game>
+    </Patches>
+  </ASMPatchesConstants>
+</PMD2>
+

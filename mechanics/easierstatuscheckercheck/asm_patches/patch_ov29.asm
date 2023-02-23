@@ -16,7 +16,7 @@
 ; ------------------------------------------------------------------------------
 
 .org StatusCheckerCheck
-.area 0xF24 ; If run into space errors, use overlay 36, don't increasce area here.
+.area 0xF24 ; If run into space errors, use overlay 36, don't increase area here.
     stmdb sp!,{r3,r4,r5,r6,r7,r8,r9,lr}
     mov   r8,r0
     ldr   r7,[r0,#0xB4]
