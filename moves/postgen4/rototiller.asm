@@ -41,8 +41,8 @@
     .area MaxSize ; Define the size of the area
     
         ; Check Gravity first.
-        bl  GravityIsActive
-        mov r3,r0
+        mov   r0,r4
+        mov 
         
         ; Find target type.
         ldr   r12,[r4,#0xB4]

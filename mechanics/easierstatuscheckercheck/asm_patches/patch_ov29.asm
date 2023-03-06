@@ -865,7 +865,7 @@ check_helping_hand_acupressure: ; Uses Helping Hand check unless ID = 492
     cmp   r1,MAX_STAT_BOOST
     cmpge r2,MAX_STAT_BOOST
     blt   return_true
-    cmp   r9,#492
+    cmp   r9,#492 ; Acupressure Move ID
     bne   helping_hand_acupressure_loop_iter
     ldrsh r1,[r0,#0x28]
     ldrsh r2,[r0,#0x2A]

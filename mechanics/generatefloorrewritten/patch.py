@@ -26,7 +26,7 @@ from skytemple_files.common.i18n_util import f, _
 
 ORIGINAL_INSTRUCTION = 0xE3A08000
 OFFSET_US = 0x5E4A4
-OFFSET_EU = 0x5E4A4 # It's the same?``
+OFFSET_EU = 0x5E748
 
 class PatchHandler(AbstractPatchHandler):
 
