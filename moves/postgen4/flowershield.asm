@@ -47,7 +47,7 @@
         mov r1,r4
         mov r2,#0 ; defense
         mob r3,#1 ; 1 stage
-        bl DefenseStatUp
+        bl  DefenseStatUp
         
         mov r10,#1
         b MoveJumpAddress

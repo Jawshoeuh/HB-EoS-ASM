@@ -1,9 +1,7 @@
 ; ------------------------------------------------------------------------------
 ; Jawshoeuh 1/9/2023 - Confirmed Workign 1/10/2023
 ; Fairy Lock is kinda weird. My PMD interpretation will inflict 
-; Shadow Hold for 1 turn, but it's intended to be used on an entire room.
-; So... maybe not a useful interpretation but... I would make it 1 or 2
-; turns; however, the leader and allies will immediately breakout with 2
+; Shadow Hold for a short amount of time.
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------ brb!
 

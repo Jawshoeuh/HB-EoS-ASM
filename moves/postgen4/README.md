@@ -13,10 +13,10 @@ Moves With Existing Effects:<br/>
 Baby-Doll Eyes (DoMoveGrowl), Celebrate (Effect 325), Dazzling Gleam (DoMoveDamage), Dragon Ascent (DoMoveCloseCombat), Fairy Wind (DoMoveDamage), Land's Wrath (DoMoveDamageWithRecoil), Light of Ruin (DoMoveDamageWithRecoil), Origin Pulse (DoMoveDamage), Petal Blizzard (DoMoveDamage), Phantom Force (DoMoveShadowForce), Play Nice (DoMoveGrowl), Precipice Blades (DoMoveDamage), Water Shuriken (DoMoveDamage)
 
 Completed Move Effects:<br/>
-Aromatic Mist, Boomburst, Confide, Diamond Storm, Disarming Voice (See Boomburst), Eerie Impulse, Fairy Lock, Fell Stinger, Mystical Fire, Noble Roar, Nuzzle, Parting Shot, Play Rough, Power-Up Punch, Steam Eruption (See Scald), Sticky Web, Topsy-Turvy
+Aromatic Mist, Boomburst, Confide, Diamond Storm, Disarming Voice (See Boomburst), Eerie Impulse, Fairy Lock, Fell Stinger, Flower Shield, Forest's Curse, Mystical Fire, Noble Roar, Nuzzle, Parting Shot, Play Rough, Power-Up Punch, Steam Eruption (See Scald), Sticky Web, Topsy-Turvy, Trick-or-Treat
 
 Moves Todo:<br/>
-Belch, Draining Kiss, Flower Shield, Flying Press, Forest's Curse, Freeze-Dry, Geomancy, Hyperspace Fury, Hyperspace Hole, Infestation, Magnetix Flux, Mat Block, Oblivion Wing (see Draining Kiss), Rototiller, Trick-or-Treat, Venom Drench
+Belch, Draining Kiss, Flying Press, Freeze-Dry, Geomancy, Hyperspace Fury, Hyperspace Hole, Infestation, Magnetix Flux, Mat Block, Oblivion Wing (see Draining Kiss), Rototiller, Venom Drench
 
 Moves Not Planned:<br/>
 Crafty Shield, Electric Terrain, Electrify, Grassy Terrain, Happy Hour, Hold Hands, Ion Deluge, King's Shield, Misty Terrain, Powder, Spiky Shield

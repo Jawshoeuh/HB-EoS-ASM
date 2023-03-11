@@ -7,6 +7,9 @@ This patch is unzipped as it is intended to be uses a a basis for creating your 
 # GenerateFloorRewritten
 This patch is a rewrite of the GenerateFloorFunction it makes a few optimizations but should make it easier to edit GenerateFloor to customize dungeon generation to be tailored to the needs of the user.<br/>
 
+# ExtraFloorTypes
+This patch requires Overlay36 (ExtraSpace). It replaces the extra Medium Large floor types 12/13/14/15 with a few custom floor types. Feel free to examine it and create your own custom floor types using the baseline work in the patch.<br/>
+
 # SnowGen9
 This patch removes the increasced speed from snow and repurposes that space to instead bolster the defense of Ice types in the damage calculation formula.<br/>
 
