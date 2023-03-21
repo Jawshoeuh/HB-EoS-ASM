@@ -11,6 +11,10 @@ Contains skypatches that modifies various things (can be applied in SkyTemple). 
 Contains the raw asm files that can be imported under the move effects tabs of SkyTemple. <br/>
 Careful as a few moves are currently marked as WIP! I'm working on something else for a bit and will come back later! <br/>
 
+# Dungeon Generation
+If you're looking for my custom dungeon generation functions, you can find those here as they don't make sense without visuals.<br/>
+https://docs.google.com/document/d/1FZxAX84Z7UsJpXD5kSazIJFfqwsaiyT8ALCLEmevsuo/edit?usp=sharing <br/>
+
 # Credits
 Adex-8x: The layout and inspiration for this repsitory goes to Adex-8x's which can be found here (if I am missing a move, it may exist here already). <br/>
 https://github.com/Adex-8x/EoS-ASM-Effects <br/>
