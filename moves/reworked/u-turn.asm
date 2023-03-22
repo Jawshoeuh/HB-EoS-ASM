@@ -37,21 +37,28 @@
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
+        sub sp,sp,#0x4
         
         ; Deal damage.
-        sub sp,sp,#0x4
         str r7,[sp]
         mov r0,r9
         mov r1,r4
         mov r2,r8
         mov r3,#0x100 ; normal damage
         bl  DealDamage
-        add sp,sp,#0x4
         
         ; Check for succesful hit.
-        cmp r0, #0
-        mov r10,#0
-        beq MoveJumpAddress
+        cmp r0, #0x0
+        mov r10,#0x0
+        beq unallocate_memory
+        mov r10,#0x1
+        
+        ; Basically check if the user didn't faint.
+        mov r0,r9
+        mov r1,#0x0 ; Guaranteed
+        bl  RandomChanceU
+        cmp r0,#0x0
+        beq unallocate_memory
         
         ; Get User Direction and Flip
         ldr  r0, [r9,#0xB4]
@@ -84,8 +91,8 @@
         ; Check tile for Monster.
         bl    GetTile
         ldr   r1,[r0,#0xC]
-        cmp   r1,#0
-        beq   MoveJumpAddress ; failed, no monster
+        cmp   r1,#0x0
+        beq   unallocate_memory ; failed, no monster
         
         ; Check if friend or enemy.
         ldr   r12,[r1,#0xB4]
@@ -97,7 +104,7 @@
         ldrb  r2,[r12,#0x8]
         eor   r12,r0,r2 ; 1 = enemy, 0 = friend
         cmp   r12,r3
-        bne   MoveJumpAddress ; failed, not on same team
+        bne   unallocate_memory ; failed, not on same team
         
         ; Try to swap places
         mov r0,r9
@@ -107,8 +114,8 @@
         ; TODO: Make the swapping animation prettier.
         ; Currently, it's very jarring...
         
-        mov r10,#1
-        ; Always branch at the end
+    unallocate_memory:
+        add sp,sp,#0x4
         b MoveJumpAddress
         .pool
     .endarea

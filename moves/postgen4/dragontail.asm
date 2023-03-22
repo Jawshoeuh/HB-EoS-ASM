@@ -34,28 +34,29 @@
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
+        sub sp,sp,#0x4
         
         ; Damage enemy.
-        sub sp,sp,#0x4
         str r7,[sp]
         mov r0,r9
         mov r1,r4
         mov r2,r8
         mov r3,#0x100 ; normal damage
         bl  DealDamage
-        add sp,sp,#0x4
         
         ; Check for succesful hit.
-        cmp r0, #0
-        mov r10,#0
-        beq MoveJumpAddress
-        mov r10,#!
+        cmp r0, #0x0
+        mov r10,#0x0
+        beq unallocate_memory
+        mov r10,#0x1
         
-        ; Check if still alive.
-        mov r0,r4
-        bl  EntityIsValid
+        ; Check both targets are still alive.
+        mov r0,r9
+        mov r1,r4
+        mov r2,#0x0 ; Guaranteed
+        bl  RandomChanceUT
         cmp r0,#0x0
-        beq MoveJumpAddress
+        beq unallocate_memory
         
         ; Uh? Yeet (throw) the target?
         mov  r0,r9
@@ -64,7 +65,8 @@
         ldrb r2,[r2,#0x4C]
         bl TryBlowAway
         
-        ; Always branch at the end
+    unallocate_memory:
+        add sp,sp,#0x4
         b MoveJumpAddress
         .pool
     .endarea

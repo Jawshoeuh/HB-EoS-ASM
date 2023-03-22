@@ -56,8 +56,7 @@ Completed Move Effects:<br/>
 Armor Cannon, Chilly Reception, Doodle, Fillet Away, Lumina Crash (See Acid Spray), Make It Rain, Spicy Extract, Tidy Up, Torch Song
 
 Moves Todo:<br/>
-Aqua Step, Axe Kick, Chilling Water, Collision Course, Double Shock, Electro Drift, 
-Gigaton Hammer, Glaive Rush, Hyper Drill, Order Up, Raging Bull, Revival Blessing, Salt Cure, Shed Tail, Spin Out, Trailblaze, 
+Aqua Step, Axe Kick, Chilling Water, Collision Course, Double Shock, Electro Drift, Gigaton Hammer, Glaive Rush, Hyper Drill, Order Up, Raging Bull, Revival Blessing, Salt Cure, Shed Tail, Spin Out, Trailblaze
 
 Moves Not Planned:<br/>
 Comeuppance, Ice Spinner, Last Respects, Rage Fist, Silk Trap, Tera Blast
