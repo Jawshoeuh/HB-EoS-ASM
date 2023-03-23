@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/9/2023 - WIP
+; Jawshoeuh 1/9/2023 - Confirmed Working 3/23/2023
 ; Magnetic Flux only raises the Defense/Special Defense of Pokemon with the
 ; ability Plus/Minus.
 ; Based on the template provided by https://github.com/SkyTemple
@@ -49,25 +49,25 @@
         bne success
         
         mov r10,#0
-        b MoveJumpAddress
+        b   MoveJumpAddress
         
     success:
         ; Raise defense.
         mov r0,r9
         mov r1,r4
         mov r2,#0 ; defense
-        mob r3,#1 ; 1 stage
+        mov r3,#1 ; 1 stage
         bl DefenseStatUp
         
         ; Raise special defense.
         mov r0,r9
         mov r1,r4
         mov r2,#1 ; special defense
-        mob r3,#1 ; 1 stage
+        mov r3,#1 ; 1 stage
         bl DefenseStatUp
         
         mov r10,#1
-        b MoveJumpAddress
+        b   MoveJumpAddress
         .pool
     .endarea
 .close

@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/9/2023 - WIP
+; Jawshoeuh 1/9/2023 - Confirmed Working 3/23/2023
 ; Magnetic Flux only raises the Attack/Special Attack of Pokemon with the
 ; ability Plus/Minus.
 ; Based on the template provided by https://github.com/SkyTemple
@@ -49,22 +49,22 @@
         bne success
         
         mov r10,#0
-        b MoveJumpAddress
+        b   MoveJumpAddress
         
     success:
         ; Raise attack.
         mov r0,r9
         mov r1,r4
         mov r2,#0 ; attack
-        mob r3,#1 ; 1 stage
-        bl AttackStatUp
+        mov r3,#1 ; 1 stage
+        bl  AttackStatUp
         
         ; Raise special defense.
         mov r0,r9
         mov r1,r4
         mov r2,#1 ; special attack
-        mob r3,#1 ; 1 stage
-        bl AttackStatUp
+        mov r3,#1 ; 1 stage
+        bl  AttackStatUp
         
         mov r10,#1
         b MoveJumpAddress

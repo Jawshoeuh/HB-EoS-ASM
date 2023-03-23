@@ -13,27 +13,26 @@ Moves With Existing Effects:<br/>
 Baby-Doll Eyes (DoMoveGrowl), Celebrate (Effect 325), Dazzling Gleam (DoMoveDamage), Dragon Ascent (DoMoveCloseCombat), Fairy Wind (DoMoveDamage), Land's Wrath (DoMoveDamageWithRecoil), Light of Ruin (DoMoveDamageWithRecoil), Origin Pulse (DoMoveDamage), Petal Blizzard (DoMoveDamage), Phantom Force (DoMoveShadowForce), Play Nice (DoMoveGrowl), Precipice Blades (DoMoveDamage), Water Shuriken (DoMoveDamage)
 
 Completed Move Effects:<br/>
-Aromatic Mist, Boomburst, Confide, Diamond Storm, Disarming Voice (See Boomburst), Eerie Impulse, Fairy Lock, Fell Stinger, Flower Shield, Forest's Curse, Mystical Fire, Noble Roar, Nuzzle, Parting Shot, Play Rough, Power-Up Punch, Steam Eruption (See Scald), Sticky Web, Topsy-Turvy, Trick-or-Treat
+Aromatic Mist, Boomburst, Confide, Diamond Storm, Disarming Voice (See Boomburst), Eerie Impulse, Fairy Lock, Fell Stinger, Flower Shield, Forest's Curse, Mystical Fire, Noble Roar, Nuzzle, Parting Shot, Play Rough, Power-Up Punch, Rototiller, Steam Eruption (See Scald), Sticky Web, Topsy-Turvy, Trick-or-Treat
 
 Moves Todo:<br/>
-Belch, Draining Kiss, Flying Press, Freeze-Dry, Geomancy, Hyperspace Fury, Hyperspace Hole, Infestation, Magnetix Flux, Mat Block, Oblivion Wing (see Draining Kiss), Rototiller, Venom Drench
+Belch, Draining Kiss, Flying Press, Freeze-Dry, Geomancy, Hyperspace Fury, Hyperspace Hole, Infestation, Magnetix Flux, Mat Block, Oblivion Wing (see Draining Kiss), Venom Drench
 
 Moves Not Planned:<br/>
 Crafty Shield, Electric Terrain, Electrify, Grassy Terrain, Happy Hour, Hold Hands, Ion Deluge, King's Shield, Misty Terrain, Powder, Spiky Shield
 
 # Gen 7
 Moves With Existing Effects:<br/>
-Accelerock (DoMoveDamage), Brutal Swing (DoMoveDamage), Double Iron Bash (DoMoveDamage), Dragon Hammer (DoMoveDamage), Fleur Cannon (DoMoveDracoMeteor), High Horsepower (DoMoveDamage), Ice Hammer (DoHammerArm), Leafage (DoMoveDamage), Liquidation (Identical to Crunch), Nature's Madness (DoMoveSuperFang), Photon Geyser, Shadow Bone (Identical to Crunch), Smart Strike (DoMoveDamage), Spotlight (DoMoveDecoy), Throat Chop (Silencer Orb)
+Accelerock (DoMoveDamage), Brutal Swing (DoMoveDamage), Double Iron Bash (DoMoveDamage), Dragon Hammer (DoMoveDamage), Fleur Cannon (DoMoveDracoMeteor), High Horsepower (DoMoveDamage), Ice Hammer (DoHammerArm), Leafage (DoMoveDamage), Liquidation (Identical to Crunch), Nature's Madness (DoMoveSuperFang), Photon Geyser, Psychic Fangs (DoMoveBrickBreak), Shadow Bone (Identical to Crunch), Smart Strike (DoMoveDamage), Spotlight (DoMoveDecoy), Throat Chop (Silencer Orb)
 
 Completed Move Effects:<br/>
 Clanging Scales, Fire Lash, Instruct, Lunge, Sparkling Aria
 
 Moves Todo:<br/>
-Anchor Shot, Burn Up, Core Enforcer, Darkest Lariat, First Impression, Floral Healing, Gear Up, Laser Focus, Mind Blown, Moongeist Beam, Multi-Attack, Pollen Puff, Power Trip, Prismatic Laser, Psychic Fangs, Purify, Revelation Dance, Shore Up, Solar Blade, Spectral Thief, Speed Swap, Spirit Shackle, Stength Sap, Sunsteel Strike, Tearful Look, Toxic Thread
-
+Anchor Shot, Burn Up, Core Enforcer, First Impression, Gear Up, Laser Focus, Mind Blown, Moongeist Beam, Multi-Attack, Pollen Puff, Power Trip, Prismatic Laser, Purify, Revelation Dance, Shore Up, Solar Blade, Spectral Thief, Speed Swap, Spirit Shackle, Stength Sap, Sunsteel Strike, Tearful Look, Toxic Thread
 
 Moves Not Planned:<br/>
-Aurora Veil, Baneful Bunker, Beak Blast, Plasma Fists, Psychic Terrain, Shell Trap, Stomping Tantrum,
+Aurora Veil, Baneful Bunker, Beak Blast, Darkest Lariat, Floral Healing, Plasma Fists, Psychic Terrain, Shell Trap, Stomping Tantrum,
 
 # Gen 8
 Moves With Existing Effects:<br/>
@@ -43,10 +42,10 @@ Completed Move Effects:<br/>
 Apple Acid (See Acid Spray), Clangorous Soul, Corrosive Gas, Court Change, Eerie Spell, Life Dew, Magic Powder, Overdrive (See Boomburst), Sandsear Storm (See Scald), Scorching Sands (See Scald), Skitter Smack (See Struggle Bug), Spirit Break (See Struggle Bug), Stone Axe
 
 Moves Todo:<br/>
-Aura Wheel, Barb Barrage, Bitter Malice, Bleakwind Storm, Body Press, Bolt Beak, Breaking Swipe, Burning Jealousy, Coaching, Decorate, Dire Claw, Esper Wing, Fishious Rend, Grav Apple, Infernal Parade, Jaw Lock, Jungle Healing, Lash Out, Lunar Blessing, Octolock, Poltergeist, Power Shift, Psyshield Bash, Raging Fury, Scale Shot, Shell Side Arm, Shelter, Snap Trap, Snipe Shot, Springtide Storm, Steel Beam, Strange Stream, Stuff Cheeks, Take Heart, Teatime, Thunderous Kick, Triple Arrows, Victory Dance, Wildbolt Storm
+Barb Barrage, Bitter Malice, Bleakwind Storm, Body Press, Bolt Beak, Breaking Swipe, Burning Jealousy, Coaching, Decorate, Dire Claw, Esper Wing, Fishious Rend, Grav Apple, Infernal Parade, Jaw Lock, Jungle Healing, Lash Out, Lunar Blessing, Octolock, Poltergeist, Power Shift, Psyshield Bash, Raging Fury, Scale Shot, Shell Side Arm, Shelter, Snap Trap, Snipe Shot, Springtide Storm, Steel Beam, Strange Stream, Stuff Cheeks, Take Heart, Teatime, Thunderous Kick, Triple Arrows, Victory Dance, Wildbolt Storm
 
 Moves Not Planned:<br/>
-Behemoth Bash, Behemoth Blade, Dynamax Cannon, Expanding Force, Grassy Glide, Obstruct, Rising Voltage, Steel Roller, Terrain Pulse, 
+Aura Wheel, Behemoth Bash, Behemoth Blade, Dynamax Cannon, Expanding Force, Grassy Glide, Obstruct, Rising Voltage, Steel Roller, Terrain Pulse
 
 # Gen 9
 Moves With Existing Effects:<br/>
@@ -56,9 +55,9 @@ Completed Move Effects:<br/>
 Armor Cannon, Chilly Reception, Doodle, Fillet Away, Lumina Crash (See Acid Spray), Make It Rain, Spicy Extract, Tidy Up, Torch Song
 
 Moves Todo:<br/>
-Aqua Step, Axe Kick, Chilling Water, Collision Course, Double Shock, Electro Drift, Gigaton Hammer, Glaive Rush, Hyper Drill, Order Up, Raging Bull, Revival Blessing, Salt Cure, Shed Tail, Spin Out, Trailblaze
+Aqua Step, Axe Kick, Chilling Water, Collision Course, Double Shock, Electro Drift, Gigaton Hammer, Glaive Rush, Hydro Steam, Hyper Drill, Order Up, Raging Bull, Revival Blessing, Salt Cure, Shed Tail, Spin Out, Trailblaze
 
 Moves Not Planned:<br/>
-Comeuppance, Ice Spinner, Last Respects, Rage Fist, Silk Trap, Tera Blast
+Comeuppance, Ice Spinner, Last Respects, Psyblade, Rage Fist, Silk Trap, Tera Blast
 
 

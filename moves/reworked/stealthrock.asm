@@ -39,19 +39,19 @@
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
         push r5
-        sub sp,sp,#0x4
+        sub  sp,sp,#0x4
         
         ; Save target X/Y for later.
         ldrsh r5,[r4,#0x4]
         ldrsh r10,[r4,#0x6]
         
         ; Deal damage.
-        str r7,[sp]
-        mov r0,r9
-        mov r1,r4
-        mov r2,r8
-        mov r3,#0x100 ; normal damage
-        bl  DealDamage
+        str   r7,[sp]
+        mov   r0,r9
+        mov   r1,r4
+        mov   r2,r8
+        mov   r3,#0x100 ; normal damage
+        bl    DealDamage
         cmp   r0,#0
         moveq r10,#0x0
         beq   unallocate_memory
@@ -71,8 +71,8 @@
         beq   unallocate_memory
         
         ; Try to place a stealth rock trap
-        strh r5,[sp,#0x0]
-        strh r10,[sp,#0x2]
+        strh  r5,[sp,#0x0]
+        strh  r10,[sp,#0x2]
         mov   r0,sp                ; r0 = pointer to x/y
         mov   r1,StealthRockTrapID ; r1 = trap id
         ldr   r2,[r9,#0xB4]        ; r2 = trap alignment

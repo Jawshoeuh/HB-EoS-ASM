@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 1/9/2023 - WIP
+; Jawshoeuh 1/9/2023 - Confirmed Working 3/22/2023
 ; Rototiller raises the Attack and Special Attack of grounded Grass type
 ; Pokemon. They specifically have to be grounded. So, this really only
 ; applies (without a lot of effort) to Hoppip and Carnavine...
@@ -21,6 +21,7 @@
 .definelabel MoveJumpAddress, 0x023326CC
 .definelabel GravityIsActive, 0x02338390
 .definelabel DefenderAbilityIsActive, 0x022F96CC
+.definelabel LevitateIsActive, 0x02301E18
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
@@ -29,6 +30,7 @@
 ;.definelabel MoveJumpAddress, 0x0233310C
 ;.definelabel GravityIsActive, 0x02338F60
 ;.definelabel DefenderAbilityIsActive, 0x22FA0D8
+;.definelabel LevitateIsActive, 0x02302844
 
 ; Universal
 .definelabel GrassTypeID, 4
@@ -39,53 +41,52 @@
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
+        mov  r10,#0x0
     
         ; Check Gravity first.
-        mov   r0,r4
-        mov 
+        bl    GravityIsActive
+        cmp   r0,#0x1
+        beq   target_is_grounded ; Don't bother checking Levitate/Flying
         
+        ; Check for Levitate
+        mov   r0,r4
+        bl    LevitateIsActive
+        cmp   r0,#0x1
+        beq   MoveJumpAddress ; Failed, not touching ground.
+        
+        ; Check for Flying Type
+        ldr   r12,[r4,#0xB4]
+        ldrb  r0,[r12,#0x5E]
+        ldrb  r1,[r12,#0x5F]
+        cmp   r0,FlyingTypeID
+        cmpne r1,FlyingTypeID
+        beq   MoveJumpAddress ; Failed, not touching ground.
+        
+    target_is_grounded:
         ; Find target type.
         ldr   r12,[r4,#0xB4]
         ldrb  r0,[r12,#0x5E]
         ldrb  r1,[r12,#0x5F]
         cmp   r0,GrassTypeID
         cmpne r1,GrassTypeID
-        mov   r10,#0
-        bne   MoveJumpAddress ; failed, not a grass type
-        
-        ; If gravity is active, skip more complex checks.
-        cmp r3,#0
-        bne raise_defense
-        
-        ; Check for Flying type.
-        cmp   r0,FlyingTypeID
-        cmpne r1,FlyingTypeID
-        beq   MoveJumpAddress
-        
-        ; Check for Magnet Rise.
-        ldrb r0,[r12,#0xF7]
-        cmp  r0,#0x1
-        beq  MoveJumpAddress
-        
-        ; Check for active Levitate.
+        bne   MoveJumpAddress ; Failed, not a grass type.
+
+        ; Raise attack.
         mov r0,r9
         mov r1,r4
-        mov r2,LevitateAbilityID
+        mov r2,#0
         mov r3,#1
-        bl  DefenderAbilityIsActive
-        cmp r0,#0
-        bne MoveJumpAddress
+        bl  AttackStatUp
         
-    raise_defense:
-        ; Raise defense.
+        ; Raise special attack.
         mov r0,r9
         mov r1,r4
-        mov r2,#0 ; defense
-        mob r3,#1 ; 1 stage
-        bl DefenseStatUp
+        mov r2,#1
+        mov r3,#1
+        bl  AttackStatUp
         
         mov r10,#1
-        b MoveJumpAddress
+        b   MoveJumpAddress
         .pool
     .endarea
 .close
