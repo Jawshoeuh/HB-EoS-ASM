@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 12/12/2022 - Confirmed Working 12/13/2022
+; Jawshoeuh 12/12/2022 - Confirmed Working 3/22/2023
 ; Dragon Tail deals damage and then does the blowback effect like Roar.
 ; This implementation should function identically to Adex-8x's but
 ; this doesn't use the stack.

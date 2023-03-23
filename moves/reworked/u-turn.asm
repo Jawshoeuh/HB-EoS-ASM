@@ -1,9 +1,8 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 11/12/2022 - Confirmed Working 11/30/2022
+; Jawshoeuh 11/12/2022 - Confirmed Working 3/22/2023
 ; U-turn deals damage and then the user swaps with an ally behind them.
-; Currently functions identically to Adex-8x's implementation, but uses
-; a bit of cleverness for determining the tile behind and whether or not
-; the monster behind is an ally or enemy.
+; With Adex-8x's overhaul of all moves in their repository, it's
+; basically identical (with a few minor differences).
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 

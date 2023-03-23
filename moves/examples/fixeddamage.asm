@@ -20,7 +20,6 @@
 .definelabel GetMoveType, 0x02013864
 .definelabel CalcDamageFixedWrapper, 0x0230D3F4
 .definelabel GetFaintReasonWrapper, 0x02324E44
-.definelabel FixedDamage, 50
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
@@ -31,7 +30,9 @@
 ;.definelabel GetMoveType, 0x0201390C
 ;.definelabel CalcDamageFixedWrapper, 0x2030DE68
 ;.definelabel GetFaintReasonWrapper, 0x02324E44
-;.definelabel FixedDamage, 50
+
+; Universal
+.definelabel FixedDamage, 50
 
 
 ; File creation

@@ -28,11 +28,14 @@
 .definelabel IsFullFloorFixedRoom, 0x023361D4
 .definelabel GetTileAtEntity, 0x022E1628
 .definelabel HasDropeyeStatus, 0x02301F50
-.definelabel UpdateMinimap, 0x02339CE8
-.definelabel UpdateDisplay, 0x02336F4C
-.definelabel DestroyTrap, 0x022EDE7C 
+.definelabel UpdateMinimap, 0x02339CE8 ; not in pmdsky-debug
+.definelabel UpdateDisplay, 0x02336F4C ; not in pmdsky-debug
+.definelabel DestroyTrap, 0x022EDE7C ; not in pmdsky-debug
 .definelabel GetTileSafe, 0x02336164
-.definelabel WeatherChanged, 0x023354C4
+.definelabel TryActivateWeather, 0x023354C4
+.definelabel GetVisibilityRange, 0x022E333C
+.definelabel WeatherTurnValue, 0x022C4654 ; 0xBB8 (3000) by default.
+.definelabel SomeDataThing, 0x02352B38 ; No clue really.
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
@@ -48,8 +51,13 @@
 ;.definelabel UpdateDisplay, 0x????????
 ;.definelabel DestroyTrap, 0x022EDE7C 
 ;.definelabel GetTileSafe, 0x02336D34
-;.definelabel WeatherChanged, 0x????????
+;.definelabel GetVisibilityRange, 0x022E3CEC
+;.definelabel TryActivateWeather, 0x02335F04
+;.definelabel WeatherTurnValue, 0x022C4FAC ; 0xBB8 (3000) by default.
+;.definelabel SomeDataThing, 0x???????? ; No clue really.
 
+; Universal
+.definelabel ProtectionRemovedStr, 0xED2
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
@@ -71,7 +79,7 @@
         bhi  lower_evasion
     
     clear_buffs:
-        ldr r2,=#0xED2
+        ldr r2,=ProtectionRemovedStr
         mov r0,r9
         mov r1,r4
         bl  SendMessageWithIDCheckUTLog
@@ -93,7 +101,8 @@
         bne remove_traps
         
         ; Blow away fog. (Set weather to clear)
-        ldr   r3,=0xBB8 ; Set to this by DoMoveRainDance
+        ldr   r3,=WeatherTurnValue
+        ldrsh r3,[r3]
         ldr   r2,=DungeonBaseStructurePtr
         ldrsh r3,[r3,#0x0]
         ldr   r2,[r2,#0x0] ; DungeonBaseStrPtr
@@ -101,7 +110,7 @@
         mov   r0,#0x1
         mov   r1,#0x0
         strh  r3,[r2,#0x3A]
-        bl    WeatherChanged
+        bl    TryActivateWeather
         
     remove_traps:
         bl    IsFullFloorFixedRoom
@@ -123,8 +132,8 @@
         cmp  r0,#0x0          ; traps around target instead of in the room?
         beq  init_room
     init_area:
-        bl    0x022E333C      ; Function gets some data from the dungeon
-        ldrsh r2,[r4,#0x4]    ; pointer, not sure what...
+        bl    GetVisibilityRange
+        ldrsh r2,[r4,#0x4]
         ldrsh r1,[r4,#0x6] 
         sub   r8,r2,r0
         sub   r9,r1,r0
@@ -148,8 +157,8 @@
         add   r7,r1,#0x1
         add   r5,r0,#0x1
     continue_init:
-        ldr  r0,=#0x02352B38 ; Will definelabel for this when I have a good
-        ldrh r1,[r0,#0x0]    ; name to describe it.
+        ldr  r0,=SomeDataThing
+        ldrh r1,[r0,#0x0]
         ldrh r0,[r0,#0x2]
         strh r1,[sp,#4]
         strh r0,[sp,#6]
@@ -159,8 +168,7 @@
         mov r0,r0, asr #0x10
         mov r6,r9
         str r0,[sp]
-        b   check_inner_loop
-        
+        b   check_inner_loop   
     body_loop:
         mov  r0,r8
         mov  r1,r6
@@ -183,8 +191,7 @@
         mov  r1,#0x0
         strh r2,[sp,#0x8]
         strh r6,[sp,#0xA]
-        bl   DestroyTrap 
-        
+        bl   DestroyTrap   
     iter_inner_loop:
         add r6,r6,#0x1
     check_inner_loop:
