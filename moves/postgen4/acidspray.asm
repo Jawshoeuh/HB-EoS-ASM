@@ -29,6 +29,7 @@
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
         sub sp,sp,#0x8
+        
         str r7,[sp]
         mov r0,r9
         mov r1,r4

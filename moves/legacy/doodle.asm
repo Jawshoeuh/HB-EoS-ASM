@@ -41,9 +41,9 @@
         ; because it's not expected for role play to be called
         ; this way...
         mov r0,#0
-		mov r1,r4
-		mov r2,#0
-		bl ChangeString ; Make target replace string 0 in roleplay msg.
+        mov r1,r4
+        mov r2,#0
+        bl ChangeString ; Make target replace string 0 in roleplay msg.
     
         ; Attempt to find a target in front of user.
         ; Get User Direction,X,Y

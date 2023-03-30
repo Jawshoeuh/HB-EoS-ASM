@@ -12,6 +12,10 @@ Contains moves added after Gen 4 (Diamond/Pearl/Platinum/HG/SS)
 
 # Reworked
 Contains moves that had effects in the original game, but with a different type of effect.
+
+# Special
+These are for moves that require a skypatch to function. If you are willing to risk it, these moves can be added WITH their skypatch and asm added.
+
 # Importing Moves Into Skytemple
 To import these ASM move effects into SkyTemple (1.4.2)...
 1. Apply the ExtractMoveCode patch under ASM->Utility.
