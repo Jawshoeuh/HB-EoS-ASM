@@ -1,6 +1,8 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 3/30/2023
-; Aurora Veil. DO NOT USE WITHOUT SPECIAL SKYPATCH for THIS MOVE!
+; Jawshoeuh 3/30/2023 - Confirmed Working 3/30/2023
+; Aurora Veil provides a buff that reduces the damage dealt to the user.
+; It will only work if the weather is Snow or Hail.
+; DO NOT USE WITHOUT SPECIAL SKYPATCH for THIS MOVE!
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
