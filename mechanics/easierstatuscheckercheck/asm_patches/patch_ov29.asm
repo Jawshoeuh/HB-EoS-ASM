@@ -838,7 +838,7 @@ check_mirror_move: ; Some exclusive item effects makes mirror move different
     bl  IsMirrorMoveEffectActive
     b   equal_to_zero
 check_helping_hand_acupressure: ; Uses Helping Hand check unless ID = 492
-    ldrb  r0,[r6,#0x6]
+    ldrb  r0,[r7,#0x6]
     cmp   r0,#0x0
     mov   r5,#0x12800
     orrne r4,r5,#0x338 ; r6 = 0x12B38 (Start Enemy, inclusive)

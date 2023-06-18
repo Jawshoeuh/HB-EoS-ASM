@@ -46,12 +46,12 @@
         ldrsh r10,[r4,#0x6]
         
         ; Deal damage.
-        str r7,[sp]
-        mov r0,r9
-        mov r1,r4
-        mov r2,r8
-        mov r3,#0x100 ; normal damage
-        bl  DealDamage
+        str   r7,[sp]
+        mov   r0,r9
+        mov   r1,r4
+        mov   r2,r8
+        mov   r3,#0x100 ; normal damage
+        bl    DealDamage
         cmp   r0,#0
         moveq r10,#0
         beq   unallocate_memory
@@ -59,7 +59,7 @@
         ; Check user has not fainted.
         mov   r0,r9
         mov   r1,#0x0
-        RandomChanceU
+        bl    RandomChanceU
         cmp   r0,#0x0
         moveq r10,#0x1
         beq   unallocate_memory
@@ -71,8 +71,8 @@
         beq   unallocate_memory
         
         ; Try to place a spike trap
-        strh r5,[sp,#0x0]
-        strh r10,[sp,#0x2]
+        strh  r5,[sp,#0x0]
+        strh  r10,[sp,#0x2]
         mov   r0,sp           ; r0 = pointer to x/y
         mov   r1,SpikeTrapID  ; r1 = trap id
         ldr   r2,[r9,#0xB4]   ; r2 = trap alignment
