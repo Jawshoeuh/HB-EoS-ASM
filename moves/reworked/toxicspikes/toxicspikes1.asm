@@ -69,7 +69,7 @@
         mov   r3,#1                ; r3 = trap visible (bool)?
         bl    TryCreateTrap
 
-        bl UpdateDisplay
+        bl    UpdateDisplay
         b MoveJumpAddress
         .pool
     .endarea

@@ -60,7 +60,7 @@
         mov   r0,r9
         mov   r1,r4
         mov   r2,#0x0
-        bl    RandomChanceUT
+        bl    RandomChanceU
         cmp   r0,#0x0
         moveq r10,#0x1
         beq   unallocate_memory

@@ -59,7 +59,7 @@
         ; Check user has not fainted.
         mov   r0,r9
         mov   r1,#0x0
-        RandomChanceU
+        bl    RandomChanceU
         cmp   r0,#0x0
         moveq r10,#0x1
         beq   unallocate_memory
