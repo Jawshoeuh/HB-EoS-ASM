@@ -25,9 +25,6 @@
 .definelabel DisplayTextAbove, 0x022EA718
 .definelabel PlayMissSound, 0x022E576C ; May be wrongly named.
 .definelabel MoveHitCheckJump, 0x02323C68
-.definelabel ConfusionChance, 30
-.definelabel NormalAccuracy, 73 ; based off of Thunder
-.definelabel SunnyAccuracy, 50 ; based off of Thunder
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"

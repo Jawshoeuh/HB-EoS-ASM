@@ -55,7 +55,7 @@
         mov   r0,#0x1
         mov   r1,#0x0
         strh  r3,[r2,#0x48]
-        bl    WeatherChanged
+        bl    TryActivateWeather
         
         ; Return if weather changed succesfully.
         cmp   r0,#0
