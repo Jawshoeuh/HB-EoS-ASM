@@ -1,8 +1,9 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 01/08/2023 - Confirmed Working XX/XX/XXXX
-; Lunge deals damage and lower target's defense.
+; Jawshoeuh 12/01/2022 - Confirmed Working 06/26/2023
+; Acid Spray deals damage and lowers the opponent's special defense by 2.
+; This version modifies the defensive multiplier, for a version that
+; modifies the stat stages, see acidspray1.asm
 ; Based on the template provided by https://github.com/SkyTemple
-; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
 ; -------------------------------------------------------------------------
 
 .relativeinclude on
@@ -14,16 +15,17 @@
 ; For US (comment for EU)
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
-.definelabel DealDamage, 0x02332B20'
+.definelabel DealDamage, 0x02332B20
+.definelabel ApplyDefensiveStatMultiplier, 0x02313F64
 .definelabel DungeonRandOutcomeUserTargetInteraction, 0x02324934
-.definelabel LowerDefensiveStat, 0x02313814
+
 
 ; For EU (uncomment for EU)
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
 ;.definelabel DealDamage, 0x02333560
+;.definelabel ApplyDefensiveStatMultiplier, 0x023149C4
 ;.definelabel DungeonRandOutcomeUserTargetInteraction, 0x0232539C
-;.definelabel LowerDefensiveStat, 0x02314274
 
 ; Constants
 .definelabel TRUE, 0x1
@@ -35,7 +37,7 @@
 .create "./code_out.bin", 0x02330134 ; Change to 0x02330B74 for EU.
     .org MoveStartAddress
     .area MaxSize
-        sub sp,sp,#0x8
+        sub sp,sp,#0x4
         mov r10,FALSE
         
         ; Damage the target.
@@ -55,23 +57,22 @@
         ; fainted or has Shield Dust).
         mov r0,r9
         mov r1,r4
-        mov r2,#0 ; Always, 100% chance.
+        mov r2,#0x0 ; Always, 100% chance.
         bl  DungeonRandOutcomeUserTargetInteraction
         cmp r0,FALSE
         beq return
         
-        ; Lower defense by one!
+        ; Lower special defense two stages.
         mov r3,FALSE
-        str r10,[sp,#0x0]
-        str r3,[sp,#0x4]
+        str r3,[sp,#0x0]
         mov r0,r9
         mov r1,r4
-        mov r2,PHYSICAL_STAT
-        mov r3,#1 ; 1 stage
-        bl  LowerDefensiveStat
-
+        mov r2,SPECIAL_STAT
+        mov r3,#0x40 ; (64/256) = 1/4 = 0.25
+        bl  ApplyDefensiveStatMultiplier
+        
     return:
-        add sp,sp,#0x8
+        add sp,sp,#0x4
         b   MoveJumpAddress
         .pool
     .endarea

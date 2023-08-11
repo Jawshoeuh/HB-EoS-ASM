@@ -1,6 +1,8 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 12/1/2022 - Confirmed Working 12/2/2022
-; Acid Spray deals damage and lowers the opponent's special defense by 2.
+; Jawshoeuh 3/22/2023 - WIP
+; Shore Up heals the user's health, but heals more if the weather
+; is sandstorm. The healing values are based upon Moonlight and
+; Morning Sun
 ; Based on the template provided by https://github.com/SkyTemple
 ; ------------------------------------------------------------------------------
 
@@ -17,53 +19,44 @@
 .include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
+.definelabel GetApparentWeather, 0x02334D08
 
 ; For EU
 ;.include "lib/stdlib_eu.asm"
 ;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
+;.definelabel GetApparentWeather, 0x02335748
+
+; Universal
+.definelabel HealingWeatherClear, 0x32 ; 50
+.definelabel HealingWeatherSandstorm, 0x50 ; 80
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
     .org MoveStartAddress
     .area MaxSize ; Define the size of the area
-        sub sp,sp,#0x8
-        
-        str r7,[sp]
+       sub sp,sp,#0x4
+       
+        ; Check weather.
+        mov   r0,r4
+        bl    GetApparentWeather
+        cmp   r0,#0x2
+        moveq r2,HealingWeatherSandstorm
+        movne r2,HealingWeatherClear
+       
+        ; Healing time.
+        mov r12,#0x1
         mov r0,r9
         mov r1,r4
-        mov r2,r8
-        mov r3,#0x100 ; normal damage
-        bl  DealDamage
+        ; Healing amount from above in r2.
+        mov r3,#0x0
+        str r12,[sp,#0x1]
+        bl  TryIncreaseHp
         
-        ; Check for succesful hit.
-        cmp r0,#0
-        mov r10,#0
-        beq unallocate_memory
-        mov r10,#1
-        
-        ; Basiclly just a valid/shield dust check.
-        mov r0,r9
-        mov r1,r4
-        mov r2,#0 ; guaranteed
-        bl  RandomChanceUT
-        cmp r0,#0
-        beq unallocate_memory
-        
-        ; If so, lower special defense.
-        mov r12,#0
-        mov r0,r9
-        mov r1,r4
-        mov r2,#1 ; special defense
-        str r2,[sp,#0x0]
-        mov r3,#2 ; 2 stages
-        str r12,[sp,#0x4]
-        bl  DefenseStatDown
-
-    unallocate_memory:
-        add sp,sp,#0x8
-        b MoveJumpAddress
+        mov r10,#0x1
+        add sp,sp,#0x4
+        b   MoveJumpAddress
         .pool
     .endarea
 .close

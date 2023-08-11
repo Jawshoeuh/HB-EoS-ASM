@@ -1,8 +1,9 @@
-; ------------------------------------------------------------------------------
-; Jawshoeuh 1/8/2023 - Confirmed Working 1/9/2023
+; -------------------------------------------------------------------------
+; Jawshoeuh 01/08/2023 - Confirmed Working 08/02/2023
 ; Fire Lash thaws the target, deals damage, then lowers their defense.
 ; Based on the template provided by https://github.com/SkyTemple
-; ------------------------------------------------------------------------------
+; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
+; -------------------------------------------------------------------------
 
 .relativeinclude on
 .nds
@@ -10,69 +11,81 @@
 
 .definelabel MaxSize, 0x2598
 
-; Uncomment the correct version
-
-; For US
-.include "lib/stdlib_us.asm"
-.include "lib/dunlib_us.asm"
+; For US (comment for EU)
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
-.definelabel TryThawTarget, 0x02307C78
+.definelabel DealDamage, 0x02332B20
+.definelabel EndFrozenStatus, 0x02307C78
+.definelabel DungeonRandOutcomeUserTargetInteraction, 0x02324934
+.definelabel LowerDefensiveStat, 0x02313814
 
-; For EU
-;.include "lib/stdlib_eu.asm"
-;.include "lib/dunlib_eu.asm"
+; For EU (uncomment for EU)
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel TryThawTarget, 0x????????
+;.definelabel DealDamage, 0x02333560
+;.definelabel EndFrozenStatus, 0x023086A4
+;.definelabel DungeonRandOutcomeUserTargetInteraction, 0x0232539C
+;.definelabel LowerDefensiveStat, 0x02314274
+
+; Constants
+.definelabel TRUE, 0x1
+.definelabel FALSE, 0x0
+.definelabel PHYSICAL_STAT, 0x0
+.definelabel SPECIAL_STAT, 0x1
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
+.create "./code_out.bin", 0x02330134 ; Change to 0x02330B74 for EU.
     .org MoveStartAddress
-    .area MaxSize ; Define the size of the area
+    .area MaxSize
         sub sp,sp,#0x8
+        mov r10,FALSE
         
         ; Try to thaw target.
         mov r0,r9
         mov r1,r4
         mov r2,r8
         mov r3,r7
-        bl  TryThawTarget
+        bl  EndFrozenStatus
         
-        ; Damage!
-        str r7,[sp]
+        ; Damage the target.
+        str r7,[sp,#0x0]
         mov r0,r9
         mov r1,r4
         mov r2,r8
-        mov r3,#0x100 ; normal damage
+        mov r3,#0x100 ; 1.0x, Normal Damage *(See Note 1 Below)
         bl  DealDamage
         
-        ;Check for succesful hit.
+        ; Check for succesful hit.
         cmp r0,#0
-        mov r10,#0
-        beq unallocate_memory
-        mov r10,#1
+        beq return
+        mov r10,TRUE
         
-        ; Basiclly just a valid/shield dust check.
+        ; Attempt to apply secondary effects (fails if the target has
+        ; fainted or has Shield Dust).
         mov r0,r9
         mov r1,r4
-        mov r2,#0 ; guaranteed
-        bl  RandomChanceUT
-        cmp r0,#0
-        beq unallocate_memory
+        mov r2,#0 ; Always, 100% chance.
+        bl  DungeonRandOutcomeUserTargetInteraction
+        cmp r0,FALSE
+        beq return
         
-        ; Lower defense.
+        ; Lower defense by one!
+        mov r3,FALSE
+        str r10,[sp,#0x0]
+        str r3,[sp,#0x4]
         mov r0,r9
         mov r1,r4
-        mov r2,#0 ; defense
-        str r2,[sp,#0x4] ; no message if fail
-        mov r3,#1
-        str r3,[sp,#0x0] ; check abilities
-        bl  DefenseStatDown
-        
-    unallocate_memory:
+        mov r2,PHYSICAL_STAT
+        mov r3,#1 ; 1 stage
+        bl  LowerDefensiveStat
+
+    return:
         add sp,sp,#0x8
-        b MoveJumpAddress
+        b   MoveJumpAddress
         .pool
     .endarea
 .close
+
+; Note 1: The game uses the 8 bits at the end as a kind of fraction/decimal
+; where the denominator is 256. So in this context, 0x100 means
+; (256/256) = 1

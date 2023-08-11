@@ -1,9 +1,10 @@
-; ------------------------------------------------------------------------------
-; Jawshoeuh 1/9/2023 - Previously Working 1/9/2023, New Version Untested
-; Eerie impulse lowers special attack by two! Almost trivial, except
-; moves that drop two or more stages use some weird multipliers instead...
+; -------------------------------------------------------------------------
+; Jawshoeuh 01/09/2023 - Confirmed Working 07/08/2023
+; Eerie impulse lowers special attack by two 'stages'! Technically lowers
+; the special attack multiplier.
 ; Based on the template provided by https://github.com/SkyTemple
-; ------------------------------------------------------------------------------
+; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
+; -------------------------------------------------------------------------
 
 .relativeinclude on
 .nds
@@ -11,36 +12,38 @@
 
 .definelabel MaxSize, 0x2598
 
-; Uncomment the correct version
-
-; For US
-.include "lib/stdlib_us.asm"
-.include "lib/dunlib_us.asm"
+; For US (comment for EU)
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
 .definelabel ApplyOffensiveStatMultiplier, 0x02313D40
 .definelabel ActivateMotorDrive, 0x0231B060
+.definelabel GetMoveTypeForMonster, 0x0230227C
+.definelabel GetMoveType, 0x02013864
+.definelabel DefenderAbilityIsActive, 0x022F96CC
 
-; For EU
-;.include "lib/stdlib_eu.asm"
-;.include "lib/dunlib_eu.asm"
+; For EU (uncomment for EU)
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
 ;.definelabel ApplyOffensiveStatMultiplier, 0x023147A0
+;.definelabel ActivateMotorDrive, 0x????????
+;.definelabel GetMoveTypeForMonster, 0x02302CA8
+;.definelabel GetMoveType, 0x0201390C
+;.definelabel DefenderAbilityIsActive, 0x022FA0D8
 
-; Universal
-.definelabel MotorDriveAbilityID, 0x66 ; 102
+; Constants
+.definelabel TRUE, 0x1
+.definelabel FALSE, 0x0
+.definelabel PHYSICAL_STAT, 0x0
+.definelabel SPECIAL_STAT, 0x1
+.definelabel MOTOR_DRIVE_ABILITY_ID, 102 ; 0x66
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
+.create "./code_out.bin", 0x02330134 ; Change to 0x02330B74 for EU.
     .org MoveStartAddress
-    .area MaxSize ; Define the size of the area
+    .area MaxSize
         sub sp,sp,#0x4
         
-        ; Unfortunately because of how the game is programmed, Motor Drive
-        ; only activates normally from electric damage. Thus, (like Thunder
-        ; Wave) the move must manually check to activate the ability Motor
-        ; Drive...
+        ; Check for Motor Drive manually.
         mov r0,r9
         mov r1,r8
         bl  GetMoveTypeForMonster
@@ -51,29 +54,29 @@
         bne motor_drive_inactive
         mov r0,r9
         mov r1,r4
-        mov r2,MotorDriveAbilityID
-        mov r3,#0x1
+        mov r2,MOTOR_DRIVE_ABILITY_ID
+        mov r3,TRUE
         bl  DefenderAbilityIsActive
-        cmp r0,#0x0
+        cmp r0,FALSE
         beq motor_drive_inactive
         mov r0,r4
         bl  ActivateMotorDrive
-        b   unallocate_memory
+        b   return
         
     motor_drive_inactive:
-        ; Not sure why, but moves that normally reduce by 2 stages modify
-        ; stat multipliers instead of the stat stages.
+        ; Because it's 2 'stages' lower the special attack multiplier.
+        mov r3,TRUE
+        str r3,[sp]
         mov r0,r9
         mov r1,r4
-        mov r2,#1 ; special attack
-        mov r3,#0x80
-        str r2,[sp] ; DoMoveCharm uses 1 here PROBABLY to check for stuff
-        bl  ApplyOffensiveStatMultiplier ; like Clear Body/White Smoke
-        
-    unallocate_memory:
-        mov r10,#1
+        mov r2,SPECIAL_STAT
+        mov r3,#0x80 ; 1/2 = 0.5x multiplier
+        bl  ApplyOffensiveStatMultiplier
+
+    return:
+        mov r10,TRUE
         add sp,sp,#0x4
-        b MoveJumpAddress
+        b   MoveJumpAddress
         .pool
     .endarea
 .close

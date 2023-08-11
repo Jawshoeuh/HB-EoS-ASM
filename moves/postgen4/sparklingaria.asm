@@ -14,32 +14,33 @@
 ; Uncomment the correct version
 
 ; For US
-.include "lib/stdlib_us.asm"
-.include "lib/dunlib_us.asm"
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
 .definelabel EndBurnClassStatus, 0x023061A8
+.definelabel DefenderAbilityIsActive, 0x022F96CC
 
 ; For EU
-;.include "lib/stdlib_eu.asm"
-;.include "lib/dunlib_eu.asm"
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel HealDamagingVolatileStatusCondition, 0x????????
+;.definelabel EndBurnClassStatus, 0x????????
+;.definelabel DefenderAbilityIsActive, 0x022FA0D8
 
-; Universal
+; Constants
 .definelabel SoundproofAbilityID, 0x3C ; 60
 .definelabel SoundproofStrID, 0xEB9 ; 3769
 
-; File creation
-.create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
+
+; Change to the actual offset as this directive doesn't accept labels
+;                             |
+;                             V
+.create "./code_out.bin", 0x02330134
     .org MoveStartAddress
-    .area MaxSize ; Define the size of the area
+    .area MaxSize
     
         ; There is a list of sound moves in the base game. A skypatch could
         ; be added to make a specific move id return positive, but this
         ; is more useful ease of use across multiple hacks. Before we do
-        ; anything, check if the target has soundproof.
+        ; anything, check if the target has Soundproof.
         mov r0,r4
         mov r1,SoundproofAbilityID
         bl  HasAbility

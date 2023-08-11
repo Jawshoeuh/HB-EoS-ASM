@@ -1,6 +1,10 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 01/08/2023 - Confirmed Working XX/XX/XXXX
-; Lunge deals damage and lower target's defense.
+; Jawshoeuh 07/31/2023 - Confirmed Working XX/XX/XXXX
+; This version does not have an accurate way to skip an accuracy check
+; without the addition of a SkyPatch; however, it doesn't use any ill
+; advised practices and still uses the normal accuracy hit check. For an
+; easily importable version that doesn't require a SkyPatch to the game,
+; see hurricane1.asm
 ; Based on the template provided by https://github.com/SkyTemple
 ; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
 ; -------------------------------------------------------------------------
@@ -14,28 +18,29 @@
 ; For US (comment for EU)
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
-.definelabel DealDamage, 0x02332B20'
+.definelabel DealDamage, 0x02332B20
+.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x0234B350
 .definelabel DungeonRandOutcomeUserTargetInteraction, 0x02324934
-.definelabel LowerDefensiveStat, 0x02313814
+.definelabel TryInflictConfusedStatus, 0x02314F38
 
 ; For EU (uncomment for EU)
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
 ;.definelabel DealDamage, 0x02333560
+;.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x0234BF50
 ;.definelabel DungeonRandOutcomeUserTargetInteraction, 0x0232539C
-;.definelabel LowerDefensiveStat, 0x02314274
+;.definelabel TryInflictConfusedStatus, 0x02315998
+
 
 ; Constants
 .definelabel TRUE, 0x1
 .definelabel FALSE, 0x0
-.definelabel PHYSICAL_STAT, 0x0
-.definelabel SPECIAL_STAT, 0x1
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to 0x02330B74 for EU.
     .org MoveStartAddress
     .area MaxSize
-        sub sp,sp,#0x8
+        sub sp,sp,#0x4
         mov r10,FALSE
         
         ; Damage the target.
@@ -55,23 +60,20 @@
         ; fainted or has Shield Dust).
         mov r0,r9
         mov r1,r4
-        mov r2,#0 ; Always, 100% chance.
+        mov r2,#30 ; 30% chance
         bl  DungeonRandOutcomeUserTargetInteraction
         cmp r0,FALSE
         beq return
         
-        ; Lower defense by one!
-        mov r3,FALSE
-        str r10,[sp,#0x0]
-        str r3,[sp,#0x4]
+        ; Confuse target (or try, I guess).
         mov r0,r9
         mov r1,r4
-        mov r2,PHYSICAL_STAT
-        mov r3,#1 ; 1 stage
-        bl  LowerDefensiveStat
+        mov r2,FALSE
+        mov r3,FALSE
+        bl  TryInflictConfusedStatus
 
     return:
-        add sp,sp,#0x8
+        add sp,sp,#0x4
         b   MoveJumpAddress
         .pool
     .endarea

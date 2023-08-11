@@ -1,52 +1,45 @@
-; ------------------------------------------------------------------------------
-; Jawshoeuh 12/6/2022 - Confirmed Working 12/6/2022
+; -------------------------------------------------------------------------
+; Jawshoeuh 12/06/2022 - Confirmed Working 07/07/2023
 ; Corrosive Gas simple makes the targets item sticky. This was the
 ; best way I could think of for temporarily disabling the held item.
 ; Based on the template provided by https://github.com/SkyTemple
-; ------------------------------------------------------------------------------
+; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
+; -------------------------------------------------------------------------
 
 .relativeinclude on
 .nds
 .arm
 
-
 .definelabel MaxSize, 0x2598
 
-; Uncomment the correct version
-
-; For US
-.include "lib/stdlib_us.asm"
-.include "lib/dunlib_us.asm"
+; For US (comment for EU)
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
-.definelabel DoTrapSticky, 0x022EE434
+.definelabel ApplyStickyTrapEffect, 0x022EE434
 
-; For EU
-;.include "lib/stdlib_eu.asm"
-;.include "lib/dunlib_eu.asm"
+; For EU (uncomment for EU)
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel DoTrapSticky, 0x????????
+;.definelabel ApplyStickyTrapEffect, 0x????????
 
-
+; Constants
+.definelabel TRUE, 0x1
+.definelabel FALSE, 0x0
+.definelabel PHYSICAL_STAT, 0x0
+.definelabel SPECIAL_STAT, 0x1
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
+.create "./code_out.bin", 0x02330134 ; Change to 0x02330B74 for EU.
     .org MoveStartAddress
-    .area MaxSize ; Define the size of the area
-        
-        ; Branch to code for the 'move' stickytrap.
-        ; Adex-8x's implementation of rapid spin
-        ; that gives a speed boost after uses this
-        ; method and many moves effects have documented
-        ; addresses in the community overlay29.
+    .area MaxSize
+
+        ; Simply make item(s) sticky.
         mov r0,r9
         mov r1,r4
-        bl  DoTrapSticky
+        bl  ApplyStickyTrapEffect
         
-        mov r10,#1
-        ; Always branch at the end
-        b MoveJumpAddress
+        mov r10,TRUE
+        b   MoveJumpAddress
         .pool
     .endarea
 .close

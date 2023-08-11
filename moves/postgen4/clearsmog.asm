@@ -1,6 +1,6 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 01/08/2023 - Confirmed Working XX/XX/XXXX
-; Lunge deals damage and lower target's defense.
+; Jawshoeuh 03/22/2023 - Confirmed Working 07/08/XXXX
+; Clear Smog deals damage and resets all stat changes to 0 (default).
 ; Based on the template provided by https://github.com/SkyTemple
 ; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
 ; -------------------------------------------------------------------------
@@ -14,16 +14,16 @@
 ; For US (comment for EU)
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
-.definelabel DealDamage, 0x02332B20'
-.definelabel DungeonRandOutcomeUserTargetInteraction, 0x02324934
-.definelabel LowerDefensiveStat, 0x02313814
+.definelabel DealDamage, 0x02332B20
+.definelabel EntityIsValid, 0x022E0354
+.definelabel TryResetStatChanges, 0x02319624
 
 ; For EU (uncomment for EU)
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
 ;.definelabel DealDamage, 0x02333560
-;.definelabel DungeonRandOutcomeUserTargetInteraction, 0x0232539C
-;.definelabel LowerDefensiveStat, 0x02314274
+;.definelabel EntityIsValid, 0x022E0C94
+;.definelabel TryResetStatChanges, 0x????????
 
 ; Constants
 .definelabel TRUE, 0x1
@@ -35,7 +35,7 @@
 .create "./code_out.bin", 0x02330134 ; Change to 0x02330B74 for EU.
     .org MoveStartAddress
     .area MaxSize
-        sub sp,sp,#0x8
+        sub sp,sp,#0x4
         mov r10,FALSE
         
         ; Damage the target.
@@ -51,27 +51,26 @@
         beq return
         mov r10,TRUE
         
-        ; Attempt to apply secondary effects (fails if the target has
-        ; fainted or has Shield Dust).
+        ; Because this stat removal is not considered a secondary effect,
+        ; check for validity of the user and target instead of checking for
+        ; a user target interaction.
+        mov r0,r4
+        bl  EntityIsValid
+        cmp r0,TRUE
+        bne return
         mov r0,r9
-        mov r1,r4
-        mov r2,#0 ; Always, 100% chance.
-        bl  DungeonRandOutcomeUserTargetInteraction
-        cmp r0,FALSE
-        beq return
+        bl  EntityIsValid
+        cmp r0,TRUE
+        bne return
         
-        ; Lower defense by one!
-        mov r3,FALSE
-        str r10,[sp,#0x0]
-        str r3,[sp,#0x4]
+        ; Reset the stats of the target.
         mov r0,r9
         mov r1,r4
-        mov r2,PHYSICAL_STAT
-        mov r3,#1 ; 1 stage
-        bl  LowerDefensiveStat
+        mov r2,FALSE
+        bl  TryResetStatChanges
 
     return:
-        add sp,sp,#0x8
+        add sp,sp,#0x4
         b   MoveJumpAddress
         .pool
     .endarea

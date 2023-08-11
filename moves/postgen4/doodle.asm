@@ -1,62 +1,56 @@
-; ------------------------------------------------------------------------------
-; Jawshoeuh 11/29/2022 - Confirmed Working 12/23/2022
+; -------------------------------------------------------------------------
+; Jawshoeuh 11/29/2022 - Confirmed Working 08/02/2023
 ; Doodle changes the abilities of all allies to the ability of the target.
 ; Unfortunately, we need to check for an enemy for every target which is
 ; a bit wasteful, but I don't see a way around it...
 ; Based on the template provided by https://github.com/SkyTemple
-; ------------------------------------------------------------------------------
+; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
+; -------------------------------------------------------------------------
 
 .relativeinclude on
 .nds
 .arm
 
-
 .definelabel MaxSize, 0x2598
 
-; Uncomment the correct version
-
-; For US
-.include "lib/stdlib_us.asm"
-.include "lib/dunlib_us.asm"
+; For US (comment for EU)
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
-.definelabel AbilityEndStatuses, 0x022FA7DC
-.definelabel DIRECTIONS_XY, 0x0235171C
+.definelabel TryEndStatusWithAbility, 0x022FA7DC
 .definelabel GetTile, 0x023360FC
+.definelabel SubstitutePlaceholderStringTags, 0x022E2AD8
+.definelabel LogMessageWithPopupCheckUserTarget, 0x0234B3A4
+.definelabel DIRECTIONS_XY, 0x0235171C
+.definelabel DUNGEON_PTR, 0x02353538
 
-; For EU
-;.include "lib/stdlib_eu.asm"
-;.include "lib/dunlib_eu.asm"
+; For EU (uncomment for EU)
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel AbilityEndStatuses, 0x????????
-;.definelabel DIRECTIONS_XY, 0x02352328
+;.definelabel TryEndStatusWithAbility, 0x????????
 ;.definelabel GetTile, 0x2336CCC
+;.definelabel SubstitutePlaceholderStringTags, 0x022E3418
+;.definelabel LogMessageWithPopupCheckUserTarget, 0x0234BFA4
+;.definelabel DIRECTIONS_XY, 0x02352328
+;.definelabel DUNGEON_PTR, 0x02354138
 
+; Constants
+.definelabel TRUE, 0x1
+.definelabel FALSE, 0x0
+.definelabel NULL, 0x0
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
+.create "./code_out.bin", 0x02330134 ; Change to 0x02330B74 for EU.
     .org MoveStartAddress
-    .area MaxSize ; Define the size of the area
-    
+    .area MaxSize
+        mov r10,FALSE
+        
         ; Attempt to find a target in front of user.
-        ; Get User Direction
         ldr  r0, [r9,#0xB4]
-        ldrb r12,[r0,#0x4C] ; User Direction
-        ; Visualization of values loaded from direction array.
-        ; 5   4   3   (y-1)
-        ;   \ | /
-        ; 6 - E - 2   (y)
-        ;   / | \
-        ; 7   0   1   (y+1)
-        ;
-        ; x   x   x
-        ; -       +
-        ; 1       1
-        ldr   r10,=DIRECTIONS_XY
-        mov   r2,r12, lsl #0x2     ; Array Offset For Dir Value
-        add   r3,r10,r12, lsl #0x2 ; Array Offset For Dir Value
-        ldrsh r0,[r10,r2]          ; X Offset
+        ldrb  r1,[r0,#0x4C] ; User Direction
+        ldr   r12,=DIRECTIONS_XY  ; See Note 1 Below
+        mov   r2,r1, lsl #0x2     ; Array Offset For Dir Value
+        add   r3,r12,r1, lsl #0x2 ; Array Offset For Dir Value
+        ldrsh r0,[r12,r2]          ; X Offset
         ldrsh r1,[r3,#0x2]         ; Y Offset
         ldrh  r2,[r9,#0x4]         ; User X Pos
         ldrh  r3,[r9,#0x6]         ; User Y Pos
@@ -67,11 +61,10 @@
         
         ; Check tile for monster.
         bl    GetTile
-        ldr   r12,[r0,#0xc]
-        cmp   r12,#0
-        movne r10,#1
-        moveq r10,#0
+        ldr   r12,[r0,#0xC]
+        cmp   r12,NULL
         beq   MoveJumpAddress ; failed, no monster
+        mov   r10,TRUE
         
         ; Load that monsters abiilities
         ldr  r0,[r12,#0xB4]
@@ -79,51 +72,63 @@
         ldrb r0,[r0,#0x61]
         
         ; Store that monsters abilities
-        ldr  r2,[r4,#0xb4]
+        ldr  r2,[r4,#0xB4]
         strb r1,[r2,#0x60]
         strb r0,[r2,#0x61]
         
         ; When giving self ability, display feedback message.
-        ; The order is specific! Because r12 is a scratch register!
-        cmp r9,r4
-        bne not_user
+        ldr r1,[sp,#0x78] ; Appears to be number of target in a loop.
+        cmp r1,#0
+        bne skip_message
         mov r0,#1
         mov r1,r12
         mov r2,#0
-        bl  ChangeString ; Target
+        bl  SubstitutePlaceholderStringTags ; Target
         mov r0,#0
         mov r1,r9
         mov r2,#0
-        bl  ChangeString ; User
+        bl  SubstitutePlaceholderStringTags ; User
         mov r0,r9
-        ldr r1,=doodle_str
-        bl  SendMessageWithStringLog
+        mov r1,r9
+        ldr r2,=doodle_str
+        bl  LogMessageWithPopupCheckUserTarget
         
         ; Set flag for dungeon to activate artificial weather abilities.
-        mov   r0,#0x1
+        mov   r0,TRUE
         ldr   r1,=DungeonBaseStructurePtr
         ldrsh r2,[r1,#0x0]
-        strb  r0,[r2,#0xe]
+        strb  r0,[r2,#0xE]
         
-        ; Skill Swap/Role Play marks the user for extra XP. Like if a move
-        ; was used on them. Why? I don't know?
+        ; Make user worth more exp (to keep parity with the game, uncertain
+        ; why the game rewards more exp from monsters if they change their
+        ; ability.)
         ldr    r3,[r9,#0xB4]
         ldrb   r0,[r3,#0x108]
         cmp    r0,#0x0
         moveq  r0,#0x1
         streqb r0,[r3,#0x108]
-     
-    not_user:
-        ; Double check if this new ability would end statuses.
-        mov  r0,r4
-        mov  r1,r4
-        bl   AbilityEndStatuses
         
-        mov r10,#1
-        ; Always branch at the end
-        b MoveJumpAddress
+    skip_message:
+        ; Check if this new ability would end a status condition currently
+        ; inflicted on the monster.
+        mov r0,r9
+        mov r1,r4
+        bl  TryEndStatusWithAbility
+        
+        b   MoveJumpAddress
         .pool
     doodle_str:
-        .asciiz "[string:0] gave all nearby allies[R]the abilities of [string:1]!" 
+        .asciiz "[string:0] gave all nearby allies[R]the abilities of [string:1]!"
     .endarea
 .close
+
+; Note 1: Visualization of values loaded from direction array.
+; 5   4   3   (y-1)
+;   \ | /
+; 6 - E - 2   (y)
+;   / | \
+; 7   0   1   (y+1)
+;
+; x   x   x
+; -       +
+; 1       1

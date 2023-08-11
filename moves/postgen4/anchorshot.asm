@@ -1,6 +1,6 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 01/08/2023 - Confirmed Working XX/XX/XXXX
-; Lunge deals damage and lower target's defense.
+; Jawshoeuh 03/22/2023 - Confirmed Working 06/26/2023
+; Anchor Shot deals damage and immobilizes the target.
 ; Based on the template provided by https://github.com/SkyTemple
 ; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
 ; -------------------------------------------------------------------------
@@ -11,31 +11,29 @@
 
 .definelabel MaxSize, 0x2598
 
-; For US (comment for EU)
+; For US
 .definelabel MoveStartAddress, 0x02330134
 .definelabel MoveJumpAddress, 0x023326CC
-.definelabel DealDamage, 0x02332B20'
+.definelabel DealDamage, 0x02332B20
+.definelabel TryInflictShadowHoldStatus, 0x02312F78
 .definelabel DungeonRandOutcomeUserTargetInteraction, 0x02324934
-.definelabel LowerDefensiveStat, 0x02313814
 
-; For EU (uncomment for EU)
+; For EU
 ;.definelabel MoveStartAddress, 0x02330B74
 ;.definelabel MoveJumpAddress, 0x0233310C
 ;.definelabel DealDamage, 0x02333560
+;.definelabel TryInflictShadowHoldStatus, 0x23139D8
 ;.definelabel DungeonRandOutcomeUserTargetInteraction, 0x0232539C
-;.definelabel LowerDefensiveStat, 0x02314274
 
 ; Constants
 .definelabel TRUE, 0x1
 .definelabel FALSE, 0x0
-.definelabel PHYSICAL_STAT, 0x0
-.definelabel SPECIAL_STAT, 0x1
 
 ; File creation
 .create "./code_out.bin", 0x02330134 ; Change to 0x02330B74 for EU.
     .org MoveStartAddress
     .area MaxSize
-        sub sp,sp,#0x8
+        sub sp,sp,#0x4
         mov r10,FALSE
         
         ; Damage the target.
@@ -60,18 +58,14 @@
         cmp r0,FALSE
         beq return
         
-        ; Lower defense by one!
-        mov r3,FALSE
-        str r10,[sp,#0x0]
-        str r3,[sp,#0x4]
+        ; Inflict Shadow Hold (Immobilized).
         mov r0,r9
         mov r1,r4
-        mov r2,PHYSICAL_STAT
-        mov r3,#1 ; 1 stage
-        bl  LowerDefensiveStat
+        mov r2,FALSE
+        bl  TryInflictShadowHoldStatus
 
     return:
-        add sp,sp,#0x8
+        add sp,sp,#0x4
         b   MoveJumpAddress
         .pool
     .endarea
