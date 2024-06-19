@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 07/31/2023 - Confirmed Working XX/XX/XXXX
+; Jawshoeuh 07/31/2023 - Tested 6/17/2024
 ; This version does not have an accurate way to skip an accuracy check
 ; without the addition of a SkyPatch; however, it doesn't use any ill
 ; advised practices and still uses the normal accuracy hit check. For an
@@ -16,20 +16,20 @@
 .definelabel MaxSize, 0x2598
 
 ; For US (comment for EU)
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel DealDamage, 0x02332B20
-.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x0234B350
-.definelabel DungeonRandOutcomeUserTargetInteraction, 0x02324934
-.definelabel TryInflictConfusedStatus, 0x02314F38
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel DealDamage, 0x2332B20
+.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x234B350
+.definelabel DungeonRandOutcomeUserTargetInteraction, 0x2324934
+.definelabel TryInflictConfusedStatus, 0x2314F38
 
 ; For EU (uncomment for EU)
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel DealDamage, 0x02333560
-;.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x0234BF50
-;.definelabel DungeonRandOutcomeUserTargetInteraction, 0x0232539C
-;.definelabel TryInflictConfusedStatus, 0x02315998
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel DealDamage, 0x2333560
+;.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x234BF50
+;.definelabel DungeonRandOutcomeUserTargetInteraction, 0x232539C
+;.definelabel TryInflictConfusedStatus, 0x2315998
 
 
 ; Constants

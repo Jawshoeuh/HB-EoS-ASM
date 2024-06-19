@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 12/24/2022 - Confirmed Working 07/08/2023
+; Jawshoeuh 12/24/2022 - Tested 6/18/2024
 ; Court Change swaps the ownership of nearby traps (Enemy -> Ally &
 ; Ally -> Enemy) and swaps Light Screen, Reflect, Mist, Safeguard.
 ; WARNING: This move was designed to only work when targetting one monster
@@ -15,28 +15,28 @@
 .definelabel MaxSize, 0x2598
 
 ; For US (comment for EU)
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel UpdateStatusIconFlags, 0x022E3AB4
-.definelabel GetTileAtEntity, 0x022E1628
-.definelabel UpdateMinimap, 0x02339CE8
-.definelabel GetTileSafe, 0x02336164
-.definelabel HasDropeyeStatus, 0x02301F50
-.definelabel GetVisibilityRange, 0x022E333C
-.definelabel UpdateTrapVisibility, 0x02336F4C
-.definelabel DUNGEON_PTR, 0x02353538
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel UpdateStatusIconFlags, 0x22E3AB4
+.definelabel GetTileAtEntity, 0x22E1628
+.definelabel UpdateMinimap, 0x2339CE8
+.definelabel GetTileSafe, 0x2336164
+.definelabel HasDropeyeStatus, 0x2301F50
+.definelabel GetVisibilityRange, 0x22E333C
+.definelabel UpdateTrapVisibility, 0x2336F4C
+.definelabel DUNGEON_PTR, 0x2353538
 
 ; For EU (uncomment for EU)
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel UpdateStatusIconFlags, 0x022E4464
-;.definelabel GetTileAtEntity, 0x022E1F68
-;.definelabel UpdateMinimap, 0x0233A8B8
-;.definelabel HasDropeyeStatus, 0x0230297C
-;.definelabel GetTileSafe, 0x02336D34
-;.definelabel GetVisibilityRange, 0x022E3CEC
-;.definelabel UpdateTrapVisibility, 0x02337B1C
-;.definelabel DUNGEON_PTR, 0x02354138
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel UpdateStatusIconFlags, 0x22E4464
+;.definelabel GetTileAtEntity, 0x22E1F68
+;.definelabel UpdateMinimap, 0x233A8B8
+;.definelabel HasDropeyeStatus, 0x230297C
+;.definelabel GetTileSafe, 0x2336D34
+;.definelabel GetVisibilityRange, 0x22E3CEC
+;.definelabel UpdateTrapVisibility, 0x2337B1C
+;.definelabel DUNGEON_PTR, 0x2354138
 
 ; Constants
 .definelabel TRUE, 0x1
@@ -49,12 +49,12 @@
         push r5,r6,r7,r8,r9
         
         ; Get User & Target Protections
-        ldr  r0,[r9,#0xB4]
-        ldrb r1,[r0,#0xD5]  ; Protections (Reflect, Aqua Ring, etc)
-        ldrb r5,[r0,#0xD6] ; Turns of Protection (User)
-        ldr  r2,[r4,#0xB4]
-        ldrb r3,[r2,#0xD5]  ; Protections (Reflect, Aqua Ring, etc)
-        ldrb r6,[r2,#0xD6] ; Turns of Protection (Target)
+        ldr  r0,[r9,#0xB4] ; entity->monster
+        ldrb r1,[r0,#0xD5] ; monster->statuses->reflect (Protections (Reflect, Aqua Ring, etc))
+        ldrb r5,[r0,#0xD6] ; monster->statuses->reflect_turns (Turns of Protection (User))
+        ldr  r2,[r4,#0xB4] ; entity->monster
+        ldrb r3,[r2,#0xD5] ; monster->statuses->reflect (Protections (Reflect, Aqua Ring, etc))
+        ldrb r6,[r2,#0xD6] ; monster->statuses->reflect_turns (Turns of Protection (Target))
         
         ; Give our protections to target.
         cmp    r1,#0x1
@@ -72,11 +72,11 @@
         cmpne  r3,#0x2
         cmpne  r3,#0x3
         cmpne  r3,#0xE
-        streqb r3,[r0,#0xD5]
-        streqb r6,[r0,#0xD6]
+        streqb r3,[r0,#0xD5] ; monster->statuses->reflect (Protections (Reflect, Aqua Ring, etc))
+        streqb r6,[r0,#0xD6] ; monster->statuses->reflect_turns (Turns of Protection (User))
         moveq  r1,#0x0
-        streqb r1,[r2,#0xD5]
-        streqb r1,[r2,#0xD6]
+        streqb r1,[r2,#0xD5] ; monster->statuses->reflect (Protections (Reflect, Aqua Ring, etc))
+        streqb r1,[r2,#0xD6] ; monster->statuses->reflect_turns (Turns of Protection (Target))
         
         ; Update after.
         mov r0,r9
@@ -87,12 +87,12 @@
         mov  r0,r9
         bl   GetTileAtEntity
         mov  r5,r0
-        ldrb r0,[r0,#0x7]
+        ldrb r0,[r0,#0x7] ; tile->room
         cmp  r0,#0xFF
         beq  init_area
         mov  r0,r9
-        bl   HasDropeyeStatus ; I guess is the user is blinded, only remove
-        cmp  r0,#0x0          ; nearby traps.
+        bl   HasDropeyeStatus ; If the player has bad visibility, only remove traps in the
+        cmp  r0,#0x0          ; immediate area around them.
         beq  init_room
     init_area: ; Clear the area around for traps.
         bl    GetVisibilityRange
@@ -105,11 +105,11 @@
         b check_outer_loop
     init_room: ; Clear the entire room for traps.
         ldr   r0,=DUNGEON_PTR
-        ldrb  r2,[r5,#0x7]
+        ldrb  r2,[r5,#0x7] ; tile->room
         ldr   r0,[r0]
         mov   r1,#0x1C
         add   r0,r0,#0x2E8
-        add   r0,r0,#0xEC00
+        add   r0,r0,#0xEC00 ; dungeon->room_data
         mla   r0,r2,r1,r0
         ldrsh r3,[r0,#0x2]
         ldrsh r2,[r0,#0x4]
@@ -129,14 +129,14 @@
         mov  r0,r8
         mov  r1,r6
         bl   GetTileSafe
-        ldr  r0,[r0,#0x10]
+        ldr  r0,[r0,#0x10] ; tile->object
         cmp  r0,#0x0
         beq  iter_inner_loop
         ldr  r1,[r0,#0x0]
         cmp  r1,#0x2
         bne  iter_inner_loop
-        ldr  r1,[r0,#0xB4]
-        ldrb r2,[r1,#0x2]
+        ldr  r1,[r0,#0xB4] ; entity->trap
+        ldrb r2,[r1,#0x2]  ; trap->0x2flags
         tst  r2,#0x1       ; trap->f_unbreakable
         bne  iter_inner_loop
         ldrb r2,[r1,#0x0]
@@ -146,7 +146,7 @@
         eor  r2,r2,#0x1   ; swap trap alignment
         strb r2,[r1,#0x1] ; save new trap alignment
         mov  r3,#0x1
-        strb r3,[r0,#0x20] ; make trap visible
+        strb r3,[r0,#0x20] ; entity->is_visible = true
     iter_inner_loop:
         add r6,r6,#0x1
     check_inner_loop:

@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 01/07/2023 - Confirmed Working 07/02/2023
+; Jawshoeuh 01/07/2023 - Tested 6/18/2024
 ; Clangorous Soul boosts all stats (except evasion/accuracy) and costs
 ; 1/3 of the players health. Is a sound move, so check for Soundproof.
 ; Also a minor abuse of fixed point multiplication to divide by 3. While
@@ -15,28 +15,28 @@
 .definelabel MaxSize, 0x2598
 
 ; For US (comment for EU)
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel UpdateStatusIconFlags, 0x022E3AB4
-.definelabel DefenderAbilityIsActive, 0x022F96CC
-.definelabel SubstitutePlaceholderStringTags, 0x022E2AD8
-.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x0234B350
-.definelabel BoostDefensiveStat, 0x02313B08
-.definelabel BoostOffensiveStat, 0x0231399C
-.definelabel BoostSpeedOneStage, 0x0231493C
-.definelabel LogMessageWithPopupCheckUserTarget, 0x0234B3A4
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel UpdateStatusIconFlags, 0x22E3AB4
+.definelabel DefenderAbilityIsActive, 0x22F96CC
+.definelabel SubstitutePlaceholderStringTags, 0x22E2AD8
+.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x234B350
+.definelabel BoostDefensiveStat, 0x2313B08
+.definelabel BoostOffensiveStat, 0x231399C
+.definelabel BoostSpeedOneStage, 0x231493C
+.definelabel LogMessageWithPopupCheckUserTarget, 0x234B3A4
 
 ; For EU (uncomment for EU)
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
 ;.definelabel UpdateStatusIconFlags, 0x22E4464
-;.definelabel DefenderAbilityIsActive, 0x022FA0D8
-;.definelabel SubstitutePlaceholderStringTags, 0x022E3418
-;.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x0234BF50
-;.definelabel BoostDefensiveStat, 0x02314568
-;.definelabel BoostOffensiveStat, 0x023143FC
-;.definelabel BoostSpeedOneStage, 0x0231539C
-;.definelabel LogMessageWithPopupCheckUser, 0x0234BFA4
+;.definelabel DefenderAbilityIsActive, 0x22FA0D8
+;.definelabel SubstitutePlaceholderStringTags, 0x22E3418
+;.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x234BF50
+;.definelabel BoostDefensiveStat, 0x2314568
+;.definelabel BoostOffensiveStat, 0x23143FC
+;.definelabel BoostSpeedOneStage, 0x231539C
+;.definelabel LogMessageWithPopupCheckUser, 0x234BFA4
 
 ; Constants
 .definelabel TRUE, 0x1
@@ -65,11 +65,11 @@
         bne fail_soundproof
         
         ; Calculate Health
-        ldr   r12,[r4,#0xB4]
-        ldrsh r1,[r12,#0x12]
-        ldrsh r2,[r12,#0x16]
-        ldrsh r3,[r12,#0x10]  ; Current HP
-        add   r1,r1,r2        ; Max HP
+        ldr   r12,[r4,#0xB4] ; entity->monster
+        ldrsh r1,[r12,#0x12] ; monster->max_hp_stat
+        ldrsh r2,[r12,#0x16] ; monster->max_hp_boost
+        ldrsh r3,[r12,#0x10] ; monster->hp (current)
+        add   r1,r1,r2       ; max_hp_stat + max_hp_boost
         
         ldr   r2,=div3_magic_number
         ldr   r2,[r2]
@@ -79,7 +79,7 @@
         
         mov r10,TRUE
         ; Simply set our health lower and update.
-        strh r3,[r12,#0x10]
+        strh r3,[r12,#0x10] ; monster->hp (current)
         mov  r0,r4
         bl   UpdateStatusIconFlags
         

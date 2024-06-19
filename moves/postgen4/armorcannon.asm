@@ -1,9 +1,10 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 01/08/2023 - Confirmed Working 06/26/2023
+; Jawshoeuh 01/08/2023 - Tested 6/18/2024
 ; Armor Cannon thaws the target, damages the target , and lowers the user's
 ; defense and special defense. For some reason the debuff from Close Combat
 ; can be blocked by abilities/items that prevent stat drops despite other
-; moves like Leaf Storm avoiding those checks. 
+; moves like Leaf Storm avoiding those checks. So for parity, this MoveJumpAddress
+; also doesn't check for them.
 ; Based on the template provided by https://github.com/SkyTemple
 ; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
 ; -------------------------------------------------------------------------
@@ -15,18 +16,18 @@
 .definelabel MaxSize, 0x2598
 
 ; For US (comment for EU)
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel DealDamage, 0x02332B20
-.definelabel EndFrozenStatus, 0x02307C78
-.definelabel LowerDefensiveStat, 0x02313814
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel DealDamage, 0x2332B20
+.definelabel EndFrozenStatus, 0x2307C78
+.definelabel LowerDefensiveStat, 0x2313814
 
 ; For EU (uncomment for EU)
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel DealDamage, 0x02333560
-;.definelabel EndFrozenStatus, 0x023086A4
-;.definelabel LowerDefensiveStat, 0x02314274
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel DealDamage, 0x2333560
+;.definelabel EndFrozenStatus, 0x23086A4
+;.definelabel LowerDefensiveStat, 0x2314274
 
 ; Constants
 .definelabel TRUE, 0x1

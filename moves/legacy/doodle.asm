@@ -1,105 +1,133 @@
-; ------------------------------------------------------------------------------
-; Jawshoeuh 11/27/2022 - Confirmed Working 11/28/2022
+; -------------------------------------------------------------------------
+; Jawshoeuh 6/19/2024 - Todo
 ; Doodle changes the abilities of all allies to the ability of the target.
-; Unfortunately, we need to check for an enemy for every target which is
-; a bit wasteful, but I don't see a way around it...
+; An older slightly more jank version can be found in the legacy folder.
 ; Based on the template provided by https://github.com/SkyTemple
-; ------------------------------------------------------------------------------
+; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
+; -------------------------------------------------------------------------
 
 .relativeinclude on
 .nds
 .arm
 
-
 .definelabel MaxSize, 0x2598
 
-; Uncomment the correct version
+; For US (comment for EU)
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel TryEndStatusWithAbility, 0x22FA7DC
+.definelabel GetTile, 0x23360FC
+.definelabel SubstitutePlaceholderStringTags, 0x22E2AD8
+.definelabel LogMessageWithPopupCheckUserTarget, 0x234B3A4
+.definelabel DIRECTIONS_XY, 0x235171C
+.definelabel DUNGEON_PTR, 0x2353538
 
-; For US
-.include "lib/stdlib_us.asm"
-.include "lib/dunlib_us.asm"
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel GetTile, 0x023360FC
-.definelabel DoMoveRolePlay, 0x0232A188
+; For EU (uncomment for EU)
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel TryEndStatusWithAbility, 0x22FB1E8
+;.definelabel GetTile, 0x2336CCC
+;.definelabel SubstitutePlaceholderStringTags, 0x22E3418
+;.definelabel LogMessageWithPopupCheckUserTarget, 0x234BFA4
+;.definelabel DIRECTIONS_XY, 0x2352328
+;.definelabel DUNGEON_PTR, 0x2354138
 
-; For EU
-;.include "lib/stdlib_eu.asm"
-;.include "lib/dunlib_eu.asm"
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel DoMoveRolePlay, 0x0232ABF4
-
+; Constants
+.definelabel TRUE, 0x1
+.definelabel FALSE, 0x0
+.definelabel NULL, 0x0
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
+.create "./code_out.bin", 0x02330134 ; Change to 0x02330B74 for EU.
     .org MoveStartAddress
-    .area MaxSize ; Define the size of the area
-    
-        ; I'm not sure why this has to be done as my ghidra wont
-        ; show me what is in DoMoveRolePlay, but I suspect it's
-        ; because it's not expected for role play to be called
-        ; this way...
-        mov r0,#0
-        mov r1,r4
-        mov r2,#0
-        bl ChangeString ; Make target replace string 0 in roleplay msg.
-    
+    .area MaxSize
+        mov r10,FALSE
+        
         ; Attempt to find a target in front of user.
-        ; Get User Direction,X,Y
-        ldr  r0, [r9,#0xb4]
-        ldrb r12,[r0,#0x4c] ; User Direction
-        ldrh r0, [r9,#0x4]  ; User X Pos
-        ldrh r1, [r9,#0x6]  ; User Y Pos
+        ldr   r0,[r9,#0xB4] ; entity->monster
+        ldrb  r1,[r0,#0x4C] ; entity->action->direction
+        ldr   r12,=DIRECTIONS_XY  ; See Note 1 Below
+        mov   r2,r1, lsl #0x2     ; Array Offset For Dir Value
+        add   r3,r12,r1, lsl #0x2 ; Array Offset For Dir Value
+        ldrsh r0,[r12,r2]          ; X Offset
+        ldrsh r1,[r3,#0x2]         ; Y Offset
+        ldrh  r2,[r9,#0x4]         ; User X Pos
+        ldrh  r3,[r9,#0x6]         ; User Y Pos
         
-        ; This is a better way to visualize what happens to
-        ; the values than loading the direction array.
-        ; 5   4   3   (y-1)
-        ;   \ | /
-        ; 6 - E - 2   (y)
-        ;   / | \
-        ; 7   0   1   (y+1)
-        ;
-        ; x   x   x
-        ; -       +
-        ; 1       1
-        cmp   r12,#1
-        addeq r0,r0,#1 ; r12 = 1
-        addle r1,r1,#1 ; r12 = 0,1
-        ble   check_tile
-        cmp   r12,#3
-        subeq r1,r1,#1 ; r12 = 3
-        addle r0,r0,#1 ; r12 = 2,3
-        ble   check_tile
-        cmp   r12,#5
-        subeq r0,r0,#1 ; r12 = 5
-        suble r1,r1,#1 ; r12 = 4,5
-        ble   check_tile
-        cmp   r12,#6
-        sub   r0,r0,#1 ; r12 = 6,7
-        beq   check_tile
-        add   r1,r1,#1 ; r12 = 7
+        ; Add values together
+        add r0,r0,r2
+        add r1,r1,r3
         
-    check_tile:
         ; Check tile for monster.
         bl    GetTile
-        ldr   r1,[r0,#0xc]
-        cmp   r1,#0
-        moveq r10,#0
+        ldr   r12,[r0,#0xC]
+        cmp   r12,NULL
         beq   MoveJumpAddress ; failed, no monster
+        mov   r10,TRUE
         
-        ; Replace target ability
-        mov r0,r4
-        ; Found monster is still in r1.
-        mov r2,r8
-        mov r3,r7
-        bl DoMoveRolePlay
+        ; Load that monsters abiilities
+        ldr  r0,[r12,#0xB4]
+        ldrb r1,[r0,#0x60]
+        ldrb r0,[r0,#0x61]
         
-        ; Move return value appropriately.
-        mov r10,r0
+        ; Store that monsters abilities
+        ldr  r2,[r4,#0xB4]
+        strb r1,[r2,#0x60]
+        strb r0,[r2,#0x61]
         
-        ; Always branch at the end
-        b MoveJumpAddress
+        ; When giving self ability, display feedback message.
+        ldr r1,[sp,#0x78] ; Appears to be number of target in a loop.
+        cmp r1,#0
+        bne skip_message
+        mov r0,#1
+        mov r1,r12
+        mov r2,#0
+        bl  SubstitutePlaceholderStringTags ; Target
+        mov r0,#0
+        mov r1,r9
+        mov r2,#0
+        bl  SubstitutePlaceholderStringTags ; User
+        mov r0,r9
+        mov r1,r9
+        ldr r2,=doodle_str
+        bl  LogMessageWithPopupCheckUserTarget
+        
+        ; Set flag for dungeon to activate artificial weather abilities.
+        mov   r0,TRUE
+        ldr   r1,=DUNGEON_PTR
+        ldrsh r2,[r1,#0x0]
+        strb  r0,[r2,#0xE] ; dungeon->activate_artificial_weather_flag = true
+        
+        ; Make user worth more exp (to keep parity with the game, uncertain
+        ; why the game rewards more exp from monsters if they change their
+        ; ability.)
+        ldr    r3,[r9,#0xB4]  ; entity->monster
+        ldrb   r0,[r3,#0x108] ; monster->statuses->exp_yield
+        cmp    r0,#0x0
+        moveq  r0,#0x1
+        streqb r0,[r3,#0x108] ; monster->statuses->exp_yield
+        
+    skip_message:
+        ; Check if this new ability would end a status condition currently
+        ; inflicted on the monster.
+        mov r0,r9
+        mov r1,r4
+        bl  TryEndStatusWithAbility
+        
+        b   MoveJumpAddress
         .pool
+            doodle_str:
+                .asciiz "[string:0] gave all nearby allies[R]the abilities of [string:1]!"
     .endarea
 .close
+
+; Note 1: Visualization of values loaded from direction array.
+; 5   4   3   (y-1)
+;   \ | /
+; 6 - E - 2   (y)
+;   / | \
+; 7   0   1   (y+1)
+;
+; x   x   x
+; -       +
+; 1       1

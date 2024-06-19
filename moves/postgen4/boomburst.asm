@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 01/07/2023 - Confirmed Working 07/02/2023
+; Jawshoeuh 01/07/2023 - Tested 6/18/2023
 ; Boomburst does damage, but is a sound move!
 ; Based on the template provided by https://github.com/SkyTemple
 ; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
@@ -12,20 +12,20 @@
 .definelabel MaxSize, 0x2598
 
 ; For US (comment for EU)
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel DealDamage, 0x02332B20
-.definelabel DefenderAbilityIsActive, 0x022F96CC
-.definelabel SubstitutePlaceholderStringTags, 0x022E2AD8
-.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x0234B350
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel DealDamage, 0x2332B20
+.definelabel DefenderAbilityIsActive, 0x22F96CC
+.definelabel SubstitutePlaceholderStringTags, 0x22E2AD8
+.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x234B350
 
 ; For EU (uncomment for EU)
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel DealDamage, 0x02333560
-;.definelabel DefenderAbilityIsActive, 0x022FA0D8
-;.definelabel SubstitutePlaceholderStringTags, 0x022E3418
-;.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x0234BF50
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel DealDamage, 0x2333560
+;.definelabel DefenderAbilityIsActive, 0x22FA0D8
+;.definelabel SubstitutePlaceholderStringTags, 0x22E3418
+;.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x234BF50
 
 ; Constants
 .definelabel TRUE, 0x1

@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 01/09/2023 - Confirmed Working 06/26/2023
+; Jawshoeuh 01/09/2023 - Tested 6/18/2024
 ; Aromatic Mist simply raises special defense. A very trivial move.
 ; Based on the template provided by https://github.com/SkyTemple
 ; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
@@ -12,14 +12,14 @@
 .definelabel MaxSize, 0x2598
 
 ; For US (comment for EU)
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel BoostDefensiveStat, 0x02313B08
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel BoostDefensiveStat, 0x2313B08
 
 ; For EU (uncomment for EU)
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel BoostDefensiveStat, 0x02314568
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel BoostDefensiveStat, 0x2314568
 
 ; Constants
 .definelabel TRUE, 0x1

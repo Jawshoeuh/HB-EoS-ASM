@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 03/22/2023 - Confirmed Working 06/26/2023
+; Jawshoeuh 03/22/2023 - Tested 6/18/2024
 ; Anchor Shot deals damage and immobilizes the target.
 ; Based on the template provided by https://github.com/SkyTemple
 ; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
@@ -12,18 +12,18 @@
 .definelabel MaxSize, 0x2598
 
 ; For US
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel DealDamage, 0x02332B20
-.definelabel TryInflictShadowHoldStatus, 0x02312F78
-.definelabel DungeonRandOutcomeUserTargetInteraction, 0x02324934
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel DealDamage, 0x2332B20
+.definelabel TryInflictShadowHoldStatus, 0x2312F78
+.definelabel DungeonRandOutcomeUserTargetInteraction, 0x2324934
 
 ; For EU
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel DealDamage, 0x02333560
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel DealDamage, 0x2333560
 ;.definelabel TryInflictShadowHoldStatus, 0x23139D8
-;.definelabel DungeonRandOutcomeUserTargetInteraction, 0x0232539C
+;.definelabel DungeonRandOutcomeUserTargetInteraction, 0x232539C
 
 ; Constants
 .definelabel TRUE, 0x1

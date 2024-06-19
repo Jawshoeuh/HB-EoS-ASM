@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Jawshoeuh 12/01/2022 - Confirmed Working 06/26/2023
+; Jawshoeuh 12/01/2022 - Tested 6/17/2024
 ; Acid Spray deals damage and lowers the opponent's special defense by 2.
 ; This version modifies the stat stages, for a version that modifies
 ; the defensive multiplier, see acidspray2.asm
@@ -13,19 +13,19 @@
 .definelabel MaxSize, 0x2598
 
 ; For US (comment for EU)
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel DealDamage, 0x02332B20
-.definelabel LowerDefensiveStat, 0x02313814
-.definelabel DungeonRandOutcomeUserTargetInteraction, 0x02324934
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel DealDamage, 0x2332B20
+.definelabel LowerDefensiveStat, 0x2313814
+.definelabel DungeonRandOutcomeUserTargetInteraction, 0x2324934
 
 
 ; For EU (uncomment for EU)
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel DealDamage, 0x02333560
-;.definelabel LowerDefensiveStat, 0x02314274
-;.definelabel DungeonRandOutcomeUserTargetInteraction, 0x0232539C
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel DealDamage, 0x2333560
+;.definelabel LowerDefensiveStat, 0x2314274
+;.definelabel DungeonRandOutcomeUserTargetInteraction, 0x232539C
 
 ; Constants
 .definelabel TRUE, 0x1

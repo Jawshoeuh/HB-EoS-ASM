@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 08/01/2023 - Confirmed Working XX/XX/XXXX
+; Jawshoeuh 08/01/2023 - Tested 6/17/2024
 ; Make It Rain deals damage, drops coins and lowers user special attack.
 ; This version handles the special attack drop the same way as the move
 ; Overheat and lowers the special attack after the move has completed.
@@ -16,18 +16,22 @@
 .definelabel MaxSize, 0x2598
 
 ; For US (comment for EU)
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel DealDamage, 0x02332B20
-.definelabel DungeonRandOutcomeUserAction, 0x02324A20
-.definelabel SpawnDroppedItemAtOffset, 0x0232A834
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel DealDamage, 0x2332B20
+.definelabel EntityIsValid, 0x22E0354
+.definelabel DungeonRandOutcomeUserAction, 0x2324A20
+.definelabel SpawnDroppedItemAtOffset, 0x232A834
+.definelabel GenerateStandardItem, 0x2344BD0
 
 ; For EU (uncomment for EU)
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel DealDamage, 0x02333560
-;.definelabel DungeonRandOutcomeUserAction, 0x02325488
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel DealDamage, 0x2333560
+;.definelabel EntityIsValid, 0x22E0C94
+;.definelabel DungeonRandOutcomeUserAction, 0x2325488
 ;.definelabel SpawnDroppedItemAtOffset, 0x????????
+;.definelabel GenerateStandardItem, 0x23457B4
 
 ; Constants
 .definelabel TRUE, 0x1
@@ -35,7 +39,7 @@
 .definelabel POKE_ITEM_ID, 183 ; 0xB7
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; Change to 0x02330B74 for EU.
+.create "./code_out.bin", 0x02330134 ; Currently EU Incompatible
     .org MoveStartAddress
     .area MaxSize
         sub sp,sp,#0x10
@@ -66,13 +70,13 @@
         ; Mark the target to get their special attack lowered.
         ldr  r3,[r9,#0xB4]
         mov  r2,TRUE
-        strb r2,[r3,#0x15F]
+        strb r2,[r3,#0x15F] ; monster->overheat_special_attack_drop_flag = true;
         
         ; Check if target died.
         mov r0,r4
         bl  EntityIsValid
         cmp r0,#0x0
-        bne entity_lived
+        bne return
         
         ; Spawn Poke (money).
         add  r0,sp,#0x8
@@ -88,7 +92,7 @@
         mov  r1,r4
         add  r2,sp,#0x8
         add  r3,sp,#0x4
-        bl   SpawnItemDropAtOffset
+        bl   SpawnDroppedItemAtOffset
 
     return:
         add sp,sp,#0x10

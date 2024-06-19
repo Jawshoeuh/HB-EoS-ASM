@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 03/22/2023 - Confirmed Working 07/08/XXXX
+; Jawshoeuh 03/22/2023 - Todo
 ; Clear Smog deals damage and resets all stat changes to 0 (default).
 ; Based on the template provided by https://github.com/SkyTemple
 ; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug

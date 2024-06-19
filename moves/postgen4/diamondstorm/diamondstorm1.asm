@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 01/09/2023 - Confirmed Working 07/08/2023
+; Jawshoeuh 01/09/2023 - Tested 6/17/2024
 ; Diamond Storms deals damage and has a 50% chance to raise the user's
 ; defense by 2. (See diamondstorm2.asm to see one that raises it one stage
 ; like in Gen VI).
@@ -14,18 +14,18 @@
 .definelabel MaxSize, 0x2598
 
 ; For US (comment for EU)
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel DealDamage, 0x02332B20
-.definelabel DungeonRandOutcomeUserAction, 0x02324A20
-.definelabel BoostDefensiveStat, 0x02313B08
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel DealDamage, 0x2332B20
+.definelabel DungeonRandOutcomeUserAction, 0x2324A20
+.definelabel BoostDefensiveStat, 0x2313B08
 
 ; For EU (uncomment for EU)
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel DealDamage, 0x02333560
-;.definelabel DungeonRandOutcomeUserAction, 0x02325488
-;.definelabel BoostDefensiveStat, 0x02314568
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel DealDamage, 0x2333560
+;.definelabel DungeonRandOutcomeUserAction, 0x2325488
+;.definelabel BoostDefensiveStat, 0x2314568
 
 
 ; Constants

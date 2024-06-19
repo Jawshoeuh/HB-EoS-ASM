@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 01/09/2023 - Confirmed Working 07/08/2023
+; Jawshoeuh 01/09/2023 - Todo
 ; Eerie impulse lowers special attack by two 'stages'! Technically lowers
 ; the special attack multiplier.
 ; Based on the template provided by https://github.com/SkyTemple

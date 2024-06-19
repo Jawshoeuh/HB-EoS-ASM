@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 12/25/2022 - Confirmed Working XX/XX/XXXX
+; Jawshoeuh 12/25/2022 - Tested 6/17/2024
 ; To avoid using complex ASM, the move should have guaranteed accuracy
 ; so that we can imitate/pretend to miss within hurricane itself. To use
 ; this move properly, the accuracy should be set to 125 (never miss) in
@@ -20,28 +20,28 @@
 .definelabel MaxSize, 0x2598
 
 ; For US (comment for EU)
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel DealDamage, 0x02332B20
-.definelabel GetApparentWeather, 0x02334D08
-.definelabel DisplayCombatNumber, 0x022EA718
-.definelabel PlayMissSound, 0x022E576C ; May be wrongly named.
-.definelabel MoveHitCheckJump, 0x02323C68
-.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x0234B350
-.definelabel DungeonRandOutcomeUserTargetInteraction, 0x02324934
-.definelabel TryInflictConfusedStatus, 0x02314F38
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel DealDamage, 0x2332B20
+.definelabel GetApparentWeather, 0x2334D08
+.definelabel DisplayAnimatedNumbers, 0x22EA718
+.definelabel PlayMissSound, 0x22E576C ; May be wrongly named.
+.definelabel MoveHitCheckJump, 0x2323C68
+.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x234B350
+.definelabel DungeonRandOutcomeUserTargetInteraction, 0x2324934
+.definelabel TryInflictConfusedStatus, 0x2314F38
 
 ; For EU (uncomment for EU)
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel DealDamage, 0x02333560
-;.definelabel GetApparentWeather, 0x02334D08
-;.definelabel DisplayTextAbove, 0x????????
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel DealDamage, 0x2333560
+;.definelabel GetApparentWeather, 0x2334D08
+;.definelabel DisplayAnimatedNumbers, 0x22EB0C8
 ;.definelabel PlayMissSound, 0x???????? ; May be wrongly named.
 ;.definelabel MoveHitCheckJump, 0x???????? ; instruction = 00 80 a0 e1
-;.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x0234BF50
-;.definelabel DungeonRandOutcomeUserTargetInteraction, 0x0232539C
-;.definelabel TryInflictConfusedStatus, 0x02315998
+;.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x234BF50
+;.definelabel DungeonRandOutcomeUserTargetInteraction, 0x232539C
+;.definelabel TryInflictConfusedStatus, 0x2315998
 
 ; Constants
 .definelabel TRUE, 0x1
@@ -51,7 +51,7 @@
 .definelabel RAIN_WEATHER_ID, 4
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; Change to 0x02330B74 for EU.
+.create "./code_out.bin", 0x02330134 ; Currently EU Incompatible
     .org MoveStartAddress
     .area MaxSize
         sub sp,sp,#0x4
@@ -87,7 +87,7 @@
         ldr r0,=0x270F ; number to show (0x270F is hardcoded to show MISS).
         mov r1,r4      ; entityt to display text above
         sub r3,r2,#0x2 ; color related, 0xfffffff normally, 0xb for stockpile
-        bl  DisplayCombatNumber
+        bl  DisplayAnimatedNumbers
         ldr r2,=MISS_STR_ID
         mov r0,r9
         mov r1,r4

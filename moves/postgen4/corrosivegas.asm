@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 12/06/2022 - Confirmed Working 07/07/2023
+; Jawshoeuh 12/06/2022 - Tested 6/18/2024
 ; Corrosive Gas simple makes the targets item sticky. This was the
 ; best way I could think of for temporarily disabling the held item.
 ; Based on the template provided by https://github.com/SkyTemple
@@ -13,14 +13,14 @@
 .definelabel MaxSize, 0x2598
 
 ; For US (comment for EU)
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel ApplyStickyTrapEffect, 0x022EE434
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel ApplyStickyTrapEffect, 0x22EE434
 
 ; For EU (uncomment for EU)
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel ApplyStickyTrapEffect, 0x????????
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel ApplyStickyTrapEffect, 0x22EEDE4
 
 ; Constants
 .definelabel TRUE, 0x1

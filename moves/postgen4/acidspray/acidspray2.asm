@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 12/01/2022 - Confirmed Working 06/26/2023
+; Jawshoeuh 12/01/2022 - Tested 6/17/2024
 ; Acid Spray deals damage and lowers the opponent's special defense by 2.
 ; This version modifies the defensive multiplier, for a version that
 ; modifies the stat stages, see acidspray1.asm
@@ -13,19 +13,19 @@
 .definelabel MaxSize, 0x2598
 
 ; For US (comment for EU)
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel DealDamage, 0x02332B20
-.definelabel ApplyDefensiveStatMultiplier, 0x02313F64
-.definelabel DungeonRandOutcomeUserTargetInteraction, 0x02324934
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel DealDamage, 0x2332B20
+.definelabel ApplyDefensiveStatMultiplier, 0x2313F64
+.definelabel DungeonRandOutcomeUserTargetInteraction, 0x2324934
 
 
 ; For EU (uncomment for EU)
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel DealDamage, 0x02333560
-;.definelabel ApplyDefensiveStatMultiplier, 0x023149C4
-;.definelabel DungeonRandOutcomeUserTargetInteraction, 0x0232539C
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel DealDamage, 0x2333560
+;.definelabel ApplyDefensiveStatMultiplier, 0x23149C4
+;.definelabel DungeonRandOutcomeUserTargetInteraction, 0x232539C
 
 ; Constants
 .definelabel TRUE, 0x1
@@ -68,7 +68,7 @@
         mov r0,r9
         mov r1,r4
         mov r2,SPECIAL_STAT
-        mov r3,#0x40 ; (64/256) = 1/4 = 0.25
+        mov r3,#0x40 ; (64/256) = 1/4 = 0.25 *(See Note 1 Below)
         bl  ApplyDefensiveStatMultiplier
         
     return:

@@ -1,8 +1,7 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 01/07/2023 - Confirmed Working 07/08/2023
-; Clanging Scales does damage and lowers the user's defense. Specifically
-; designed to be used as a multi-hit move and drop defense only on the
-; first hit. Also a sound based move.
+; Jawshoeuh 01/07/2023 - Todo
+; Clanging Scales does damage and lowers the user's defense. Also a sound
+; based move.
 ; Based on the template provided by https://github.com/SkyTemple
 ; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
 ; -------------------------------------------------------------------------
@@ -14,26 +13,24 @@
 .definelabel MaxSize, 0x2598
 
 ; For US (comment for EU)
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel DealDamage, 0x02332B20
-.definelabel DefenderAbilityIsActive, 0x022F96CC
-.definelabel LowerDefensiveStat, 0x02313814
-.definelabel SubstitutePlaceholderStringTags, 0x022E2AD8
-.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x0234B350
-.definelabel DungeonRandOutcomeUserAction, 0x02324A20
-.definelabel MULTIHIT_HIT_COUNTER, 0x0237CA78
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel DealDamage, 0x2332B20
+.definelabel DefenderAbilityIsActive, 0x22F96CC
+.definelabel LowerDefensiveStat, 0x2313814
+.definelabel SubstitutePlaceholderStringTags, 0x22E2AD8
+.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x234B350
+.definelabel DungeonRandOutcomeUserAction, 0x2324A20
 
 ; For EU (uncomment for EU)
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel DealDamage, 0x02333560
-;.definelabel DefenderAbilityIsActive, 0x022FA0D8
-;.definelabel LowerDefensiveStat, 0x02314274
-;.definelabel SubstitutePlaceholderStringTags, 0x022E3418
-;.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x0234BF50
-;.definelabel DungeonRandOutcomeUserAction, 0x02325488
-;.definelabel MULTIHIT_HIT_COUNTER, 0x????????
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel DealDamage, 0x2333560
+;.definelabel DefenderAbilityIsActive, 0x22FA0D8
+;.definelabel LowerDefensiveStat, 0x2314274
+;.definelabel SubstitutePlaceholderStringTags, 0x22E3418
+;.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x234BF50
+;.definelabel DungeonRandOutcomeUserAction, 0x2325488
 
 
 ; Constants
@@ -84,13 +81,15 @@
         
         ; Check for succesful hit.
         cmp r0,#0
-        moveq r10,TRUE
-        
-        ; Check if the first hit.
-        ldr r0,=MULTIHIT_HIT_COUNTER
-        ldr r1,[r0,#0x0]
-        cmp r1,#1
-        bne return
+        beq return
+        mov r10,TRUE
+    
+        ; Check a user action.
+        mov r0,r9
+        mov r1,#0 ; Guaranteed, always
+        bl  DungeonRandOutcomeUserAction
+        cmp r0,FALSE
+        beq return
         
         ; Lower defense stat one stage.
         mov r2,TRUE

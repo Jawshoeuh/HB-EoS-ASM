@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 11/28/2022 - Confirmed Working XX/XX/XXXX
+; Jawshoeuh 11/28/2022 - Tested 6/17/2024
 ; Make It Rain deals damage, drops coins and lowers user special attack.
 ; This version handles the special attack drop identically to the move
 ; Draco Meteor and drops the special attack after the first target. For a
@@ -16,18 +16,24 @@
 .definelabel MaxSize, 0x2598
 
 ; For US (comment for EU)
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel DealDamage, 0x02332B20
-.definelabel DungeonRandOutcomeUserAction, 0x02324A20
-.definelabel SpawnDroppedItemAtOffset, 0x0232A834
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel DealDamage, 0x2332B20
+.definelabel EntityIsValid, 0x22E0354
+.definelabel DungeonRandOutcomeUserAction, 0x2324A20
+.definelabel SpawnDroppedItemAtOffset, 0x232A834
+.definelabel LowerOffensiveStat, 0x23135FC
+.definelabel GenerateStandardItem, 0x2344BD0
 
 ; For EU (uncomment for EU)
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel DealDamage, 0x02333560
-;.definelabel DungeonRandOutcomeUserAction, 0x02325488
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel DealDamage, 0x2333560
+;.definelabel EntityIsValid, 0x22E0C94
+;.definelabel DungeonRandOutcomeUserAction, 0x2325488
 ;.definelabel SpawnDroppedItemAtOffset, 0x????????
+;.definelabel LowerOffensiveStat, 0x231405C
+;.definelabel GenerateStandardItem, 0x23457B4
 
 ; Constants
 .definelabel TRUE, 0x1
@@ -37,7 +43,7 @@
 .definelabel POKE_ITEM_ID, 183 ; 0xB7
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; Change to 0x02330B74 for EU.
+.create "./code_out.bin", 0x02330134 ; Currently EU Incompatible
     .org MoveStartAddress
     .area MaxSize
         sub sp,sp,#0x10
@@ -77,7 +83,8 @@
         mov  r2,#0x2
         bl   GenerateStandardItem
         
-        ; Drop Poke on ground (weirdly at an offset of (0, 0).
+        ; Drop Poke on ground (weirdly this uses an offset of 0,0 instead
+		; of dropping it directly on the ground at a spot).
         mov  r3,#0
         strh r3,[sp,#0x4]
         strh r3,[sp,#0x6]
@@ -85,13 +92,13 @@
         mov  r1,r4
         add  r2,sp,#0x8
         add  r3,sp,#0x4
-        bl   SpawnItemDropAtOffset
+        bl   SpawnDroppedItemAtOffset
         
     entity_lived:
         ; I don't know why the developers decided on this when the game
         ; already has an easy and convenient way to drop the special attack
         ; for the move Overheat (Overheat technically drops 2 special
-        ; attacl stages instead of 1, but I don't see why they couldn't
+        ; attack stages instead of 1, but I don't see why they couldn't
         ; do something similar for Draco Meteor.)
         ldr r0,[sp,#0x88] ; The number of the target in the loop.
         cmp r0,#0x0
@@ -105,7 +112,7 @@
         mov r1,r9
         mov r2,SPECIAL_STAT
         mov r3,#1 ; 1 stage
-        bl  AttackStatDown
+        bl  LowerOffensiveStat
 
     return:
         add sp,sp,#0x10

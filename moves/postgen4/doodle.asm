@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 11/29/2022 - Confirmed Working 08/02/2023
+; Jawshoeuh 11/29/2022 - Todo
 ; Doodle changes the abilities of all allies to the ability of the target.
 ; Unfortunately, we need to check for an enemy for every target which is
 ; a bit wasteful, but I don't see a way around it...
@@ -14,24 +14,24 @@
 .definelabel MaxSize, 0x2598
 
 ; For US (comment for EU)
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel TryEndStatusWithAbility, 0x022FA7DC
-.definelabel GetTile, 0x023360FC
-.definelabel SubstitutePlaceholderStringTags, 0x022E2AD8
-.definelabel LogMessageWithPopupCheckUserTarget, 0x0234B3A4
-.definelabel DIRECTIONS_XY, 0x0235171C
-.definelabel DUNGEON_PTR, 0x02353538
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel TryEndStatusWithAbility, 0x22FA7DC
+.definelabel GetTile, 0x23360FC
+.definelabel SubstitutePlaceholderStringTags, 0x22E2AD8
+.definelabel LogMessageWithPopupCheckUserTarget, 0x234B3A4
+.definelabel DIRECTIONS_XY, 0x235171C
+.definelabel DUNGEON_PTR, 0x2353538
 
 ; For EU (uncomment for EU)
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel TryEndStatusWithAbility, 0x????????
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel TryEndStatusWithAbility, 0x22FB1E8
 ;.definelabel GetTile, 0x2336CCC
-;.definelabel SubstitutePlaceholderStringTags, 0x022E3418
-;.definelabel LogMessageWithPopupCheckUserTarget, 0x0234BFA4
-;.definelabel DIRECTIONS_XY, 0x02352328
-;.definelabel DUNGEON_PTR, 0x02354138
+;.definelabel SubstitutePlaceholderStringTags, 0x22E3418
+;.definelabel LogMessageWithPopupCheckUserTarget, 0x234BFA4
+;.definelabel DIRECTIONS_XY, 0x2352328
+;.definelabel DUNGEON_PTR, 0x2354138
 
 ; Constants
 .definelabel TRUE, 0x1
@@ -45,8 +45,8 @@
         mov r10,FALSE
         
         ; Attempt to find a target in front of user.
-        ldr  r0, [r9,#0xB4]
-        ldrb  r1,[r0,#0x4C] ; User Direction
+        ldr   r0,[r9,#0xB4] ; entity->monster
+        ldrb  r1,[r0,#0x4C] ; entity->action->direction
         ldr   r12,=DIRECTIONS_XY  ; See Note 1 Below
         mov   r2,r1, lsl #0x2     ; Array Offset For Dir Value
         add   r3,r12,r1, lsl #0x2 ; Array Offset For Dir Value
@@ -95,18 +95,18 @@
         
         ; Set flag for dungeon to activate artificial weather abilities.
         mov   r0,TRUE
-        ldr   r1,=DungeonBaseStructurePtr
+        ldr   r1,=DUNGEON_PTR
         ldrsh r2,[r1,#0x0]
-        strb  r0,[r2,#0xE]
+        strb  r0,[r2,#0xE] ; dungeon->activate_artificial_weather_flag = true
         
         ; Make user worth more exp (to keep parity with the game, uncertain
         ; why the game rewards more exp from monsters if they change their
         ; ability.)
-        ldr    r3,[r9,#0xB4]
-        ldrb   r0,[r3,#0x108]
+        ldr    r3,[r9,#0xB4]  ; entity->monster
+        ldrb   r0,[r3,#0x108] ; monster->statuses->exp_yield
         cmp    r0,#0x0
         moveq  r0,#0x1
-        streqb r0,[r3,#0x108]
+        streqb r0,[r3,#0x108] ; monster->statuses->exp_yield
         
     skip_message:
         ; Check if this new ability would end a status condition currently
