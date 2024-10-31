@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 01/07/2023 - Todo
+; Jawshoeuh 01/07/2023 - Tested 6/19/2024
 ; Clanging Scales does damage and lowers the user's defense. Also a sound
 ; based move.
 ; Based on the template provided by https://github.com/SkyTemple

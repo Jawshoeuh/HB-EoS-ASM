@@ -1,8 +1,7 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 11/29/2022 - Todo
+; Jawshoeuh 6/19/2024 - Confirmed Working 10/29/2024
 ; Doodle changes the abilities of all allies to the ability of the target.
-; Unfortunately, we need to check for an enemy for every target which is
-; a bit wasteful, but I don't see a way around it...
+; This move is intended to only target a single enemy.
 ; Based on the template provided by https://github.com/SkyTemple
 ; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
 ; -------------------------------------------------------------------------
@@ -17,20 +16,18 @@
 .definelabel MoveStartAddress, 0x2330134
 .definelabel MoveJumpAddress, 0x23326CC
 .definelabel TryEndStatusWithAbility, 0x22FA7DC
-.definelabel GetTile, 0x23360FC
 .definelabel SubstitutePlaceholderStringTags, 0x22E2AD8
 .definelabel LogMessageWithPopupCheckUserTarget, 0x234B3A4
-.definelabel DIRECTIONS_XY, 0x235171C
+.definelabel EntityIsValid, 0x232800C
 .definelabel DUNGEON_PTR, 0x2353538
 
 ; For EU (uncomment for EU)
 ;.definelabel MoveStartAddress, 0x2330B74
 ;.definelabel MoveJumpAddress, 0x233310C
 ;.definelabel TryEndStatusWithAbility, 0x22FB1E8
-;.definelabel GetTile, 0x2336CCC
 ;.definelabel SubstitutePlaceholderStringTags, 0x22E3418
 ;.definelabel LogMessageWithPopupCheckUserTarget, 0x234BFA4
-;.definelabel DIRECTIONS_XY, 0x2352328
+;.definelabel EntityIsValid, 0x2328A78
 ;.definelabel DUNGEON_PTR, 0x2354138
 
 ; Constants
@@ -42,46 +39,44 @@
 .create "./code_out.bin", 0x02330134 ; Change to 0x02330B74 for EU.
     .org MoveStartAddress
     .area MaxSize
-        mov r10,FALSE
+        push r5,r6,r7,r8,r10,r11
+        mov r10,TRUE
         
-        ; Attempt to find a target in front of user.
-        ldr   r0,[r9,#0xB4] ; entity->monster
-        ldrb  r1,[r0,#0x4C] ; entity->action->direction
-        ldr   r12,=DIRECTIONS_XY  ; See Note 1 Below
-        mov   r2,r1, lsl #0x2     ; Array Offset For Dir Value
-        add   r3,r12,r1, lsl #0x2 ; Array Offset For Dir Value
-        ldrsh r0,[r12,r2]          ; X Offset
-        ldrsh r1,[r3,#0x2]         ; Y Offset
-        ldrh  r2,[r9,#0x4]         ; User X Pos
-        ldrh  r3,[r9,#0x6]         ; User Y Pos
+        ; Load target monsters abiilities
+        ldr  r0,[r4,#0xB4] ; entity->monster
+        ldrb r5,[r0,#0x60] ; monster->abilities[0]
+        ldrb r6,[r0,#0x61] ; monster->abilities[1]
         
-        ; Add values together
-        add r0,r0,r2
-        add r1,r1,r3
-        
-        ; Check tile for monster.
-        bl    GetTile
-        ldr   r12,[r0,#0xC]
-        cmp   r12,NULL
-        beq   MoveJumpAddress ; failed, no monster
-        mov   r10,TRUE
-        
-        ; Load that monsters abiilities
-        ldr  r0,[r12,#0xB4]
-        ldrb r1,[r0,#0x60]
-        ldrb r0,[r0,#0x61]
-        
-        ; Store that monsters abilities
-        ldr  r2,[r4,#0xB4]
-        strb r1,[r2,#0x60]
-        strb r0,[r2,#0x61]
-        
-        ; When giving self ability, display feedback message.
-        ldr r1,[sp,#0x78] ; Appears to be number of target in a loop.
-        cmp r1,#0
-        bne skip_message
+        ; Check user alignment to figure out which monsters to check.
+        ldr   r12,[r9,#0xB4] ; entity->monster
+        ldrb  r0,[r12,#0x6]  ; monster->is_not_team_member
+        ldrb  r2,[r12,#0x8]  ; monster->is_ally
+        eor   r12,r0,r2      ; 1 = enemy, 0 = friend
+        cmp   r12,#0
+        mov   r8,#0x12800
+        orrne r7,r8,#0x338 ; r7 = 0x12B38 (Start Enemy, inclusive)
+        orrne r8,r8,#0x378 ; r8 = 0x12B78 (End Enemy, not inclusive)
+        orreq r7,r8,#0x328 ; r7 = 0x12B28 (Start Ally, inclusive)
+        orreq r8,r8,#0x338 ; r8 = 0x12B38 (End Ally, not inclusive)
+        ldr   r1,=DUNGEON_PTR
+        ldr   r10,[r1,#0x0]
+        ability_sharing_loop:
+            ldr   r11,[r10,r7]
+            mov   r0,r11
+            bl    EntityIsValid
+            cmp   r0,FALSE
+            beq   ability_sharing_loop_iter
+            ldr   r0,[r11,#0xB4] ; entity->monster
+            strb  r5,[r0,#0x60] ; monster->abilities[0]
+            strb  r6,[r0,#0x61] ; monster->abilities[1]
+            ability_sharing_loop_iter:
+                add r7,r7,#0x4
+                cmp r7,r8
+                blt ability_sharing_loop
+                
+        ; Feedback message.
         mov r0,#1
-        mov r1,r12
+        mov r1,r4
         mov r2,#0
         bl  SubstitutePlaceholderStringTags ; Target
         mov r0,#0
@@ -89,15 +84,9 @@
         mov r2,#0
         bl  SubstitutePlaceholderStringTags ; User
         mov r0,r9
-        mov r1,r9
+        mov r1,r4
         ldr r2,=doodle_str
         bl  LogMessageWithPopupCheckUserTarget
-        
-        ; Set flag for dungeon to activate artificial weather abilities.
-        mov   r0,TRUE
-        ldr   r1,=DUNGEON_PTR
-        ldrsh r2,[r1,#0x0]
-        strb  r0,[r2,#0xE] ; dungeon->activate_artificial_weather_flag = true
         
         ; Make user worth more exp (to keep parity with the game, uncertain
         ; why the game rewards more exp from monsters if they change their
@@ -108,17 +97,18 @@
         moveq  r0,#0x1
         streqb r0,[r3,#0x108] ; monster->statuses->exp_yield
         
-    skip_message:
-        ; Check if this new ability would end a status condition currently
-        ; inflicted on the monster.
-        mov r0,r9
-        mov r1,r4
-        bl  TryEndStatusWithAbility
+        ; Set flag for dungeon to activate artificial weather abilities.
+        mov   r0,TRUE
+        ldr   r1,=DUNGEON_PTR
+        ldr   r2,[r1,#0x0]
+        strb  r0,[r2,#0xE] ; dungeon->activate_artificial_weather_flag = true
         
+    return:
+        pop r5,r6,r7,r8,r10,r11
         b   MoveJumpAddress
         .pool
     doodle_str:
-        .asciiz "[string:0] gave all nearby allies[R]the abilities of [string:1]!"
+        .asciiz "[string:0] gave all allies the[R]abilities of [string:1]!"
     .endarea
 .close
 

@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 01/09/2023 - Confirmed Working 08/02/2023
+; Jawshoeuh 01/09/2023 - Confirmed Working 10/29/2024
 ; Fairy Lock (translating this move to a mystery dungeon context is a
 ; little odd. In current PMD games it just applies the Shadow Hold or
 ; Immobilized status; however, this version just inflicts shadow hold for
@@ -15,13 +15,13 @@
 .definelabel MaxSize, 0x2598
 
 ; For US (comment for EU)
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel TryInflictShadowHoldStatus, 0x02312F78
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel TryInflictShadowHoldStatus, 0x2312F78
 
 ; For EU (uncomment for EU)
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
 ;.definelabel TryInflictShadowHoldStatus, 0x23139D8
 
 ; Constants
@@ -30,7 +30,7 @@
 .definelabel FAIRY_LOCK_SHADOW_HOLD_TURNS, 3
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; Change to 0x02330B74 for EU.
+.create "./code_out.bin", 0x2330134 ; Change to 0x2330B74 for EU.
     .org MoveStartAddress
     .area MaxSize
         mov r10,TRUE

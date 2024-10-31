@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 01/08/2023 - Confirmed Working 08/02/2023
+; Jawshoeuh 01/08/2023 - Confirmed Working 10/30/2024
 ; Fire Lash thaws the target, deals damage, then lowers their defense.
 ; Based on the template provided by https://github.com/SkyTemple
 ; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
@@ -12,20 +12,20 @@
 .definelabel MaxSize, 0x2598
 
 ; For US (comment for EU)
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel DealDamage, 0x02332B20
-.definelabel EndFrozenStatus, 0x02307C78
-.definelabel DungeonRandOutcomeUserTargetInteraction, 0x02324934
-.definelabel LowerDefensiveStat, 0x02313814
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel DealDamage, 0x2332B20
+.definelabel EndFrozenStatus, 0x2307C78
+.definelabel DungeonRandOutcomeUserTargetInteraction, 0x2324934
+.definelabel LowerDefensiveStat, 0x2313814
 
 ; For EU (uncomment for EU)
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel DealDamage, 0x02333560
-;.definelabel EndFrozenStatus, 0x023086A4
-;.definelabel DungeonRandOutcomeUserTargetInteraction, 0x0232539C
-;.definelabel LowerDefensiveStat, 0x02314274
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel DealDamage, 0x2333560
+;.definelabel EndFrozenStatus, 0x23086A4
+;.definelabel DungeonRandOutcomeUserTargetInteraction, 0x232539C
+;.definelabel LowerDefensiveStat, 0x2314274
 
 ; Constants
 .definelabel TRUE, 0x1
@@ -34,7 +34,7 @@
 .definelabel SPECIAL_STAT, 0x1
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; Change to 0x02330B74 for EU.
+.create "./code_out.bin", 0x2330134 ; Change to 0x2330B74 for EU.
     .org MoveStartAddress
     .area MaxSize
         sub sp,sp,#0x8

@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 12/12/2022 - Confirmed Working 07/08/2023
+; Jawshoeuh 12/12/2022 - Confirmed Working 10/29/2024
 ; Move does things and stuff.
 ; Based on the template provided by https://github.com/SkyTemple
 ; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug

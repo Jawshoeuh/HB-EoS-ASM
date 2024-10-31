@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 01/09/2023 - Todo
+; Jawshoeuh 01/09/2023 - Tested 10/29/2024
 ; Eerie impulse lowers special attack by two 'stages'! Technically lowers
 ; the special attack multiplier.
 ; Based on the template provided by https://github.com/SkyTemple
@@ -13,22 +13,22 @@
 .definelabel MaxSize, 0x2598
 
 ; For US (comment for EU)
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel ApplyOffensiveStatMultiplier, 0x02313D40
-.definelabel ActivateMotorDrive, 0x0231B060
-.definelabel GetMoveTypeForMonster, 0x0230227C
-.definelabel GetMoveType, 0x02013864
-.definelabel DefenderAbilityIsActive, 0x022F96CC
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel ApplyOffensiveStatMultiplier, 0x2313D40
+.definelabel ActivateMotorDrive, 0x231B060
+.definelabel GetMoveTypeForMonster, 0x230227C
+.definelabel GetMoveType, 0x2013864
+.definelabel DefenderAbilityIsActive, 0x22F96CC
 
 ; For EU (uncomment for EU)
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel ApplyOffensiveStatMultiplier, 0x023147A0
-;.definelabel ActivateMotorDrive, 0x????????
-;.definelabel GetMoveTypeForMonster, 0x02302CA8
-;.definelabel GetMoveType, 0x0201390C
-;.definelabel DefenderAbilityIsActive, 0x022FA0D8
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel ApplyOffensiveStatMultiplier, 0x23147A0
+;.definelabel ActivateMotorDrive, 0x231BAC0
+;.definelabel GetMoveTypeForMonster, 0x2302CA8
+;.definelabel GetMoveType, 0x201390C
+;.definelabel DefenderAbilityIsActive, 0x22FA0D8
 
 ; Constants
 .definelabel TRUE, 0x1
@@ -38,7 +38,7 @@
 .definelabel MOTOR_DRIVE_ABILITY_ID, 102 ; 0x66
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; Change to 0x02330B74 for EU.
+.create "./code_out.bin", 0x2330134 ; Change to 0x2330B74 for EU.
     .org MoveStartAddress
     .area MaxSize
         sub sp,sp,#0x4
@@ -70,7 +70,7 @@
         mov r0,r9
         mov r1,r4
         mov r2,SPECIAL_STAT
-        mov r3,#0x80 ; 1/2 = 0.5x multiplier
+        mov r3,#0x80 ; 128/256 = 1/2 = 0.5x *(See Note 1 Below)
         bl  ApplyOffensiveStatMultiplier
 
     return:
@@ -80,3 +80,7 @@
         .pool
     .endarea
 .close
+
+; Note 1: The game uses the 8 bits at the end as a kind of fraction/decimal
+; where the denominator is 256. So in this context, 0x100 means
+; (256/256) = 1

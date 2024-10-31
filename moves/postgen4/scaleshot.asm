@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 6/18/2024 - Todo
+; Jawshoeuh 6/18/2024 - Tested 6/19/2024
 ; Scale Shot does damage and lowers the user's defense. Specifically
 ; designed to be used as a multi-hit move and drop defense only on the
 ; first hit. Also a sound based move.
@@ -51,29 +51,6 @@
         sub sp,sp,#0x8
         mov r10,FALSE
         
-        ; There is a list of sound moves in the base game. A skypatch could
-        ; be added to add a move ID to the list of sound moves in game, but
-        ; this is easier for people to implement and doesn't require a
-        ; custom skypatch.
-        mov r0,r9
-        mov r1,r4
-        mov r2,SOUNDPROOF_ABILITY_ID
-        mov r3,TRUE
-        bl  DefenderAbilityIsActive
-        cmp r0,FALSE
-        beq not_blocked
-        
-        mov r0,#1
-        mov r1,r4
-        mov r2,#0
-        bl  SubstitutePlaceholderStringTags ; Sub Target
-        ldr r2,=SOUNDPROOF_STR_ID
-        mov r0,r9
-        mov r1,r4
-        bl  LogMessageByIdWithPopupCheckUserTarget
-        b   return
-        
-    not_blocked:
         ; Damage the target.
         str r7,[sp,#0x0]
         mov r0,r9

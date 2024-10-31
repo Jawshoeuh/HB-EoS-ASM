@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 01/08/2023 - Confirmed Working XX/XX/XXXX
+; Jawshoeuh 01/08/2023 - Confirmed Working 10/30/2024
 ; Grav Apple deals (more if gravity is in effect) and reduced defense
 ; by one stage.
 ; Based on the template provided by https://github.com/SkyTemple
@@ -13,20 +13,20 @@
 .definelabel MaxSize, 0x2598
 
 ; For US (comment for EU)
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel DealDamage, 0x02332B20
-.definelabel GravityIsActive, 0x02338390
-.definelabel DungeonRandOutcomeUserTargetInteraction, 0x02324934
-.definelabel LowerDefensiveStat, 0x02313814
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel DealDamage, 0x2332B20
+.definelabel GravityIsActive, 0x2338390
+.definelabel DungeonRandOutcomeUserTargetInteraction, 0x2324934
+.definelabel LowerDefensiveStat, 0x2313814
 
 ; For EU (uncomment for EU)
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel DealDamage, 0x02333560
-;.definelabel GravityIsActive, 0x02338F60
-;.definelabel DungeonRandOutcomeUserTargetInteraction, 0x0232539C
-;.definelabel LowerDefensiveStat, 0x02314274
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel DealDamage, 0x2333560
+;.definelabel GravityIsActive, 0x2338F60
+;.definelabel DungeonRandOutcomeUserTargetInteraction, 0x232539C
+;.definelabel LowerDefensiveStat, 0x2314274
 
 ; Constants
 .definelabel TRUE, 0x1
@@ -35,7 +35,7 @@
 .definelabel SPECIAL_STAT, 0x1
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; Change to 0x02330B74 for EU.
+.create "./code_out.bin", 0x2330134 ; Change to 0x2330B74 for EU.
     .org MoveStartAddress
     .area MaxSize
         sub sp,sp,#0x8
@@ -52,7 +52,7 @@
         mov r0,r9
         mov r1,r4
         mov r2,r8
-        ; Damage in r3 from above! ; 1.0x, Normal Damage *(See Note 1 Below)
+        ; Damage multiplier in r3 from above! *(See Note 1 Below)
         bl  DealDamage
         
         ; Check for succesful hit.

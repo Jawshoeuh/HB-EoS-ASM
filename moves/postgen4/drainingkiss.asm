@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 01/06/2023 - Confirmed Working 07/08/2023
+; Jawshoeuh 01/06/2023 - Confirmed Working 10/29/2024
 ; Drainking Kiss heals for 75% of the damage instead of 50% like other
 ; draining moves. To accomplish this, multiply by 3 and then divide by 4.
 ; Based on the template provided by https://github.com/SkyTemple

@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 01/09/2023 - Confirmed Working 08/02/2023
+; Jawshoeuh 01/09/2023 - Confirmed Working 10/30/2024
 ; Forest's Curse normally adds the grass type. However, that's not exactly
 ; easy to do. As a compromise, I overwrite the secondary type with
 ; the Grass type.
@@ -14,30 +14,30 @@
 .definelabel MaxSize, 0x2598
 
 ; For US (comment for EU)
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel SubstitutePlaceholderStringTags, 0x022E2AD8
-.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x0234B350
-.definelabel LogMessageWithPopupCheckUserTarget, 0x0234B3A4
-.definelabel AbilityIsActive, 0x022F96CC
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel SubstitutePlaceholderStringTags, 0x22E2AD8
+.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x234B350
+.definelabel LogMessageWithPopupCheckUserTarget, 0x234B3A4
+.definelabel AbilityIsActive, 0x2301D10
 
 ; For EU (uncomment for EU)
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel SubstitutePlaceholderStringTags, 0x022E3418
-;.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x0234BF50
-;.definelabel LogMessageWithPopupCheckUserTarget, 0x0234BFA4
-;.definelabel AbilityIsActive, 0x022FA0D8
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel SubstitutePlaceholderStringTags, 0x22E3418
+;.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x234BF50
+;.definelabel LogMessageWithPopupCheckUserTarget, 0x234BFA4
+;.definelabel AbilityIsActive, 0x230273C
 
 ; Constants
 .definelabel TRUE, 0x1
 .definelabel FALSE, 0x0
 .definelabel FORECAST_ACTIVE_STR_ID, 3523 ; 0xDC3
 .definelabel FORECAST_ABILITY_ID, 37 ; 0x25
-.definelabel GRASS_TYPE_ID, 4
+.definelabel ENUM_TYPE_ID_GRASS, 0x4
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; Change to 0x02330B74 for EU.
+.create "./code_out.bin", 0x2330134 ; Change to 0x2330B74 for EU.
     .org MoveStartAddress
     .area MaxSize
         
@@ -53,8 +53,9 @@
         
         ; Base game wont change the type of a monster with an active
         ; Forecast ability. To keep parity with the game, check if
-        ; Forecast is active.
-        mov r0,r9
+        ; Forecast is active. Not sure why it allows it if it's
+        ; disabled by Gastro Acid though? Perhaps that's an oversight.
+        mov r0,r4
         mov r1,FORECAST_ABILITY_ID
         bl  AbilityIsActive
         cmp r0,TRUE
@@ -64,13 +65,13 @@
         ldr   r3,[r4,#0xB4]
         ldrb  r0,[r3,#0x5E] ; Type 1
         ldrb  r1,[r3,#0x5F] ; Type 2
-        cmp   r0,GRASS_TYPE_ID
-        cmpne r1,GRASS_TYPE_ID
+        cmp   r0,ENUM_TYPE_ID_GRASS
+        cmpne r1,ENUM_TYPE_ID_GRASS
         beq   failed_grass
         
         ; Replace secondary type.
         mov   r10,TRUE
-        mov   r0,GRASS_TYPE_ID
+        mov   r0,ENUM_TYPE_ID_GRASS
         strb  r0,[r3,#0x5F]  ; Type 2 = Grass
         strb  r10,[r3,#0xFF] ; type_changed = TRUE
         
@@ -96,7 +97,7 @@
         b   MoveJumpAddress
         .pool
     forestscurse_str:
-        .asciiz "[string:1] secondary type converted[R]to the Grass type!"
+        .asciiz "[string:1]'s secondary type converted[R]to the Grass type!"
     forestscurse_fail_str:
         .asciiz "[string:1] is aleady Grass type!"
     .endarea
