@@ -13,35 +13,35 @@
 .definelabel MaxSize, 0x2598
 
 ; For US (comment for EU)
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel SubstitutePlaceholderStringTags, 0x022E2AD8
-.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x0234B350
-.definelabel LogMessageWithPopupCheckUserTarget, 0x0234B3A4
-.definelabel AbilityIsActive, 0x022F96CC
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel SubstitutePlaceholderStringTags, 0x22E2AD8
+.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x234B350
+.definelabel LogMessageWithPopupCheckUserTarget, 0x234B3A4
+.definelabel AbilityIsActive, 0x2301D10
 
 ; For EU (uncomment for EU)
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel SubstitutePlaceholderStringTags, 0x022E3418
-;.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x0234BF50
-;.definelabel LogMessageWithPopupCheckUserTarget, 0x0234BFA4
-;.definelabel AbilityIsActive, 0x022FA0D8
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel SubstitutePlaceholderStringTags, 0x22E3418
+;.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x234BF50
+;.definelabel LogMessageWithPopupCheckUserTarget, 0x234BFA4
+;.definelabel AbilityIsActive, 0x230273C
 
 ; Constants
 .definelabel TRUE, 0x1
 .definelabel FALSE, 0x0
 .definelabel FORECAST_ACTIVE_STR_ID, 3523 ; 0xDC3
-.definelabel FORECAST_ABILITY_ID, 37, ; 0x25
-.definelabel PSYCHIC_TYPE_ID, 11
-.definelabel NONE_TYPE_ID, 0
+.definelabel FORECAST_ABILITY_ID, 37 ; 0x25
+.definelabel ENUM_TYPE_ID_PSYCHIC, 11
+.definelabel ENUM_TYPE_ID_NONE, 0
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; Change to 0x02330B74 for EU.
+.create "./code_out.bin", 0x2330134 ; Change to 0x2330B74 for EU.
     .org MoveStartAddress
     .area MaxSize
         
-         ; Preemptively substitute strings.
+        ; Preemptively substitute strings.
         mov r0,#0
         mov r1,r9
         mov r2,#0
@@ -54,27 +54,27 @@
         ; Base game wont change the type of a monster with an active
         ; Forecast ability. To keep parity with the game, check if
         ; Forecast is active.
-        mov r0,r9
+        mov r0,r4
         mov r1,FORECAST_ABILITY_ID
         bl  AbilityIsActive
         cmp r0,TRUE
         beq failed_forecast
         
         ; Check for a psychic type.
-        ldr   r3,[r4,#0xB4]
+        ldr   r3,[r4,#0xB4] ; entity->monster
         ldrb  r0,[r3,#0x5E] ; Type 1
         ldrb  r1,[r3,#0x5F] ; Type 2
-        cmp   r0,PSYCHIC_TYPE_ID
-        cmpne r1,NONE_TYPE_ID
+        cmp   r0,ENUM_TYPE_ID_PSYCHIC
+        cmpne r1,ENUM_TYPE_ID_PSYCHIC
         beq   failed_psychic
         
         ; Replace secondary type.
         mov   r10,TRUE
-        mov   r0,PSYCHIC_TYPE_ID
-        mov   r1,NONE_TYPE_ID
-        strb  r0,[r3,#0x5E]   ; Type 1 = Grass
-        strb  r0,[r3,#0x5F]   ; Type 2 = None
-        strb  r10,[r12,#0xFF] ; type_changed = TRUE
+        mov   r0,ENUM_TYPE_ID_PSYCHIC
+        mov   r1,ENUM_TYPE_ID_NONE
+        strb  r0,[r3,#0x5E]   ; Type 1 = Psychic
+        strb  r1,[r3,#0x5F]   ; Type 2 = None
+        strb  r10,[r3,#0xFF] ; type_changed = TRUE
         
         ; Log message.
         ldr r2,=magicpowder_str

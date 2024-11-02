@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 11/12/2022 - Confirmed Working XX/XX/XXXX
+; Jawshoeuh 11/12/2022 - Confirmed Working 10/30/2024
 ; Inferno thaws, deals damage and guarantees burn (if it hits).
 ; Based on the template provided by https://github.com/SkyTemple
 ; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
@@ -12,27 +12,27 @@
 .definelabel MaxSize, 0x2598
 
 ; For US (comment for EU)
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel DealDamage, 0x02332B20
-.definelabel EndFrozenStatus, 0x02307C78
-.definelabel DungeonRandOutcomeUserTargetInteraction, 0x02324934
-.definelabel TryInflictBurnStatus, 0x02312338
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel DealDamage, 0x2332B20
+.definelabel EndFrozenStatus, 0x2307C78
+.definelabel DungeonRandOutcomeUserTargetInteraction, 0x2324934
+.definelabel TryInflictBurnStatus, 0x2312338
 
 ; For EU (uncomment for EU)
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel DealDamage, 0x02333560
-;.definelabel EndFrozenStatus, 0x023086A4
-;.definelabel DungeonRandOutcomeUserTargetInteraction, 0x0232539C
-;.definelabel TryInflictBurnStatus, 0x02312D98
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel DealDamage, 0x2333560
+;.definelabel EndFrozenStatus, 0x23086A4
+;.definelabel DungeonRandOutcomeUserTargetInteraction, 0x232539C
+;.definelabel TryInflictBurnStatus, 0x2312D98
 
 ; Constants
 .definelabel TRUE, 0x1
 .definelabel FALSE, 0x0
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; Change to 0x02330B74 for EU.
+.create "./code_out.bin", 0x2330134 ; Change to 0x2330B74 for EU.
     .org MoveStartAddress
     .area MaxSize
         sub sp,sp,#0x4
@@ -66,6 +66,14 @@
         bl  DungeonRandOutcomeUserTargetInteraction
         cmp r0,FALSE
         beq return
+        
+        ; Burn the target.
+        mov r0,r9
+        mov r1,r4
+        mov r2,FALSE
+        mov r3,FALSE
+        str r2,[sp,#0x0]
+        bl  TryInflictBurnStatus
 
     return:
         add sp,sp,#0x4

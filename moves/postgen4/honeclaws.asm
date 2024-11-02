@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 01/03/2023 - Confirmed Working 08/02/2023
+; Jawshoeuh 01/03/2023 - Confirmed Working 10/30/2024
 ; Hone Claws simply raises attack and accuracy.
 ; Based on the template provided by https://github.com/SkyTemple
 ; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
@@ -12,16 +12,16 @@
 .definelabel MaxSize, 0x2598
 
 ; For US (comment for EU)
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel BoostOffensiveStat, 0x0231399C
-.definelabel BoostHitChanceStat, 0x023140E4
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel BoostOffensiveStat, 0x231399C
+.definelabel BoostHitChanceStat, 0x23140E4
 
 ; For EU (uncomment for EU)
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel BoostOffensiveStat, 0x023143FC
-;.definelabel BoostHitChanceStat, 0x02314B44
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel BoostOffensiveStat, 0x23143FC
+;.definelabel BoostHitChanceStat, 0x2314B44
 
 ; Constants
 .definelabel TRUE, 0x1
@@ -32,10 +32,9 @@
 .definelabel EVASION_STAT, 0x1
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; Change to 0x02330B74 for EU.
+.create "./code_out.bin", 0x2330134 ; Change to 0x2330B74 for EU.
     .org MoveStartAddress
     .area MaxSize
-        sub sp,sp,#0x0
         
         ; Raise attack 1 stage.
         mov r0,r9
@@ -51,8 +50,6 @@
         mov r3,#1
         bl  BoostHitChanceStat
 
-    return:
-        add sp,sp,#0x0
         b   MoveJumpAddress
         .pool
     .endarea
