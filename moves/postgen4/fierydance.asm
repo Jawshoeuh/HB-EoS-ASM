@@ -45,8 +45,6 @@
         ; Try to thaw target.
         mov r0,r9
         mov r1,r4
-        mov r2,r8
-        mov r3,r7
         bl  EndFrozenStatus
         
         ; Damage the target.

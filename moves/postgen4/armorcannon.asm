@@ -3,7 +3,7 @@
 ; Armor Cannon thaws the target, damages the target , and lowers the user's
 ; defense and special defense. For some reason the debuff from Close Combat
 ; can be blocked by abilities/items that prevent stat drops despite other
-; moves like Leaf Storm avoiding those checks. So for parity, this MoveJumpAddress
+; moves like Leaf Storm avoiding those checks. So for parity, this move
 ; also doesn't check for them.
 ; Based on the template provided by https://github.com/SkyTemple
 ; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
@@ -45,8 +45,6 @@
         ; Try to thaw target.
         mov r0,r9
         mov r1,r4
-        mov r2,r8
-        mov r3,r7
         bl  EndFrozenStatus
         
         ; Damage the target.
