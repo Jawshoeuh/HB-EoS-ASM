@@ -1,13 +1,13 @@
-; ------------------------------------------------------------------------------
-; Jawshoeuh 1/7/2023 - Confirmed Working 1/8/2023
+; -------------------------------------------------------------------------
+; Jawshoeuh 01/07/2023 - Confirmed Working 11/11/2024
 ; Parting Shot reduces Attack & Special Attack of the Target. Since Gen 7,
 ; this move fails if the user's attack/special attack doesn't get dropped.
 ; Since that's such a niche scenario (the target must be at the lowest
 ; attack AND special attack), I decided not to implement it. However,
-; I have implemented a check for Clear Body/White Smoke/Exclusive Item
-; Effect? and Twist Band.
+; it does check for immunities from stat drops.
 ; Based on the template provided by https://github.com/SkyTemple
-; ------------------------------------------------------------------------------
+; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
+; -------------------------------------------------------------------------
 
 .relativeinclude on
 .nds
@@ -15,86 +15,114 @@
 
 .definelabel MaxSize, 0x2598
 
-; Uncomment the correct version
-
-; For US
-.include "lib/stdlib_us.asm"
-.include "lib/dunlib_us.asm"
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel StatsCanBeLowered,0x02301B2C ; convenient function
-.definelabel TrySwitchPlace, 0x022EB178
+; For US (comment for EU)
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel DefenderAbilityIsActive, 0x22F96CC
+.definelabel SubstitutePlaceholderStringTags, 0x22E2AD8
+.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x234B350
+.definelabel LowerOffensiveStat, 0x23135FC
+.definelabel ItemIsActive, 0x22E330C
+.definelabel GetTile, 0x23360FC
+.definelabel TrySwitchPlace, 0x22EB178
+.definelabel IsProtectedFromStatDrops, 0x2301B2C
 .definelabel DIRECTIONS_XY, 0x0235171C
-.definelabel GetTile, 0x023360FC
 
-; For EU
-;.include "lib/stdlib_eu.asm"
-;.include "lib/dunlib_eu.asm"
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel StatsCanBeLowered,0x????????
-;.definelabel TrySwitchPlace, 0x022EBB28
-;.definelabel DIRECTIONS_XY, 0x2352328
+; For EU (uncomment for EU)
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel DefenderAbilityIsActive, 0x22FA0D8
+;.definelabel SubstitutePlaceholderStringTags, 0x22E3418
+;.definelabel LogMessageByIdWithPopupCheckUserTarget, 0x234BF50
+;.definelabel LowerOffensiveStat, 0x231405C
+;.definelabel ItemIsActive, 0x22E3CBC
 ;.definelabel GetTile, 0x2336CCC
+;.definelabel TrySwitchPlace, 0x22EBB28
+;.definelabel IsProtectedFromStatDrops, 0x2302558
+;.definelabel DIRECTIONS_XY, 0x2352328
 
-; Universal
-.definelabel SoundproofAbilityID, 0x3C ; 60
-.definelabel SoundproofStrID, 0xEB9 ; 3769
-.definelabel TwistBandItemID, 0x12 ; 18
+; Constants
+.definelabel TRUE, 0x1
+.definelabel FALSE, 0x0
+.definelabel NULL, 0x0
+.definelabel PHYSICAL_STAT, 0x0
+.definelabel SPECIAL_STAT, 0x1
+.definelabel SOUNDPROOF_ABILITY_ID, 60 ; 0x3C
+.definelabel SOUNDPROOF_STR_ID, 3769 ; 0xEB9
+.definelabel TWIST_BAND_ITEM_ID, 0x12
+.definelabel PROTECTED_BY_BAND_STR_ID, 3506 ; 0xDB2
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
+.create "./code_out.bin", 0x2330134 ; Change to 0x2330B74 for EU.
     .org MoveStartAddress
-    .area MaxSize ; Define the size of the area
-    
-        ; There is a list of sound moves in the base game. A skypatch could
-        ; be added to make a specific move id return positive, but this
-        ; is more useful ease of use across multiple hacks. Before we do
-        ; anything, check if the target has soundproof.
-        mov r0,r4
-        mov r1,SoundproofAbilityID
-        bl  HasAbility
-        cmp r0,#0
-        mov r10,#0
-        bne failed_soundproof
-        
+    .area MaxSize
         sub sp,sp,#0x8
-        ; Lower attack.
-        mov r2,#0 ; attack
-        mov r3,#1 ; 1 stage
-        str r3,[sp,#0x4] ; display message on failure
-        str r3,[sp,#0x0] ; check items/abilities
-        mov r0,r9
-        mov r1,r4
-        bl  AttackStatDown
+        mov r10,FALSE
         
-        ; Lower special attack.
-        mov r2,#1 ; special attack
-        mov r3,#1 ; 1 stage
-        str r3,[sp,#0x4] ; display message on failure
-        str r3,[sp,#0x0] ; check items/abilities
+        ; There is a list of sound moves in the base game. A skypatch could
+        ; be added to add a move ID to the list of sound moves in game, but
+        ; this is easier for people to implement and doesn't require a
+        ; custom skypatch.
         mov r0,r9
         mov r1,r4
-        bl  AttackStatDown
-        add sp,sp,#0x8
+        mov r2,SOUNDPROOF_ABILITY_ID
+        mov r3,TRUE
+        bl  DefenderAbilityIsActive
+        cmp r0,FALSE
+        beq not_blocked
         
-        ; Check for some exclusive items/clear body/white smoke
+        mov r0,#1
+        mov r1,r4
+        mov r2,#0
+        bl  SubstitutePlaceholderStringTags ; Sub Target
+        ldr r2,=SOUNDPROOF_STR_ID
         mov r0,r9
         mov r1,r4
-        mov r2,#0 ; no messages, silently check
-        bl  StatsCanBeLowered
-        cmp r0,#0
-        bne MoveJumpAddress
+        bl  LogMessageByIdWithPopupCheckUserTarget
+        b   return
+        
+        not_blocked:
+        mov r0,r9
+        mov r1,r4
+        mov r2,TRUE
+        bl  IsProtectedFromStatDrops
+        cmp r0,TRUE
+        beq return
         
         ; Check for Twist Band
         mov r0,r4
-        mov r1,#0x12
-        bl  HasItem
-        cmp r0,#0
-        bne MoveJumpAddress
-        mov r10,#1
+        mov r1,TWIST_BAND_ITEM_ID
+        bl  ItemIsActive
+        cmp r0,FALSE
+        beq not_stopped_by_twist_band
+        mov r0,#0
+        mov r1,r4
+        mov r2,#0
+        bl SubstitutePlaceholderStringTags
+        mov r0,r9
+        mov r1,r4
+        ldr r2,=PROTECTED_BY_BAND_STR_ID
+        bl  LogMessageByIdWithPopupCheckUserTarget
         
-        ; FINALLY switch places with ally behind us (if possible).
+        
+        not_stopped_by_twist_band:
+        mov r10,TRUE
+        mov r0,r9
+        mov r1,r4
+        mov r2,PHYSICAL_STAT
+        mov r3,#1 ; 1 stage
+        str r10,[sp,#0x0]
+        str r10,[sp,#0x4]
+        bl  LowerOffensiveStat
+        
+        mov r0,r9
+        mov r1,r4
+        mov r2,SPECIAL_STAT
+        mov r3,#1 ; 1 stage
+        str r10,[sp,#0x0]
+        str r10,[sp,#0x4]
+        bl  LowerOffensiveStat
+        
         ; Get User Direction and Flip
         ldr  r0, [r9,#0xB4]
         ldrb r12,[r0,#0x4C] ; User Direction
@@ -126,8 +154,8 @@
         ; Check tile for Monster.
         bl    GetTile
         ldr   r1,[r0,#0xC]
-        cmp   r1,#0
-        beq   MoveJumpAddress ; failed, no monster
+        cmp   r1,NULL
+        beq   return
         
         ; Check if friend or enemy.
         ldr   r12,[r1,#0xB4]
@@ -139,27 +167,16 @@
         ldrb  r2,[r12,#0x8]
         eor   r12,r0,r2 ; 1 = enemy, 0 = friend
         cmp   r12,r3
-        bne   MoveJumpAddress ; failed, not on same team
+        bne   return
         
         ; Try to swap places
         mov r0,r9
         ; Monster behind still in r1.
         bl  TrySwitchPlace
-        b MoveJumpAddress
-        
-    failed_soundproof:
-        mov r0,#1
-        mov r1,r4
-        mov r2,#0
-        bl  ChangeString ; Sub Target
-        
-        ; Display soundproof msg.
-        ldr r2,=SoundproofStrID
-        mov r0,r9
-        mov r1,r4
-        bl  SendMessageWithIDCheckUTLog
-        
-        b MoveJumpAddress
+
+    return:
+        add sp,sp,#0x8
+        b   MoveJumpAddress
         .pool
     .endarea
 .close

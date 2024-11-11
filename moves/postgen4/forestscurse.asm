@@ -62,9 +62,9 @@
         beq failed_forecast
         
         ; Check for a grass type.
-        ldr   r3,[r4,#0xB4]
-        ldrb  r0,[r3,#0x5E] ; Type 1
-        ldrb  r1,[r3,#0x5F] ; Type 2
+        ldr   r3,[r4,#0xB4] ; entity->monster
+        ldrb  r0,[r3,#0x5E] ; monster->types[0]
+        ldrb  r1,[r3,#0x5F] ; monster->types[1]
         cmp   r0,ENUM_TYPE_ID_GRASS
         cmpne r1,ENUM_TYPE_ID_GRASS
         beq   failed_grass
@@ -72,8 +72,8 @@
         ; Replace secondary type.
         mov   r10,TRUE
         mov   r0,ENUM_TYPE_ID_GRASS
-        strb  r0,[r3,#0x5F]  ; Type 2 = Grass
-        strb  r10,[r3,#0xFF] ; type_changed = TRUE
+        strb  r0,[r3,#0x5F]  ; monster->types[1] = Grass
+        strb  r10,[r3,#0xFF] ; monster->type_changed = TRUE
         
         ; Log message.
         ldr r2,=forestscurse_str

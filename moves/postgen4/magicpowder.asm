@@ -62,8 +62,8 @@
         
         ; Check for a psychic type.
         ldr   r3,[r4,#0xB4] ; entity->monster
-        ldrb  r0,[r3,#0x5E] ; Type 1
-        ldrb  r1,[r3,#0x5F] ; Type 2
+        ldrb  r0,[r3,#0x5E] ; monster->types[0]
+        ldrb  r1,[r3,#0x5F] ; monster->types[1]
         cmp   r0,ENUM_TYPE_ID_PSYCHIC
         cmpne r1,ENUM_TYPE_ID_PSYCHIC
         beq   failed_psychic
@@ -72,9 +72,9 @@
         mov   r10,TRUE
         mov   r0,ENUM_TYPE_ID_PSYCHIC
         mov   r1,ENUM_TYPE_ID_NONE
-        strb  r0,[r3,#0x5E]   ; Type 1 = Psychic
-        strb  r1,[r3,#0x5F]   ; Type 2 = None
-        strb  r10,[r3,#0xFF] ; type_changed = TRUE
+        strb  r0,[r3,#0x5E]  ; monster->types[0] = Psychic
+        strb  r1,[r3,#0x5F]  ; monster->types[1] = None
+        strb  r10,[r3,#0xFF] ; monster->type_changed = TRUE
         
         ; Log message.
         ldr r2,=magicpowder_str

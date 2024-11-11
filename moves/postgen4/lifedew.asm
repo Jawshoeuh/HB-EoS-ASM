@@ -30,11 +30,12 @@
 .create "./code_out.bin", 0x2330134 ; Change to 0x2330B74 for EU.
     .org MoveStartAddress
     .area MaxSize
+        sub sp,sp,#0x4
     
         ; Calculate Health
-        ldr   r0,[r4,#0xB4]
-        ldrsh r1,[r0,#0x12]
-        ldrsh r0,[r0,#0x16]
+        ldr   r0,[r4,#0xB4] ; entity->monster
+        ldrsh r1,[r0,#0x12] ; monster->max_hp_stat
+        ldrsh r0,[r0,#0x16] ; monster->max_hp_booost
         add   r0,r0,r1 ; Max HP
         
         ; Heal 1/4 HP.
@@ -42,9 +43,11 @@
         mov r0,r9
         mov r1,r4
         mov r3,#0 ; Don't increasce temp max HP
+        str r3,[sp,#0x0]
         bl  TryIncreaseHp
     
         mov r10,TRUE
+        add sp,sp,#0x4
         b   MoveJumpAddress
         .pool
     .endarea

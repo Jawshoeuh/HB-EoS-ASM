@@ -1,9 +1,10 @@
-; ------------------------------------------------------------------------------
-; Jawshoeuh 1/3/2023 - Confirmed Working 1/3/2023
+; -------------------------------------------------------------------------
+; Jawshoeuh 01/03/2023 - Confirmed Working 11/11/2024
 ; Quash makes the target cringe (flinch). It's the only non-damaging flinch
 ; move in Pokemon Mystery Dungeon!
 ; Based on the template provided by https://github.com/SkyTemple
-; ------------------------------------------------------------------------------
+; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
+; -------------------------------------------------------------------------
 
 .relativeinclude on
 .nds
@@ -11,37 +12,34 @@
 
 .definelabel MaxSize, 0x2598
 
-; Uncomment the correct version
+; For US (comment for EU)
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel TryInflictCringeStatus, 0x23143E8
 
-; For US
-.include "lib/stdlib_us.asm"
-.include "lib/dunlib_us.asm"
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
+; For EU (uncomment for EU)
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel TryInflictCringeStatus, 0x2314E48
 
-; For EU
-;.include "lib/stdlib_eu.asm"
-;.include "lib/dunlib_eu.asm"
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
+; Constants
+.definelabel TRUE, 0x1
+.definelabel FALSE, 0x0
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
+.create "./code_out.bin", 0x2330134 ; Change to 0x2330B74 for EU.
     .org MoveStartAddress
-    .area MaxSize ; Define the size of the area
+    .area MaxSize
         
         ; Just cringe/flinch the target...
-        mov r0,r9
-        mov r1,r4
-        mov r2,#1
-        mov r3,#0
-        bl  Cringe
+        mov   r0,r9
+        mov   r1,r4
+        mov   r2,TRUE
+        mov   r3,FALSE
+        bl    TryInflictCringeStatus
+        mov   r10,r0
         
-        ; Set return value appropiately.
-        cmp   r0,#0
-        moveq r10,#0
-        movne r10,#1
-        b MoveJumpAddress
+        b   MoveJumpAddress
         .pool
     .endarea
 .close
