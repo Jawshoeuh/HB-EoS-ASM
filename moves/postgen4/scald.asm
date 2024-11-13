@@ -1,82 +1,85 @@
-; ------------------------------------------------------------------------------
-; Jawshoeuh 12/19/2022 - Confirmed Working 12/19/2022
-; While a water type move, scald works internally similar to fire type
-; moves. It thaws the target and has a 30% chance to burn.
-; ------------------------------------------------------------------------------
+; -------------------------------------------------------------------------
+; Jawshoeuh 12/19/2022 - Confirmed Working 11/13/2024
+; Scald works similarly to a fire type move despite being water type. It
+; thaws and has a 30% chance to burn.
+; Based on the template provided by https://github.com/SkyTemple
+; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
+; -------------------------------------------------------------------------
 
 .relativeinclude on
 .nds
 .arm
 
-
 .definelabel MaxSize, 0x2598
 
-; Uncomment the correct version
+; For US (comment for EU)
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel DealDamage, 0x2332B20
+.definelabel EndFrozenStatus, 0x2307C78
+.definelabel DungeonRandOutcomeUserTargetInteraction, 0x2324934
+.definelabel TryInflictBurnStatus, 0x2312338
 
-; For US
-.include "lib/stdlib_us.asm"
-.include "lib/dunlib_us.asm"
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel TryThawTarget, 0x02307C78
-.definelabel BurnChance, 30
+; For EU (uncomment for EU)
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel DealDamage, 0x2333560
+;.definelabel EndFrozenStatus, 0x23086A4
+;.definelabel DungeonRandOutcomeUserTargetInteraction, 0x232539C
+;.definelabel TryInflictBurnStatus, 0x2312D98
 
-; For EU
-;.include "lib/stdlib_eu.asm"
-;.include "lib/dunlib_eu.asm"
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel TryThawTarget, 0x02307C78
-;.definelabel BurnChance, 30
-
+; Constants
+.definelabel TRUE, 0x1
+.definelabel FALSE, 0x0
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
+.create "./code_out.bin", 0x2330134 ; Change to 0x2330B74 for EU.
     .org MoveStartAddress
-    .area MaxSize ; Define the size of the area
-    
+    .area MaxSize
+        sub sp,sp,#0x4
+        mov r10,FALSE
+        
         ; Try to thaw target.
         mov r0,r9
         mov r1,r4
-        mov r2,r8
-        mov r3,r7
-        bl  TryThawTarget
-    
-        ; Deal damage.
-        sub sp,sp,#0x4
-        str r7,[sp]
+        bl  EndFrozenStatus
+        
+        ; Damage the target.
+        str r7,[sp,#0x0]
         mov r0,r9
         mov r1,r4
         mov r2,r8
-        mov r3,#0x100 ; normal damage
+        mov r3,#0x100 ; 1.0x, Normal Damage *(See Note 1 Below)
         bl  DealDamage
-        add sp,sp,#0x4
         
         ; Check for succesful hit.
-        cmp r0,#0 ; 0 means we didn't deal any damage
-        mov r10,#0
-        beq MoveJumpAddress
-        mov r10,#1
-        
-        ; Check if we shouuld burn with 30%
-        mov r0,r9
-        mov r1,r4
-        mov r2,BurnChance
-        bl  RandomChanceUT
         cmp r0,#0
-        beq MoveJumpAddress
+        beq return
+        mov r10,TRUE
         
-        ; Burn if chance passes.
-        mov r3,#0
-        str r3,[sp]
+        ; Attempt to apply secondary effects (fails if the target has
+        ; fainted or has Shield Dust).
         mov r0,r9
         mov r1,r4
-        mov r2,#0
-        mov r3,#0
-        bl  Burn
-
-        ; Always branch at the end
-        b MoveJumpAddress
+        mov r2,#30
+        bl  DungeonRandOutcomeUserTargetInteraction
+        cmp r0,FALSE
+        beq return
+        
+        mov r0,r9
+        mov r1,r4
+        mov r2,FALSE
+        mov r3,FALSE
+        str r3,[sp,#0x0]
+        bl  TryInflictBurnStatus
+        
+    return:
+        add sp,sp,#0x4
+        b   MoveJumpAddress
         .pool
     .endarea
 .close
+
+; Note 1: The game uses the 8 bits at the end as a kind of fraction/decimal
+; where the denominator is 256. So in this context, 0x100 means
+; (256/256) = 1

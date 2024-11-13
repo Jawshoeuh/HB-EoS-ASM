@@ -31,8 +31,6 @@
 ; Constants
 .definelabel TRUE, 0x1
 .definelabel FALSE, 0x0
-.definelabel PHYSICAL_STAT, 0x0
-.definelabel SPECIAL_STAT, 0x1
 .definelabel FORECAST_ABILITY_ID, 0x25 ; 37
 .definelabel FORECAST_PREVENT_STR_ID, 3523 ; 0xDC3
 .definelabel ENUM_TYPE_ID_NONE, 0

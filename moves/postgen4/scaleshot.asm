@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 6/18/2024 - Tested 6/19/2024
+; Jawshoeuh 06/18/2024 - Confirmed Working 11/13/2024
 ; Scale Shot does damage and lowers the user's defense. Specifically
 ; designed to be used as a multi-hit move and drop defense only on the
 ; first hit. Also a sound based move.
@@ -45,7 +45,7 @@
 .definelabel SOUNDPROOF_STR_ID, 3769 ; 0xEB9
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; Change to 0x02330B74 for EU.
+.create "./code_out.bin", 0x2330134 ; Change to 0x2330B74 for EU.
     .org MoveStartAddress
     .area MaxSize
         sub sp,sp,#0x8
