@@ -1,10 +1,11 @@
-; ------------------------------------------------------------------------------
-; Jawshoeuh 3/22/2023 - WIP
+; -------------------------------------------------------------------------
+; Jawshoeuh 03/22/2023 - Confirmed Working 11/15/2024
 ; Shore Up heals the user's health, but heals more if the weather
 ; is sandstorm. The healing values are based upon Moonlight and
 ; Morning Sun
 ; Based on the template provided by https://github.com/SkyTemple
-; ------------------------------------------------------------------------------
+; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
+; -------------------------------------------------------------------------
 
 .relativeinclude on
 .nds
@@ -12,49 +13,47 @@
 
 .definelabel MaxSize, 0x2598
 
-; Uncomment the correct version
+; For US (comment for EU)
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel GetApparentWeather, 0x2334D08
+.definelabel TryIncreaseHp, 0x23152E4
 
-; For US
-.include "lib/stdlib_us.asm"
-.include "lib/dunlib_us.asm"
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel GetApparentWeather, 0x02334D08
+; For EU (uncomment for EU)
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel GetApparentWeather, 0x2335748
+;.definelabel TryIncreaseHp, 0x2315D44
 
-; For EU
-;.include "lib/stdlib_eu.asm"
-;.include "lib/dunlib_eu.asm"
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel GetApparentWeather, 0x02335748
-
-; Universal
-.definelabel HealingWeatherClear, 0x32 ; 50
-.definelabel HealingWeatherSandstorm, 0x50 ; 80
+; Constants
+.definelabel TRUE, 0x1
+.definelabel FALSE, 0x0
+.definelabel PHYSICAL_STAT, 0x0
+.definelabel SPECIAL_STAT, 0x1
+.definelabel ENUM_WEATHER_ID_SANDSTORM, 0x2
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
+.create "./code_out.bin", 0x2330134 ; Change to 0x2330B74 for EU.
     .org MoveStartAddress
-    .area MaxSize ; Define the size of the area
-       sub sp,sp,#0x4
-       
-        ; Check weather.
+    .area MaxSize
+        sub sp,sp,#0x4
+        mov r10,TRUE
+        
+        ; Check for a sandstorm.
         mov   r0,r4
         bl    GetApparentWeather
-        cmp   r0,#0x2
-        moveq r2,HealingWeatherSandstorm
-        movne r2,HealingWeatherClear
-       
+        cmp   r0,ENUM_WEATHER_ID_SANDSTORM
+        moveq r2,#80 ; Sandstorm healing.
+        movne r2,#50 ; Normal healing.
+        
         ; Healing time.
-        mov r12,#0x1
         mov r0,r9
         mov r1,r4
         ; Healing amount from above in r2.
         mov r3,#0x0
-        str r12,[sp,#0x1]
+        str r10,[sp,#0x0]
         bl  TryIncreaseHp
         
-        mov r10,#0x1
         add sp,sp,#0x4
         b   MoveJumpAddress
         .pool

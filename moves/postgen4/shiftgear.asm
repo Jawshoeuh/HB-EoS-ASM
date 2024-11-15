@@ -1,8 +1,9 @@
-; ------------------------------------------------------------------------------
-; Jawshoeuh 1/3/2023 - Confirmed Working 1/3/2023
+; -------------------------------------------------------------------------
+; Jawshoeuh 01/03/2023 - Confirmed Working 11/15/2024
 ; Shift gear increasces attack by 1 and speed by 2.
 ; Based on the template provided by https://github.com/SkyTemple
-; ------------------------------------------------------------------------------
+; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
+; -------------------------------------------------------------------------
 
 .relativeinclude on
 .nds
@@ -10,45 +11,46 @@
 
 .definelabel MaxSize, 0x2598
 
-; Uncomment the correct version
+; For US (comment for EU)
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel BoostOffensiveStat, 0x231399C
+.definelabel BoostSpeed, 0x2314810
 
-; For US
-.include "lib/stdlib_us.asm"
-.include "lib/dunlib_us.asm"
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
+; For EU (uncomment for EU)
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel BoostOffensiveStat, 0x23143FC
+;.definelabel BoostSpeed, 0x2315270
 
-; For EU
-;.include "lib/stdlib_eu.asm"
-;.include "lib/dunlib_eu.asm"
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
+; Constants
+.definelabel TRUE, 0x1
+.definelabel FALSE, 0x0
+.definelabel PHYSICAL_STAT, 0x0
+.definelabel SPECIAL_STAT, 0x1
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
+.create "./code_out.bin", 0x2330134 ; Change to 0x2330B74 for EU.
     .org MoveStartAddress
-    .area MaxSize ; Define the size of the area
+    .area MaxSize
         sub sp,sp,#0x4
+        mov r10,TRUE
         
-        ; Raise attack
         mov r0,r9
         mov r1,r4
-        mov r2,#0 ; attack
-        mov r3,#1
-        bl  AttackStatUp
+        mov r2,#2
+        mov r3,#0
+        str r10,[sp,#0x0]
+        bl  BoostSpeed
         
-        ; Raise speed two stages.
-        mov r3,#1
         mov r0,r9
         mov r1,r4
-        mov r2,#2   ; 2 stages
-        str r3,[sp] ; yes, fail message
-        mov r3,#0   ; default number turns
-        bl  SpeedStatUp
+        mov r2,PHYSICAL_STAT
+        mov r3,#1
+        bl  BoostOffensiveStat
         
-        mov r10,#1
         add sp,sp,#0x4
-        b MoveJumpAddress
+        b   MoveJumpAddress
         .pool
     .endarea
 .close

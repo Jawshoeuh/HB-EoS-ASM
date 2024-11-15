@@ -129,16 +129,7 @@
         add  r12,r12,#0x4
         and  r12,r12,#0x7   ; Flip Direction
         
-        ; Visualization of values loaded from direction array.
-        ; 5   4   3   (y-1)
-        ;   \ | /
-        ; 6 - E - 2   (y)
-        ;   / | \
-        ; 7   0   1   (y+1)
-        ;
-        ; x   x   x
-        ; -       +
-        ; 1       1
+        ; See Note 1
         ldr   r10,=DIRECTIONS_XY
         mov   r2,r12, lsl #0x2     ; Array Offset For Dir Value
         add   r3,r10,r12, lsl #0x2 ; Array Offset For Dir Value
@@ -180,3 +171,14 @@
         .pool
     .endarea
 .close
+
+; Note 1: Visualization of values loaded from direction array.
+; 5   4   3   (y-1)
+;   \ | /
+; 6 - E - 2   (y)
+;   / | \
+; 7   0   1   (y+1)
+;
+; x   x   x
+; -       +
+; 1       1

@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------------
-; Jawshoeuh 12/02/2023 - Confirmed Working 10/29/2024
+; Jawshoeuh 12/02/2023 - Confirmed Working 11/15/2024
 ; Entrainment changes the target's ability to match the user's.
 ; While Adex-8x's version will function identically most of the time,
 ; this one checks for Truant, Trace, Forecast, and Flower Gift
@@ -36,6 +36,7 @@
 .definelabel FORECAST_ABILITY_ID, 37 ; 0x25
 .definelabel TRACE_ABILITY_ID, 40 ; 0x28
 .definelabel TRUANT_ABILITY_ID, 42 ; 0x2A
+.definelabel MULTITYPE_ABILITY_ID, 116 ; 0x74
 
 ; File creation
 .create "./code_out.bin", 0x2330134 ; Change to 0x2330B74 for EU.
@@ -53,14 +54,16 @@
         mov r2,#0
         bl  SubstitutePlaceholderStringTags ; Target
 
-        ; Check for Truant manually since we don't want to accidentally
-        ; share it even if it is suppressed by Gastro Acid!
+        ; Check for Truant and Multitype manually since we don't want to
+        ; accidentally change it even if it is suppressed by Gastro Acid!
         ldr   r3,[r4,#0xB4] ; entity->monster
         ldrb  r1,[r3,#0x60] ; monster->abilities[0]
         ldrb  r2,[r3,#0x61] ; monster->abilities[1]
         cmp   r1,TRUANT_ABILITY_ID
         cmpne r2,TRUANT_ABILITY_ID
-        beq   failed_ability_truant
+        cmpne r1,MULTITYPE_ABILITY_ID
+        cmpne r2,MULTITYPE_ABILITY_ID
+        beq   failed_ability_reciever
         
         ; Check abilities manually since we don't want to accidentally
         ; share illegal abilities if the ability is suppresed.
@@ -107,8 +110,8 @@
         bl  LogMessageWithPopupCheckUserTarget
         b   MoveJumpAddress
 
-    failed_ability_truant:
-        ldr r2,=failed_entrainment_truant_str
+    failed_ability_reciever:
+        ldr r2,=failed_entrainment_reciever_str
         mov r0,r9
         mov r1,r4
         bl  LogMessageWithPopupCheckUserTarget
@@ -116,8 +119,8 @@
         .pool
     entrainment_str:
         .asciiz "[string:0] shared its ability[R]with [string:1]"
-    failed_entrainment_truant_str:
-        .asciiz "[string:1]'s Truant ability[R]can't be changed!"
+    failed_entrainment_reciever_str:
+        .asciiz "[string:1]'s ability can't[R]be changed!"
     failed_entrainment_str:
         .asciiz "[string:0]'s abilities can't be shared!"
     .endarea

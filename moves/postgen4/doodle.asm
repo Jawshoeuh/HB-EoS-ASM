@@ -111,14 +111,3 @@
         .asciiz "[string:0] gave all allies the[R]abilities of [string:1]!"
     .endarea
 .close
-
-; Note 1: Visualization of values loaded from direction array.
-; 5   4   3   (y-1)
-;   \ | /
-; 6 - E - 2   (y)
-;   / | \
-; 7   0   1   (y+1)
-;
-; x   x   x
-; -       +
-; 1       1

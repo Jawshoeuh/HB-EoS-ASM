@@ -68,7 +68,7 @@
         cmpne r1,ENUM_TYPE_ID_PSYCHIC
         beq   failed_psychic
         
-        ; Replace secondary type.
+        ; Replace types.
         mov   r10,TRUE
         mov   r0,ENUM_TYPE_ID_PSYCHIC
         mov   r1,ENUM_TYPE_ID_NONE

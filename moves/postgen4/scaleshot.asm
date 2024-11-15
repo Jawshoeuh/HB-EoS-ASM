@@ -62,21 +62,21 @@
         ; Check for succesful hit.
         cmp r0,#0
         beq return
-		mov r10,TRUE
-		
-		; Reuse the tracker for Twineedle to keep track if we have hit to
-		; apply secondary effects.
+        mov r10,TRUE
+        
+        ; Reuse the tracker for Twineedle to keep track if we have hit to
+        ; apply secondary effects.
         ldr  r0,=TWINEEDLE_HIT_TRACKER
         ldrb r1,[r0,#0x0]
         cmp  r1,#1
         beq  return
-		mov  r1,#1
-		strb r1,[r0,#0x0]
-		
-		; Check a user action.
-		mov r0,r9
-		mov r1,#0 ; Guaranteed, always
-		bl  DungeonRandOutcomeUserAction
+        mov  r1,#1
+        strb r1,[r0,#0x0]
+        
+        ; Check a user action.
+        mov r0,r9
+        mov r1,#0 ; Guaranteed, always
+        bl  DungeonRandOutcomeUserAction
         
         ; Lower defense stat one stage.
         mov r2,TRUE

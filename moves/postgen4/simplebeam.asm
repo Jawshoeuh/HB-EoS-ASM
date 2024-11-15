@@ -1,11 +1,12 @@
-; ------------------------------------------------------------------------------
-; Jawshoeuh 12/1/2022 - Confirmed Working 12/23/2022
+; -------------------------------------------------------------------------
+; Jawshoeuh 12/01/2024 - Confirmed Working 11/15/2024
 ; Chanegs the target's ability to Simple. Adex-8x's implementaion
 ; will function identically most of the time, but this one check for
 ; fails on Truant. It should also fail when the ability is already
 ; Simple, but this is not neccessary.
 ; Based on the template provided by https://github.com/SkyTemple
-; ------------------------------------------------------------------------------
+; Uses the naming conventions from https://github.com/UsernameFodder/pmdsky-debug
+; -------------------------------------------------------------------------
 
 .relativeinclude on
 .nds
@@ -13,85 +14,89 @@
 
 .definelabel MaxSize, 0x2598
 
-; Uncomment the correct version
+; For US (comment for EU)
+.definelabel MoveStartAddress, 0x2330134
+.definelabel MoveJumpAddress, 0x23326CC
+.definelabel TryEndStatusWithAbility, 0x22FA7DC
+.definelabel SubstitutePlaceholderStringTags, 0x22E2AD8
+.definelabel LogMessageWithPopupCheckUserTarget, 0x234B3A4
+.definelabel DUNGEON_PTR, 0x2353538
 
-; For US
-.include "lib/stdlib_us.asm"
-.include "lib/dunlib_us.asm"
-.definelabel MoveStartAddress, 0x02330134
-.definelabel MoveJumpAddress, 0x023326CC
-.definelabel SimpleAbilityID, 0x61 ; 97
-.definelabel TruantAbilityID, 0x2A ; 40
+; For EU (uncomment for EU)
+;.definelabel MoveStartAddress, 0x2330B74
+;.definelabel MoveJumpAddress, 0x233310C
+;.definelabel TryEndStatusWithAbility, 0x22FB1E8
+;.definelabel SubstitutePlaceholderStringTags, 0x22E3418
+;.definelabel LogMessageWithPopupCheckUserTarget, 0x234BFA4
+;.definelabel DUNGEON_PTR, 0x2354138
 
-; For EU
-;.include "lib/stdlib_eu.asm"
-;.include "lib/dunlib_eu.asm"
-;.definelabel MoveStartAddress, 0x02330B74
-;.definelabel MoveJumpAddress, 0x0233310C
-;.definelabel SimpleAbilityID, 0x61 ; 97
-;.definelabel TruantAbilityID, 0x2A ; 40
+
+; Constants
+.definelabel TRUE, 0x1
+.definelabel FALSE, 0x0
+.definelabel TRUANT_ABILITY_ID, 42 ; 0x2A
+.definelabel SIMPLE_ABILITY_ID, 97 ; 0x61
+.definelabel MULTITYPE_ABILITY_ID, 116 ; 0x74
+.definelabel NONE_ABILITY_ID, 0
 
 ; File creation
-.create "./code_out.bin", 0x02330134 ; Change to the actual offset as this directive doesn't accept labels
+.create "./code_out.bin", 0x2330134 ; Change to 0x2330B74 for EU.
     .org MoveStartAddress
-    .area MaxSize ; Define the size of the area
-    
-        ; Preemptively substitute target into slot 1.
+    .area MaxSize
+        mov r10,FALSE
+        
+        ; Preemptively substitute strings.
+        mov r0,#0
+        mov r1,r9
+        mov r2,#0
+        bl  SubstitutePlaceholderStringTags ; User
         mov r0,#1
         mov r1,r4
         mov r2,#0
-        bl  ChangeString
-
-        ; Check for Truant Ability
-        mov r0,r4
-        mov r1,TruantAbilityID
-        bl  HasAbility
-        cmp r0,#0
-        beq success
+        bl  SubstitutePlaceholderStringTags ; Target
         
-        ; Failed!
-        ldr r1,=failed_simplebeam_str
-        mov r0,r4
-        bl  SendMessageWithStringLog
-
-        mov r10,#0
-        b MoveJumpAddress
+        ; Check for Truant and Multitype manually since we don't want to
+        ; accidentally change it even if it is suppressed by Gastro Acid!
+        ldr   r3,[r4,#0xB4] ; entity->monster
+        ldrb  r1,[r3,#0x60] ; monster->abilities[0]
+        ldrb  r2,[r3,#0x61] ; monster->abilities[1]
+        cmp   r1,TRUANT_ABILITY_ID
+        cmpne r2,TRUANT_ABILITY_ID
+        cmpne r1,MULTITYPE_ABILITY_ID
+        cmpne r2,MULTITYPE_ABILITY_ID
+        beq   failed_ability_reciever
         
-    success:
-        ldr r1,=simplebeam_str
-        mov r0,r4
-        bl  SendMessageWithStringLog
-
+        mov r10,TRUE
         ; Change Ability To Simple
         ldr  r0,[r4,#0xB4]
-        mov  r1,SimpleAbilityID
-        mov  r2,#0x0       ; Ability 0 = None
+        mov  r1,SIMPLE_ABILITY_ID
+        mov  r2,NONE_ABILITY_ID
         strb r1,[r0,#0x60] ; First Ability -> Simple
         strb r2,[r0,#0x61] ; Secon Ability -> None
         
-        ; Log ability change.
-        mov r0,r4
-        ldr r1,=simplebeam_str
-        bl  SendMessageWithStringLog
+        ; Set flag for dungeon to check artificial weather abilities.
+        mov   r0,#0x1
+        ldr   r1,=DUNGEON_PTR
+        ldr   r2,[r1,#0x0]
+        strb  r0,[r2,#0xE] ; dungeon->activate_artificial_weather_flag = true
         
-        ; I don't know why, but Skill Swap/Role Play does this to the
-        ; user so they give more XP. Why? I don't know?
-        ldr    r3,[r9,#0xB4]
-        ldrb   r0,[r3,#0x108]
-        cmp    r0,#0x0
-        moveq  r0,#0x1
-        streqb r0,[r3,#0x108]
+        ldr r2,=simplebeam_str
+        mov r0,r9
+        mov r1,r4
+        bl  LogMessageWithPopupCheckUserTarget
+        b   MoveJumpAddress
         
-        ; Normally, you would call 022FA7DC after changing an ability, but
-        ; because we know Simple isn't going to remove any statuses
-        ; (for example, Own Tempo stopping confusion) I just don't bother.
+        failed_ability_reciever:
+        ldr r2,=failed_simplebeam_str
+        mov r0,r9
+        mov r1,r4
+        bl  LogMessageWithPopupCheckUserTarget
         
-        mov r10,#1
-        b MoveJumpAddress
+        b   MoveJumpAddress
         .pool
     simplebeam_str:
         .asciiz "[string:1]'s ability became Simple!"
     failed_simplebeam_str:
-        .asciiz "[string:1]'s Truant ability[R]prevents Simple!"
+        .asciiz "[string:1]'s ability can't[R]be changed!"
     .endarea
 .close
